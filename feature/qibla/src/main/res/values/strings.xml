@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_qibla_title">Qibla</string>
+    <string name="feature_qibla_coming_soon">The Qibla compass arrives in Milestone 4.</string>
+</resources>

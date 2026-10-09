@@ -1,0 +1,22 @@
+# Gradle / Kotlin
+.gradle/
+build/
+.kotlin/
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Signing secrets: never commit these
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+
+# OS
+.DS_Store
+Thumbs.db

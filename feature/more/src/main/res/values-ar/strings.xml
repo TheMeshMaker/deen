@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_more_title">المزيد</string>
+    <string name="feature_more_settings">الإعدادات</string>
+    <string name="feature_more_reliability">تأكّد من أن الأذان يعمل دائمًا</string>
+    <string name="feature_more_support">ادعم دِين</string>
+    <string name="feature_more_about">حول التطبيق والتراخيص</string>
+    <string name="feature_more_milestone_2">قريبًا في المرحلة الثانية</string>
+    <string name="feature_more_milestone_5">قريبًا في المرحلة الخامسة</string>
+    <string name="feature_more_channel_play">نسخة Google Play</string>
+    <string name="feature_more_channel_foss">النسخة الحرّة (F-Droid)</string>
+    <string name="feature_more_build_line">دِين %1$s · %2$s</string>
+</resources>

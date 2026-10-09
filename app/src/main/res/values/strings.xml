@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Deen</string>
+    <string name="nav_today">Today</string>
+    <string name="nav_adhkar">Adhkar</string>
+    <string name="nav_tasbih">Tasbih</string>
+    <string name="nav_qibla">Qibla</string>
+    <string name="nav_more">More</string>
+</resources>
