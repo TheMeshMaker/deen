@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="feature_today_tagline">Prayer, remembrance, peace</string>
-    <string name="feature_today_coming_soon">Prayer times and the countdown to the next prayer arrive in Milestone 1.</string>
+    <string name="feature_today_next_prayer">Next prayer</string>
+    <string name="feature_today_method_summary">%1$s · %2$s</string>
+    <string name="feature_today_countdown_description">%1$s in %2$s and %3$s</string>
+    <plurals name="feature_today_hours">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <plurals name="feature_today_minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
 </resources>

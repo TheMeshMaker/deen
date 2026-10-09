@@ -69,7 +69,7 @@ Exact versions get pinned in `gradle/libs.versions.toml` at scaffold time, using
 | Persistence | Room (read-only content DB + user DB), DataStore |
 | Background | AlarmManager for the adhan; WorkManager only as a safety net |
 | Prayer math | `com.batoulapps.adhan:adhan2` (MIT) + kotlinx-datetime |
-| Hijri | `android.icu.util.IslamicCalendar` (Umm al-Qura), built into Android |
+| Hijri | `java.time.chrono.HijrahDate` (Umm al-Qura), built into Android |
 | Audio | Media3 ExoPlayer inside our own foreground service |
 | Location | Platform `LocationManager` (both flavors) + Fused Location (play only) + offline GeoNames city DB |
 | Billing | Play Billing Library (play only) |
@@ -183,7 +183,7 @@ sealed interface TodayEffect { data object OpenReliability : TodayEffect }
   1. *play:* Fused `getCurrentLocation(BALANCED_POWER)`, with a 15 s timeout.
   2. Platform `LocationManager.getCurrentLocation()` (fused → network → GPS), with a 20 s timeout.
   3. Last known location.
-  4. **Manual city search**, offline, over the GeoNames `cities5000` subset (CC BY 4.0, roughly 2–3 MB compressed).
+  4. **Manual city search**, offline, over 64,450 places from GeoNames `cities5000` (CC BY 4.0). Arabic names come from GeoNames' language-tagged names (15k cities). Built by `tools/geonames/build_cities.py` into a plain `cities.tsv` asset (4.8 MB, ~1.7 MB inside the APK), reviewable in PRs.
 - **Why the platform path ships in the play build too:** on CN ROMs, Google location services often don't work even when they're installed (as on the main test phone).
 - **Travel detection:** a `TIMEZONE_CHANGED` broadcast posts a quiet "You're in a new time zone, update location?" notification. No background tracking.
 - **Debug menu:** "Pretend Google services are missing", to test the non-GMS path on a phone that has them.
@@ -353,7 +353,7 @@ Each vendor has an **ordered list of candidate intents**. The first one `resolve
 ## 13. Qibla, Hijri, widget
 
 - **Qibla:** bearing from adhan2's `Qibla`; heading from `TYPE_ROTATION_VECTOR` corrected for magnetic declination (`GeomagneticField`). Also: an accuracy chip, a figure-8 calibration hint, a gentle haptic when aligned, and distance to Makkah.
-- **Hijri:** ICU `IslamicCalendar` with `ISLAMIC_UMALQURA` + the user's day offset. Month names are localised.
+- **Hijri:** `java.time.chrono.HijrahDate` (Umm al-Qura, 1300–1600 AH) + the user's day offset, tested against the official Umm al-Qura calendar. Month names are localised.
 - **Widget:** next prayer name, time and live countdown (RemoteViews `Chronometer`, so no per-second updates or battery cost). The alarm pipeline refreshes it at each prayer time.
 
 ---
@@ -405,16 +405,24 @@ content/*.json  ──▶  tools/content-builder  ──▶  app/src/main/assets
 
 ### 16.1 Design system (`core:designsystem`)
 
-**Color**
-- Dynamic Color is on by default (Android 12+).
-- Fallback palette is generated from the seed **#1E6B57** (deep green), with a warm sand accent **#B8925A**.
-- Light background: warm paper **#FBF8F1**.
+**Color** (revised after M1 review: Deen has its own look, not stock Material/Google)
+- **Colour themes, all free**, each with a two-colour gradient for hero surfaces:
+
+  | Theme | Gradient | Brand colour | Feel |
+  |---|---|---|---|
+  | **Emerald** (default) | `#064E3B → #0E8A62` | `#0E7A55` | Green and white |
+  | **Kiswah** | `#0D0D0D → #4A3812`, gold text | `#A87C1F` | Black and gold, after the Kaaba's cover |
+  | **Desert** | `#7C2D12 → #C2622D` | `#B4532A` | Terracotta and sand |
+
+- Palettes are generated with Material Color Utilities' *fidelity* scheme (keeps the brand colour vivid) and light pages are pure white; cards keep a faint theme tint.
+- Material You (wallpaper colours) is **off by default**; it may come back as an opt-in setting in M5.
+- The navigation bar is themed: plain surface, theme-coloured selection, no pill indicator.
 - Theme modes: **Light · Dark · OLED Black**.
   - OLED Black uses pure `#000000` backgrounds and surfaces.
   - Instead of tonal elevation, it separates cards with hairline outlines.
 
 **Type**
-- UI text uses the system font (Roboto / system Arabic).
+- UI text uses **Readex Pro** (SIL OFL, one variable font covering Latin and Arabic) instead of Roboto.
 - Religious text uses **Amiri** (with Noto Naskh Arabic and Scheherazade New as options). Quranic text uses **Amiri Quran**. All are under the SIL Open Font License.
 - The Arabic reading size is adjustable separately from the UI size.
 
@@ -601,8 +609,8 @@ adb reboot
 
 | # | Milestone | Done when |
 |---|---|---|
-| **M0** | Foundation | Repo, build-logic, flavors, CI green, design system, empty screens in the nav shell, runs on the test phone |
-| **M1** | Prayer times | Engine + golden tests, location (both paths + city search), onboarding, Today screen with live countdown |
+| **M0** ✅ | Foundation | Repo, build-logic, flavors, CI green, design system, empty screens in the nav shell, runs on the test phone |
+| **M1** ✅ | Prayer times | Engine + golden tests, location (both paths + city search), onboarding, Today screen with live countdown, colour themes |
 | **M2** | Adhan | Alarm pipeline, playback service, notifications, Reliability center, health log, all device scenarios pass on ColorOS 17 CN |
 | **M3** | Adhkar and Tasbih | Content pipeline, reader, counter, haptics (sample content is debug-only until reviewed) |
 | **M4** | Hadith, Qibla, Hijri, widget | All four working, plus screenshot tests |

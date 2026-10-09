@@ -8,8 +8,9 @@ that actually plays, daily adhkar with a tasbih counter, and a daily hadith with
 تطبيق إسلامي مجاني ومفتوح المصدر لأندرويد: مواقيت صلاة دقيقة بدون إنترنت مع أذان يعمل فعلًا،
 وأذكار يومية مع عدّاد تسبيح، وحديث يومي مع مصدره. بلا إعلانات، بلا تتبّع، بلا اشتراكات.
 
-> **Status:** early development (Milestone 0: project foundation). Not usable yet.
-> The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
+> **Status:** early development. Milestone 1 is done: offline prayer times, location (GPS or offline
+> city search), onboarding, the Today screen with a live countdown, and three free colour themes.
+> Adhan alarms arrive in Milestone 2. The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
 
 ## Planned for v1
 
@@ -18,7 +19,7 @@ that actually plays, daily adhkar with a tasbih counter, and a daily hadith with
 - Morning, evening, before-sleep and after-prayer adhkar, with a tasbih counter
 - Daily hadith with Arabic text, translation, reference and grading
 - Qibla compass, Hijri date, home-screen widget
-- Arabic and English, Light / Dark / OLED Black themes, Material You
+- Arabic and English, Light / Dark / OLED Black, and free colour themes (Emerald, Kiswah, Desert)
 
 ## Builds
 

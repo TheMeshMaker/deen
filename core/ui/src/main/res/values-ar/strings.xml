@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_ui_prayer_fajr">الفجر</string>
+    <string name="core_ui_prayer_sunrise">الشروق</string>
+    <string name="core_ui_prayer_dhuhr">الظهر</string>
+    <string name="core_ui_prayer_jumuah">الجمعة</string>
+    <string name="core_ui_prayer_asr">العصر</string>
+    <string name="core_ui_prayer_maghrib">المغرب</string>
+    <string name="core_ui_prayer_isha">العشاء</string>
+
+    <string name="core_ui_method_umm_al_qura">أم القرى، مكة المكرمة</string>
+    <string name="core_ui_method_umm_al_qura_region">السعودية، اليمن</string>
+    <string name="core_ui_method_mwl">رابطة العالم الإسلامي</string>
+    <string name="core_ui_method_mwl_region">أوروبا، الشرق الأقصى، ومعظم دول العالم</string>
+    <string name="core_ui_method_isna">الجمعية الإسلامية لأمريكا الشمالية</string>
+    <string name="core_ui_method_isna_region">الولايات المتحدة، كندا</string>
+    <string name="core_ui_method_egyptian">الهيئة المصرية العامة للمساحة</string>
+    <string name="core_ui_method_egyptian_region">مصر، وأجزاء من أفريقيا والشام</string>
+    <string name="core_ui_method_karachi">جامعة العلوم الإسلامية بكراتشي</string>
+    <string name="core_ui_method_karachi_region">باكستان، الهند، بنغلاديش، أفغانستان</string>
+    <string name="core_ui_method_dubai">دبي</string>
+    <string name="core_ui_method_dubai_region">الإمارات العربية المتحدة</string>
+    <string name="core_ui_method_kuwait">الكويت</string>
+    <string name="core_ui_method_kuwait_region">الكويت</string>
+    <string name="core_ui_method_qatar">قطر</string>
+    <string name="core_ui_method_qatar_region">قطر</string>
+    <string name="core_ui_method_singapore">سنغافورة (المجلس الإسلامي)</string>
+    <string name="core_ui_method_singapore_region">سنغافورة، ماليزيا، إندونيسيا، بروناي</string>
+    <string name="core_ui_method_moonsighting">لجنة رؤية الهلال العالمية</string>
+    <string name="core_ui_method_moonsighting_region">المملكة المتحدة ودول أخرى</string>
+    <string name="core_ui_method_turkey">رئاسة الشؤون الدينية التركية</string>
+    <string name="core_ui_method_turkey_region">تركيا (تقريب قريب من الجداول الرسمية)</string>
+
+    <string name="core_ui_asr_standard">الجمهور (الشافعي والمالكي والحنبلي)</string>
+    <string name="core_ui_asr_standard_short">عصر الجمهور</string>
+    <string name="core_ui_asr_hanafi">الحنفي</string>
+    <string name="core_ui_asr_hanafi_short">العصر الحنفي</string>
+
+    <string-array name="core_ui_hijri_months">
+        <item>محرّم</item>
+        <item>صفر</item>
+        <item>ربيع الأول</item>
+        <item>ربيع الآخر</item>
+        <item>جمادى الأولى</item>
+        <item>جمادى الآخرة</item>
+        <item>رجب</item>
+        <item>شعبان</item>
+        <item>رمضان</item>
+        <item>شوّال</item>
+        <item>ذو القعدة</item>
+        <item>ذو الحجة</item>
+    </string-array>
+    <string name="core_ui_hijri_date">%1$d %2$s %3$d هـ</string>
+</resources>

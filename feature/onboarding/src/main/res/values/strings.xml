@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_onboarding_welcome_title">Welcome to Deen</string>
+    <string name="feature_onboarding_welcome_body">Prayer times, adhkar and a daily hadith. Free, without ads, and it works offline.</string>
+    <string name="feature_onboarding_start">Get started</string>
+    <string name="feature_onboarding_back">Back</string>
+    <string name="feature_onboarding_finish">Done</string>
+    <string name="feature_onboarding_save">Save</string>
+
+    <string name="feature_onboarding_location_title">Where are you?</string>
+    <string name="feature_onboarding_location_body">Prayer times depend on your location. It stays on your phone.</string>
+    <string name="feature_onboarding_location_use_device">Use my location</string>
+    <string name="feature_onboarding_location_detecting">Finding your location…</string>
+    <string name="feature_onboarding_location_failed">Couldn\'t get your location. Search for your city instead.</string>
+    <string name="feature_onboarding_location_permission_denied">Location access is off. You can search for your city instead.</string>
+    <string name="feature_onboarding_location_search_hint">Search for a city</string>
+    <string name="feature_onboarding_location_no_results">No city found. Try another spelling.</string>
+    <string name="feature_onboarding_location_picker_title">Location</string>
+
+    <string name="feature_onboarding_method_title">Calculation method</string>
+    <string name="feature_onboarding_method_body">Choose the method your local mosque follows. You can change it any time.</string>
+    <string name="feature_onboarding_method_suggested">Suggested</string>
+    <string name="feature_onboarding_method_asr_title">ʿAsr time</string>
+    <string name="feature_onboarding_method_asr_body">In the Ḥanafī school, ʿAsr begins later.</string>
+</resources>

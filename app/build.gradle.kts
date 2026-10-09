@@ -57,10 +57,14 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
     implementation(projects.core.designsystem)
+    implementation(projects.core.domain)
+    implementation(projects.core.location)
     implementation(projects.core.model)
     implementation(projects.feature.adhkar)
     implementation(projects.feature.more)
+    implementation(projects.feature.onboarding)
     implementation(projects.feature.qibla)
     implementation(projects.feature.tasbih)
     implementation(projects.feature.today)
@@ -69,7 +73,11 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.core)
+
+    // Google Play services are only ever linked into the Play build.
+    "playImplementation"(projects.core.locationGms)
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_ui_prayer_fajr">Fajr</string>
+    <string name="core_ui_prayer_sunrise">Sunrise</string>
+    <string name="core_ui_prayer_dhuhr">Dhuhr</string>
+    <string name="core_ui_prayer_jumuah">Jumuʿah</string>
+    <string name="core_ui_prayer_asr">ʿAsr</string>
+    <string name="core_ui_prayer_maghrib">Maghrib</string>
+    <string name="core_ui_prayer_isha">ʿIshāʾ</string>
+
+    <string name="core_ui_method_umm_al_qura">Umm al-Qura, Makkah</string>
+    <string name="core_ui_method_umm_al_qura_region">Saudi Arabia, Yemen</string>
+    <string name="core_ui_method_mwl">Muslim World League</string>
+    <string name="core_ui_method_mwl_region">Europe, the Far East, much of the world</string>
+    <string name="core_ui_method_isna">ISNA (Islamic Society of North America)</string>
+    <string name="core_ui_method_isna_region">United States, Canada</string>
+    <string name="core_ui_method_egyptian">Egyptian General Authority of Survey</string>
+    <string name="core_ui_method_egyptian_region">Egypt, parts of Africa and the Levant</string>
+    <string name="core_ui_method_karachi">University of Islamic Sciences, Karachi</string>
+    <string name="core_ui_method_karachi_region">Pakistan, India, Bangladesh, Afghanistan</string>
+    <string name="core_ui_method_dubai">Dubai</string>
+    <string name="core_ui_method_dubai_region">United Arab Emirates</string>
+    <string name="core_ui_method_kuwait">Kuwait</string>
+    <string name="core_ui_method_kuwait_region">Kuwait</string>
+    <string name="core_ui_method_qatar">Qatar</string>
+    <string name="core_ui_method_qatar_region">Qatar</string>
+    <string name="core_ui_method_singapore">Singapore (MUIS)</string>
+    <string name="core_ui_method_singapore_region">Singapore, Malaysia, Indonesia, Brunei</string>
+    <string name="core_ui_method_moonsighting">Moonsighting Committee Worldwide</string>
+    <string name="core_ui_method_moonsighting_region">United Kingdom and other countries</string>
+    <string name="core_ui_method_turkey">Diyanet (Turkey)</string>
+    <string name="core_ui_method_turkey_region">Turkey (close approximation of the official tables)</string>
+
+    <string name="core_ui_asr_standard">Standard (Shāfiʿī, Mālikī, Ḥanbalī)</string>
+    <string name="core_ui_asr_standard_short">Standard ʿAsr</string>
+    <string name="core_ui_asr_hanafi">Ḥanafī</string>
+    <string name="core_ui_asr_hanafi_short">Ḥanafī ʿAsr</string>
+
+    <string-array name="core_ui_hijri_months">
+        <item>Muḥarram</item>
+        <item>Ṣafar</item>
+        <item>Rabīʿ al-Awwal</item>
+        <item>Rabīʿ al-Ākhir</item>
+        <item>Jumādā al-Ūlā</item>
+        <item>Jumādā al-Ākhirah</item>
+        <item>Rajab</item>
+        <item>Shaʿbān</item>
+        <item>Ramaḍān</item>
+        <item>Shawwāl</item>
+        <item>Dhū al-Qaʿdah</item>
+        <item>Dhū al-Ḥijjah</item>
+    </string-array>
+    <string name="core_ui_hijri_date">%1$d %2$s %3$d AH</string>
+</resources>

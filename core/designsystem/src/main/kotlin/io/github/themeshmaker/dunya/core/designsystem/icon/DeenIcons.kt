@@ -24,4 +24,15 @@ object DeenIcons {
     @DrawableRes val More = R.drawable.deen_ic_more
 
     @DrawableRes val MoreFilled = R.drawable.deen_ic_more_filled
+
+    /** Mirrors automatically in right-to-left layouts. */
+    @DrawableRes val Back = R.drawable.deen_ic_back
+
+    @DrawableRes val Location = R.drawable.deen_ic_location
+
+    @DrawableRes val MyLocation = R.drawable.deen_ic_my_location
+
+    @DrawableRes val Search = R.drawable.deen_ic_search
+
+    @DrawableRes val Tune = R.drawable.deen_ic_tune
 }

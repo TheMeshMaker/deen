@@ -10,4 +10,9 @@
     <string name="feature_more_channel_play">Google Play build</string>
     <string name="feature_more_channel_foss">FOSS build (F-Droid)</string>
     <string name="feature_more_build_line">Deen %1$s · %2$s</string>
+    <string name="feature_more_themes_title">Themes</string>
+    <string name="feature_more_themes_free">All themes are free.</string>
+    <string name="feature_more_theme_emerald">Emerald</string>
+    <string name="feature_more_theme_kiswah">Kiswah</string>
+    <string name="feature_more_theme_desert">Desert</string>
 </resources>

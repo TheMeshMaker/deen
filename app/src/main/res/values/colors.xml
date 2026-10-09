@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Window colors shown before Compose draws (match core:designsystem backgrounds). -->
-    <color name="deen_window_background">#FFFFF8F3</color>
-    <color name="deen_icon_background">#FF126B56</color>
-    <color name="deen_icon_foreground">#FFEEBF79</color>
+    <color name="deen_window_background">#FFFFFFFF</color>
+    <color name="deen_icon_background">#FF0E7A55</color>
+    <color name="deen_icon_foreground">#FFFFFFFF</color>
 </resources>

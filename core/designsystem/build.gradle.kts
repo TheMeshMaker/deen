@@ -10,5 +10,6 @@ android {
 dependencies {
     api(libs.androidx.compose.material3)
     api(libs.androidx.compose.ui)
+    implementation(libs.androidx.core.ktx)
     implementation(projects.core.model)
 }

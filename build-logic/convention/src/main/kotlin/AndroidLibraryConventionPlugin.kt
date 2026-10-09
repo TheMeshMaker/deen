@@ -21,10 +21,14 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                     sourceCompatibility = DeenBuild.JAVA_VERSION
                     targetCompatibility = DeenBuild.JAVA_VERSION
                 }
+                // Local unit tests: android.* stubs (e.g. Log) return defaults instead of throwing.
+                testOptions.unitTests.isReturnDefaultValues = true
             }
 
             dependencies {
                 add("testImplementation", libs.lib("junit"))
+                add("testImplementation", libs.lib("kotlinx-coroutines-test"))
+                add("testImplementation", libs.lib("turbine"))
             }
         }
     }

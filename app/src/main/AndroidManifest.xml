@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- No permissions yet. Each one is added in the milestone that needs it (docs/BLUEPRINT.md §17). -->
+    <!-- Permissions are declared by the modules that need them (e.g. :core:location, coarse location only).
+         The merged list is in docs/BLUEPRINT.md section 17. -->
 
     <!-- allowBackup is off until M5 adds explicit backup rules for user data. -->
     <application
@@ -18,6 +19,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:theme="@style/Theme.Deen.Starting"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

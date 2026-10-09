@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_onboarding_welcome_title">أهلًا بك في دِين</string>
+    <string name="feature_onboarding_welcome_body">مواقيت الصلاة والأذكار وحديث كل يوم. مجاني، بلا إعلانات، ويعمل دون إنترنت.</string>
+    <string name="feature_onboarding_start">ابدأ</string>
+    <string name="feature_onboarding_back">رجوع</string>
+    <string name="feature_onboarding_finish">تم</string>
+    <string name="feature_onboarding_save">حفظ</string>
+
+    <string name="feature_onboarding_location_title">أين أنت؟</string>
+    <string name="feature_onboarding_location_body">تعتمد مواقيت الصلاة على موقعك، ويبقى موقعك على هاتفك فقط.</string>
+    <string name="feature_onboarding_location_use_device">استخدم موقعي</string>
+    <string name="feature_onboarding_location_detecting">جارٍ تحديد موقعك…</string>
+    <string name="feature_onboarding_location_failed">تعذّر تحديد موقعك. ابحث عن مدينتك بدلًا من ذلك.</string>
+    <string name="feature_onboarding_location_permission_denied">الوصول إلى الموقع متوقف. يمكنك البحث عن مدينتك بدلًا من ذلك.</string>
+    <string name="feature_onboarding_location_search_hint">ابحث عن مدينة</string>
+    <string name="feature_onboarding_location_no_results">لم نجد مدينة بهذا الاسم. جرّب كتابة أخرى.</string>
+    <string name="feature_onboarding_location_picker_title">الموقع</string>
+
+    <string name="feature_onboarding_method_title">طريقة الحساب</string>
+    <string name="feature_onboarding_method_body">اختر الطريقة التي يعتمدها مسجدك، ويمكنك تغييرها في أي وقت.</string>
+    <string name="feature_onboarding_method_suggested">مقترحة</string>
+    <string name="feature_onboarding_method_asr_title">وقت العصر</string>
+    <string name="feature_onboarding_method_asr_body">يبدأ وقت العصر متأخرًا في المذهب الحنفي.</string>
+</resources>

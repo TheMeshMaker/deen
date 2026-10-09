@@ -10,4 +10,9 @@
     <string name="feature_more_channel_play">نسخة Google Play</string>
     <string name="feature_more_channel_foss">النسخة الحرّة (F-Droid)</string>
     <string name="feature_more_build_line">دِين %1$s · %2$s</string>
+    <string name="feature_more_themes_title">السمات</string>
+    <string name="feature_more_themes_free">كل السمات مجانية.</string>
+    <string name="feature_more_theme_emerald">زمرّد</string>
+    <string name="feature_more_theme_kiswah">كسوة</string>
+    <string name="feature_more_theme_desert">صحراء</string>
 </resources>

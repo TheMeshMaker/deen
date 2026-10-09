@@ -4,96 +4,85 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import io.github.themeshmaker.dunya.core.model.ThemeMode
+import io.github.themeshmaker.dunya.core.model.ThemeStyle
 
-private val DeenLightColors = lightColorScheme(
-    primary = primaryLight,
-    onPrimary = onPrimaryLight,
-    primaryContainer = primaryContainerLight,
-    onPrimaryContainer = onPrimaryContainerLight,
-    inversePrimary = inversePrimaryLight,
-    secondary = secondaryLight,
-    onSecondary = onSecondaryLight,
-    secondaryContainer = secondaryContainerLight,
-    onSecondaryContainer = onSecondaryContainerLight,
-    tertiary = tertiaryLight,
-    onTertiary = onTertiaryLight,
-    tertiaryContainer = tertiaryContainerLight,
-    onTertiaryContainer = onTertiaryContainerLight,
-    background = backgroundLight,
-    onBackground = onBackgroundLight,
-    surface = surfaceLight,
-    onSurface = onSurfaceLight,
-    surfaceVariant = surfaceVariantLight,
-    onSurfaceVariant = onSurfaceVariantLight,
-    surfaceTint = surfaceTintLight,
-    inverseSurface = inverseSurfaceLight,
-    inverseOnSurface = inverseOnSurfaceLight,
-    error = errorLight,
-    onError = onErrorLight,
-    errorContainer = errorContainerLight,
-    onErrorContainer = onErrorContainerLight,
-    outline = outlineLight,
-    outlineVariant = outlineVariantLight,
-    scrim = scrimLight,
-    surfaceBright = surfaceBrightLight,
-    surfaceContainer = surfaceContainerLight,
-    surfaceContainerHigh = surfaceContainerHighLight,
-    surfaceContainerHighest = surfaceContainerHighestLight,
-    surfaceContainerLow = surfaceContainerLowLight,
-    surfaceContainerLowest = surfaceContainerLowestLight,
-    surfaceDim = surfaceDimLight
+/** The two-colour gradient each theme uses for its hero surfaces, plus what goes on top of it. */
+@Immutable
+data class DeenGradient(val start: Color, val end: Color, val content: Color, val pattern: Color) {
+    val brush: Brush = Brush.linearGradient(listOf(start, end))
+}
+
+private val EmeraldGradient = DeenGradient(
+    start = Color(0xFF064E3B),
+    end = Color(0xFF0E8A62),
+    content = Color.White,
+    pattern = Color.White.copy(alpha = 0.10f)
 )
 
-private val DeenDarkColors = darkColorScheme(
-    primary = primaryDark,
-    onPrimary = onPrimaryDark,
-    primaryContainer = primaryContainerDark,
-    onPrimaryContainer = onPrimaryContainerDark,
-    inversePrimary = inversePrimaryDark,
-    secondary = secondaryDark,
-    onSecondary = onSecondaryDark,
-    secondaryContainer = secondaryContainerDark,
-    onSecondaryContainer = onSecondaryContainerDark,
-    tertiary = tertiaryDark,
-    onTertiary = onTertiaryDark,
-    tertiaryContainer = tertiaryContainerDark,
-    onTertiaryContainer = onTertiaryContainerDark,
-    background = backgroundDark,
-    onBackground = onBackgroundDark,
-    surface = surfaceDark,
-    onSurface = onSurfaceDark,
-    surfaceVariant = surfaceVariantDark,
-    onSurfaceVariant = onSurfaceVariantDark,
-    surfaceTint = surfaceTintDark,
-    inverseSurface = inverseSurfaceDark,
-    inverseOnSurface = inverseOnSurfaceDark,
-    error = errorDark,
-    onError = onErrorDark,
-    errorContainer = errorContainerDark,
-    onErrorContainer = onErrorContainerDark,
-    outline = outlineDark,
-    outlineVariant = outlineVariantDark,
-    scrim = scrimDark,
-    surfaceBright = surfaceBrightDark,
-    surfaceContainer = surfaceContainerDark,
-    surfaceContainerHigh = surfaceContainerHighDark,
-    surfaceContainerHighest = surfaceContainerHighestDark,
-    surfaceContainerLow = surfaceContainerLowDark,
-    surfaceContainerLowest = surfaceContainerLowestDark,
-    surfaceDim = surfaceDimDark
+private val KiswahGradient = DeenGradient(
+    start = Color(0xFF0D0D0D),
+    end = Color(0xFF4A3812),
+    content = Color(0xFFF6E7B8),
+    pattern = Color(0xFFD4AF37).copy(alpha = 0.22f)
+)
+
+private val DesertGradient = DeenGradient(
+    start = Color(0xFF7C2D12),
+    end = Color(0xFFC2622D),
+    content = Color.White,
+    pattern = Color.White.copy(alpha = 0.12f)
+)
+
+fun ThemeStyle.gradient(): DeenGradient = when (this) {
+    ThemeStyle.EMERALD -> EmeraldGradient
+    ThemeStyle.KISWAH -> KiswahGradient
+    ThemeStyle.DESERT -> DesertGradient
+}
+
+private val LocalDeenGradient = staticCompositionLocalOf { EmeraldGradient }
+
+/** Deen-specific theme values, alongside [MaterialTheme]. */
+object DeenTheme {
+    val gradient: DeenGradient
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalDeenGradient.current
+}
+
+private fun ThemeStyle.lightScheme(): ColorScheme = when (this) {
+    ThemeStyle.EMERALD -> emeraldLight
+    ThemeStyle.KISWAH -> kiswahLight
+    ThemeStyle.DESERT -> desertLight
+}.withWhiteBackground()
+
+private fun ThemeStyle.darkScheme(): ColorScheme = when (this) {
+    ThemeStyle.EMERALD -> emeraldDark
+    ThemeStyle.KISWAH -> kiswahDark.copy(background = Color(0xFF0B0B0B), surface = Color(0xFF0B0B0B))
+    ThemeStyle.DESERT -> desertDark
+}
+
+/** Clean white pages; cards keep the theme's faint tint (surfaceContainerLow) so they still stand out. */
+private fun ColorScheme.withWhiteBackground(): ColorScheme = copy(
+    background = Color.White,
+    surface = Color.White,
+    surfaceBright = Color.White,
+    surfaceContainerLowest = Color.White
 )
 
 /**
  * OLED Black: pure black backgrounds. Containers stay near-black so cards are still
- * distinguishable; components add hairline outlines where elevation would normally show.
+ * distinguishable.
  */
 private fun ColorScheme.toOledBlack(): ColorScheme = copy(
     background = Color.Black,
@@ -108,11 +97,17 @@ private fun ColorScheme.toOledBlack(): ColorScheme = copy(
 )
 
 /**
- * @param dynamicColor use the wallpaper-based Material You palette on Android 12+.
- *   Falls back to the Deen palette on older versions.
+ * @param style one of the (free) colour themes; Emerald green-and-white by default.
+ * @param dynamicColor use the wallpaper's Material You colours instead (Android 12+). Off by
+ *   default: Deen keeps its own look.
  */
 @Composable
-fun DeenTheme(themeMode: ThemeMode = ThemeMode.SYSTEM, dynamicColor: Boolean = true, content: @Composable () -> Unit) {
+fun DeenTheme(
+    style: ThemeStyle = ThemeStyle.EMERALD,
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
+    dynamicColor: Boolean = false,
+    content: @Composable () -> Unit
+) {
     val dark = when (themeMode) {
         ThemeMode.SYSTEM -> isSystemInDarkTheme()
         ThemeMode.LIGHT -> false
@@ -122,15 +117,17 @@ fun DeenTheme(themeMode: ThemeMode = ThemeMode.SYSTEM, dynamicColor: Boolean = t
     val base = when {
         useDynamic && dark -> dynamicDarkColorScheme(LocalContext.current)
         useDynamic -> dynamicLightColorScheme(LocalContext.current)
-        dark -> DeenDarkColors
-        else -> DeenLightColors
+        dark -> style.darkScheme()
+        else -> style.lightScheme()
     }
     val colors = if (themeMode == ThemeMode.OLED_BLACK) base.toOledBlack() else base
 
-    MaterialTheme(
-        colorScheme = colors,
-        typography = DeenTypography,
-        shapes = DeenShapes,
-        content = content
-    )
+    CompositionLocalProvider(LocalDeenGradient provides style.gradient()) {
+        MaterialTheme(
+            colorScheme = colors,
+            typography = DeenTypography,
+            shapes = DeenShapes,
+            content = content
+        )
+    }
 }
