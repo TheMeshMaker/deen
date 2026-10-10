@@ -39,5 +39,8 @@ data class UserData(
     val location: SavedLocation?,
     /** Null until the user has confirmed a calculation method. */
     val prayerSettings: PrayerSettings?,
-    val themeStyle: ThemeStyle = ThemeStyle.EMERALD
+    val themeStyle: ThemeStyle = ThemeStyle.EMERALD,
+    val alertSettings: AlertSettings = AlertSettings(),
+    /** Reliability steps Android can't detect, confirmed by the user (e.g. OEM auto-start). */
+    val confirmedReliabilitySteps: Set<String> = emptySet()
 )

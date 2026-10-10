@@ -24,6 +24,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -43,16 +44,20 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
 import io.github.themeshmaker.dunya.core.designsystem.component.screen
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.domain.PrayerSchedule
+import io.github.themeshmaker.dunya.core.model.AlertMode
+import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.prayer.NextPrayer
 import io.github.themeshmaker.dunya.core.ui.currentLocale
@@ -68,16 +73,31 @@ import java.time.Instant
 import java.time.ZoneId
 
 @Composable
-internal fun TodayRoute(onChangeLocation: () -> Unit, onChangeMethod: () -> Unit, viewModel: TodayViewModel = hiltViewModel()) {
+internal fun TodayRoute(
+    onChangeLocation: () -> Unit,
+    onChangeMethod: () -> Unit,
+    onOpenReliability: () -> Unit,
+    viewModel: TodayViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    LifecycleResumeEffect(viewModel) {
+        viewModel.refresh()
+        onPauseOrDispose {}
+    }
     when (val s = state) {
         TodayUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-        is TodayUiState.Ready -> TodayScreen(s, onChangeLocation, onChangeMethod)
+        is TodayUiState.Ready -> TodayScreen(s, onChangeLocation, onChangeMethod, onOpenReliability, viewModel::cycleAlert)
     }
 }
 
 @Composable
-internal fun TodayScreen(state: TodayUiState.Ready, onChangeLocation: () -> Unit, onChangeMethod: () -> Unit) {
+internal fun TodayScreen(
+    state: TodayUiState.Ready,
+    onChangeLocation: () -> Unit,
+    onChangeMethod: () -> Unit,
+    onOpenReliability: () -> Unit,
+    onCycleAlert: (Prayer) -> Unit
+) {
     val schedule = state.schedule
     val zone = schedule.location.zoneId
     val isFriday = schedule.date.dayOfWeek == DayOfWeek.FRIDAY
@@ -90,8 +110,9 @@ internal fun TodayScreen(state: TodayUiState.Ready, onChangeLocation: () -> Unit
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Header(schedule, onChangeLocation)
+        if (state.alarmSetupNeeded) SetupBanner(onOpenReliability)
         NextPrayerCard(state.next, state.now, zone, isFriday)
-        PrayerTimesCard(schedule, state.next, state.now, isFriday)
+        PrayerTimesCard(schedule, state.next, state.now, isFriday, state.alerts, onCycleAlert)
         AssistChip(
             onClick = onChangeMethod,
             label = {
@@ -207,7 +228,14 @@ private fun Countdown(remaining: Duration, prayerName: String) {
 }
 
 @Composable
-private fun PrayerTimesCard(schedule: PrayerSchedule, next: NextPrayer, now: Instant, isFriday: Boolean) {
+private fun PrayerTimesCard(
+    schedule: PrayerSchedule,
+    next: NextPrayer,
+    now: Instant,
+    isFriday: Boolean,
+    alerts: AlertSettings,
+    onCycleAlert: (Prayer) -> Unit
+) {
     val timeFormatter = rememberTimeFormatter()
     val zone = schedule.location.zoneId
     Card(
@@ -223,7 +251,9 @@ private fun PrayerTimesCard(schedule: PrayerSchedule, next: NextPrayer, now: Ins
                     name = stringResource(prayer.labelRes(isFriday && prayer == Prayer.DHUHR)),
                     time = timeFormatter.format(at.atZone(zone)),
                     isNext = isNext,
-                    isMuted = (at.isBefore(now) && !isNext) || prayer == Prayer.SUNRISE
+                    isMuted = (at.isBefore(now) && !isNext) || prayer == Prayer.SUNRISE,
+                    mode = alerts.modeFor(prayer),
+                    onCycleAlert = { onCycleAlert(prayer) }
                 )
             }
         }
@@ -231,7 +261,7 @@ private fun PrayerTimesCard(schedule: PrayerSchedule, next: NextPrayer, now: Ins
 }
 
 @Composable
-private fun PrayerRow(name: String, time: String, isNext: Boolean, isMuted: Boolean) {
+private fun PrayerRow(name: String, time: String, isNext: Boolean, isMuted: Boolean, mode: AlertMode, onCycleAlert: () -> Unit) {
     val color = when {
         isNext -> MaterialTheme.colorScheme.primary
         isMuted -> MaterialTheme.colorScheme.onSurfaceVariant
@@ -252,10 +282,54 @@ private fun PrayerRow(name: String, time: String, isNext: Boolean, isMuted: Bool
                     Modifier
                 }
             )
-            .padding(horizontal = 12.dp, vertical = 12.dp),
+            .padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(name, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = color, modifier = Modifier.weight(1f))
         Text(time, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = color, textAlign = TextAlign.End)
+        val modeLabel = stringResource(mode.labelRes())
+        val description = stringResource(R.string.feature_today_alert_for, name, modeLabel)
+        IconButton(onClick = onCycleAlert, modifier = Modifier.semantics { contentDescription = description }) {
+            Icon(
+                painter = painterResource(mode.iconRes()),
+                contentDescription = null,
+                tint = if (mode == AlertMode.SILENT) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(22.dp)
+            )
+        }
+    }
+}
+
+private fun AlertMode.iconRes(): Int = when (this) {
+    AlertMode.ADHAN -> DeenIcons.Adhan
+    AlertMode.NOTIFICATION -> DeenIcons.Notification
+    AlertMode.SILENT -> DeenIcons.Silent
+}
+
+private fun AlertMode.labelRes(): Int = when (this) {
+    AlertMode.ADHAN -> R.string.feature_today_mode_adhan
+    AlertMode.NOTIFICATION -> R.string.feature_today_mode_notification
+    AlertMode.SILENT -> R.string.feature_today_mode_silent
+}
+
+/** Shown while notifications or exact alarms are off; opens the reliability checklist. */
+@Composable
+private fun SetupBanner(onOpenReliability: () -> Unit) {
+    Card(
+        onClick = onOpenReliability,
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer
+        )
+    ) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Icon(painterResource(DeenIcons.Problem), contentDescription = null)
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.feature_today_setup_title), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.feature_today_setup_body), style = MaterialTheme.typography.bodyMedium)
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package io.github.themeshmaker.dunya.feature.onboarding.location
 import io.github.themeshmaker.dunya.core.domain.DeviceLocationResult
 import io.github.themeshmaker.dunya.core.domain.LocationRepository
 import io.github.themeshmaker.dunya.core.domain.UserDataRepository
+import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.City
 import io.github.themeshmaker.dunya.core.model.Coordinates
 import io.github.themeshmaker.dunya.core.model.LocationSource
@@ -44,6 +45,8 @@ class LocationViewModelTest {
         override suspend fun setPrayerSettings(settings: PrayerSettings) = Unit
         override suspend fun setOnboardingComplete() = Unit
         override suspend fun setThemeStyle(style: ThemeStyle) = Unit
+        override suspend fun setAlertSettings(settings: AlertSettings) = Unit
+        override suspend fun setReliabilityStepConfirmed(step: String, confirmed: Boolean) = Unit
     }
 
     private class FakeLocations(

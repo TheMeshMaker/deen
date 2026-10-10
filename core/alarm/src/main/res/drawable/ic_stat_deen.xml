@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status-bar icon: the launcher icon's arch and crescent, white on transparent. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="56"
+    android:viewportHeight="56">
+    <group
+        android:translateX="-26"
+        android:translateY="-28.5">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:fillType="evenOdd"
+            android:pathData="M34.5,82 L34.5,56 A25.5,25.5 0 0,1 54,31.22 A25.5,25.5 0 0,1 73.5,56 L73.5,82 Z M40,82 L40,56 A19,19 0 0,1 54,37.67 A19,19 0 0,1 68,56 L68,82 Z" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M52.72,48.59 A9.5,9.5 0 1,0 62.9,61.31 A8.17,8.17 0 0,1 52.72,48.59 Z" />
+    </group>
+</vector>

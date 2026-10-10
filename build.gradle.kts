@@ -12,14 +12,13 @@ plugins {
 spotless {
     // Matches .gitattributes; avoids Spotless scanning git attributes (breaks the configuration cache).
     lineEndings = com.diffplug.spotless.LineEnding.UNIX
+    // Only source folders: walking build/ races with tasks that write there in the same build.
     kotlin {
-        target("**/*.kt")
-        targetExclude("**/build/**", "**/.gradle/**")
+        target("app/src/**/*.kt", "core/*/src/**/*.kt", "feature/*/src/**/*.kt", "build-logic/*/src/**/*.kt")
         ktlint(libs.versions.ktlint.get())
     }
     kotlinGradle {
-        target("**/*.gradle.kts")
-        targetExclude("**/build/**", "**/.gradle/**")
+        target("*.gradle.kts", "*/*.gradle.kts", "*/*/*.gradle.kts")
         ktlint(libs.versions.ktlint.get())
     }
 }

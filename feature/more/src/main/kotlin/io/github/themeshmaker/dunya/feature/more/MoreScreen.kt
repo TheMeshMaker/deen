@@ -5,6 +5,7 @@ import android.text.TextDirectionHeuristics
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,22 +45,26 @@ import io.github.themeshmaker.dunya.core.model.DistributionChannel
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
 
 @Composable
-internal fun MoreScreenRoute(viewModel: MoreViewModel = hiltViewModel()) {
+internal fun MoreScreenRoute(onOpenReliability: () -> Unit, viewModel: MoreViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    MoreScreen(uiState, onSelectTheme = viewModel::selectTheme)
+    MoreScreen(uiState, onSelectTheme = viewModel::selectTheme, onOpenReliability = onOpenReliability)
 }
 
 private data class MoreEntry(@StringRes val title: Int, @StringRes val milestone: Int)
 
 private val entries = listOf(
     MoreEntry(R.string.feature_more_settings, R.string.feature_more_milestone_5),
-    MoreEntry(R.string.feature_more_reliability, R.string.feature_more_milestone_2),
     MoreEntry(R.string.feature_more_support, R.string.feature_more_milestone_5),
     MoreEntry(R.string.feature_more_about, R.string.feature_more_milestone_5)
 )
 
 @Composable
-internal fun MoreScreen(uiState: MoreUiState, onSelectTheme: (ThemeStyle) -> Unit, modifier: Modifier = Modifier) {
+internal fun MoreScreen(
+    uiState: MoreUiState,
+    onSelectTheme: (ThemeStyle) -> Unit,
+    onOpenReliability: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier
             .windowInsetsPadding(WindowInsets.screen)
@@ -71,6 +76,12 @@ internal fun MoreScreen(uiState: MoreUiState, onSelectTheme: (ThemeStyle) -> Uni
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp)
         )
         ThemePicker(selected = uiState.themeStyle, onSelect = onSelectTheme)
+        ListItem(
+            headlineContent = { Text(stringResource(R.string.feature_more_reliability)) },
+            supportingContent = { Text(stringResource(R.string.feature_more_reliability_body)) },
+            modifier = Modifier.clickable(onClick = onOpenReliability)
+        )
+        HorizontalDivider(Modifier.padding(horizontal = 16.dp))
         entries.forEach { entry ->
             ListItem(
                 headlineContent = { Text(stringResource(entry.title)) },
@@ -176,6 +187,6 @@ private fun buildLine(info: AppBuildInfo): String {
 @Composable
 private fun MoreScreenPreview() {
     DeenTheme {
-        MoreScreen(MoreUiState(AppBuildInfo("0.1.0", DistributionChannel.FOSS, isDebug = true)), onSelectTheme = {})
+        MoreScreen(MoreUiState(AppBuildInfo("0.1.0", DistributionChannel.FOSS, isDebug = true)), onSelectTheme = {}, onOpenReliability = {})
     }
 }

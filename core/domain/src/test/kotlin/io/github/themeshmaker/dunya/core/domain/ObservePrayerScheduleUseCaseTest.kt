@@ -1,6 +1,7 @@
 package io.github.themeshmaker.dunya.core.domain
 
 import app.cash.turbine.test
+import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalculationMethod
 import io.github.themeshmaker.dunya.core.model.Coordinates
 import io.github.themeshmaker.dunya.core.model.LocationSource
@@ -43,6 +44,8 @@ class ObservePrayerScheduleUseCaseTest {
         override suspend fun setPrayerSettings(settings: PrayerSettings) = state.update { it.copy(prayerSettings = settings) }
         override suspend fun setOnboardingComplete() = state.update { it.copy(onboardingComplete = true) }
         override suspend fun setThemeStyle(style: ThemeStyle) = state.update { it.copy(themeStyle = style) }
+        override suspend fun setAlertSettings(settings: AlertSettings) = state.update { it.copy(alertSettings = settings) }
+        override suspend fun setReliabilityStepConfirmed(step: String, confirmed: Boolean) = Unit
         private inline fun MutableStateFlow<UserData>.update(f: (UserData) -> UserData) {
             value = f(value)
         }

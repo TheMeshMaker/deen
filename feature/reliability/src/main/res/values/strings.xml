@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_reliability_title">Make sure the adhan plays</string>
+    <string name="feature_reliability_back">Back</string>
+    <string name="feature_reliability_done">Done</string>
+    <string name="feature_reliability_progress">%1$d of %2$d steps done</string>
+    <string name="feature_reliability_subtitle">A few settings so Android never silences the adhan.</string>
+    <string name="feature_reliability_ok">Done</string>
+    <string name="feature_reliability_todo">Needs attention</string>
+    <string name="feature_reliability_allow">Allow</string>
+    <string name="feature_reliability_open_settings">Open settings</string>
+    <string name="feature_reliability_did_it">I\'ve done it</string>
+
+    <string name="feature_reliability_step_notifications">Notifications</string>
+    <string name="feature_reliability_step_notifications_body">So the adhan can show the prayer\'s name and a Stop button.</string>
+    <string name="feature_reliability_step_exact">Exact alarms</string>
+    <string name="feature_reliability_step_exact_body">So the adhan starts on time, not minutes late.</string>
+    <string name="feature_reliability_step_battery">Battery: unrestricted</string>
+    <string name="feature_reliability_step_battery_body">Otherwise the battery saver can hold the adhan back. If your phone asks, choose “Allow background activity” or “Unrestricted”.</string>
+    <string name="feature_reliability_step_background">Auto-start and background activity</string>
+    <string name="feature_reliability_step_background_body">Many phones add their own limits on top of Android, called auto-start, app launch or background activity. If yours has one, allow it for Deen. If you can\'t find it, your phone doesn\'t need it: just tick the box.</string>
+    <string name="feature_reliability_step_recents">Lock Deen in recent apps</string>
+    <string name="feature_reliability_step_recents_body">On some phones, clearing recent apps also stops their alarms. Open recent apps, long-press Deen\'s card (or swipe it down) and tap Lock if your phone offers it.</string>
+
+    <string name="feature_reliability_test_title">Test the adhan</string>
+    <string name="feature_reliability_test_body">Tap the button, lock your phone and wait one minute. If you hear the adhan, everything works.</string>
+    <string name="feature_reliability_test_button">Test adhan in 1 minute</string>
+    <string name="feature_reliability_test_waiting">Lock your phone now · %1$s</string>
+
+    <string name="feature_reliability_log_title">Recent alarms</string>
+    <string name="feature_reliability_log_empty">No alarms yet.</string>
+    <string name="feature_reliability_log_test">Test</string>
+    <string name="feature_reliability_on_time">on time</string>
+    <string name="feature_reliability_late_by">%1$d s late</string>
+    <string name="feature_reliability_outcome_played">Adhan played</string>
+    <string name="feature_reliability_outcome_notified">Notification shown</string>
+    <string name="feature_reliability_outcome_reminded">Reminder shown</string>
+    <string name="feature_reliability_outcome_vibrated">Vibrated (phone on silent)</string>
+    <string name="feature_reliability_outcome_in_call">Skipped during a call</string>
+    <string name="feature_reliability_outcome_late">Too late: the phone held it back</string>
+    <string name="feature_reliability_outcome_cleared">Cleared by the phone</string>
+    <string name="feature_reliability_outcome_fallback">Notification instead of the adhan</string>
+</resources>

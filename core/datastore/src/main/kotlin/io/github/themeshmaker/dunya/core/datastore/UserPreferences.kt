@@ -11,7 +11,9 @@ data class UserPreferences(
     val onboardingComplete: Boolean = false,
     val location: LocationPreferences? = null,
     val prayer: PrayerPreferences? = null,
-    val themeStyle: String = "EMERALD"
+    val themeStyle: String = "EMERALD",
+    val alerts: AlertPreferences? = null,
+    val confirmedReliabilitySteps: Set<String> = emptySet()
 )
 
 @Serializable
@@ -33,4 +35,12 @@ data class PrayerPreferences(
     val offsetMinutes: Map<String, Int> = emptyMap(),
     val ramadanIshaExtension: Boolean = true,
     val hijriOffsetDays: Int = 0
+)
+
+@Serializable
+data class AlertPreferences(
+    val modes: Map<String, String> = emptyMap(),
+    val reminderMinutes: Int = 0,
+    val respectSilentMode: Boolean = true,
+    val useAlarmClock: Boolean = true
 )

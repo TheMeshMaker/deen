@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FOSS build only. Outside Google Play there is no USE_EXACT_ALARM policy, so exact alarms are
+     granted at install on Android 13+; SCHEDULE_EXACT_ALARM is then only needed on Android 12. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32"
+        tools:replace="android:maxSdkVersion" />
+</manifest>

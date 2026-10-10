@@ -34,13 +34,15 @@ import io.github.themeshmaker.dunya.feature.onboarding.locationPickerScreen
 import io.github.themeshmaker.dunya.feature.onboarding.methodPickerScreen
 import io.github.themeshmaker.dunya.feature.onboarding.onboardingScreen
 import io.github.themeshmaker.dunya.feature.qibla.qiblaScreen
+import io.github.themeshmaker.dunya.feature.reliability.ReliabilityRoute
+import io.github.themeshmaker.dunya.feature.reliability.reliabilityScreen
 import io.github.themeshmaker.dunya.feature.tasbih.tasbihScreen
 import io.github.themeshmaker.dunya.feature.today.TodayRoute
 import io.github.themeshmaker.dunya.feature.today.todayScreen
 import io.github.themeshmaker.dunya.navigation.TopLevelDestination
 
 /** Full-screen flows that hide the bottom bar / rail. */
-private val fullScreenRoutes = listOf(OnboardingRoute::class, LocationPickerRoute::class, MethodPickerRoute::class)
+private val fullScreenRoutes = listOf(OnboardingRoute::class, LocationPickerRoute::class, MethodPickerRoute::class, ReliabilityRoute::class)
 
 /**
  * App shell. NavigationSuiteScaffold shows a bottom bar on phones and switches to a
@@ -107,19 +109,30 @@ fun DeenApp(startDestination: Any, navController: NavHostController = rememberNa
         ) {
             onboardingScreen(
                 onFinished = {
-                    navController.navigate(TodayRoute) { popUpTo<OnboardingRoute> { inclusive = true } }
+                    // Straight on to adhan setup (notifications, exact alarms, battery), then Today.
+                    navController.navigate(ReliabilityRoute(setup = true)) { popUpTo<OnboardingRoute> { inclusive = true } }
                 }
             )
             locationPickerScreen(onDone = { navController.popBackStack() })
             methodPickerScreen(onDone = { navController.popBackStack() })
+            reliabilityScreen(
+                onDone = { setup ->
+                    if (setup) {
+                        navController.navigate(TodayRoute) { popUpTo<ReliabilityRoute> { inclusive = true } }
+                    } else {
+                        navController.popBackStack()
+                    }
+                }
+            )
             todayScreen(
                 onChangeLocation = { navController.navigate(LocationPickerRoute) },
-                onChangeMethod = { navController.navigate(MethodPickerRoute) }
+                onChangeMethod = { navController.navigate(MethodPickerRoute) },
+                onOpenReliability = { navController.navigate(ReliabilityRoute()) }
             )
             adhkarScreen()
             tasbihScreen()
             qiblaScreen()
-            moreScreen()
+            moreScreen(onOpenReliability = { navController.navigate(ReliabilityRoute()) })
         }
     }
 }

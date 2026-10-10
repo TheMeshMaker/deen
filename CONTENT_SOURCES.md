@@ -10,6 +10,7 @@ Everything bundled in Deen that isn't original code, with its license.
 | App icon (Rub el Hizb star) | `app/src/main/res/drawable/ic_launcher_*.xml` | Original, geometric construction | GPL-3.0-or-later (with the code) |
 | City database | `core/location/src/main/assets/cities.tsv` | [GeoNames](https://www.geonames.org/) `cities5000`, `admin1CodesASCII`, `alternateNamesV2` (Arabic names), built by `tools/geonames/build_cities.py` | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Contains data from GeoNames. |
 | Prayer-time calculation | dependency `com.batoulapps.adhan:adhan2` | [batoulapps/adhan-kotlin](https://github.com/batoulapps/adhan-kotlin) | MIT |
+| Default adhan (provisional, awaiting the maintainer's approval) | `core/alarm/src/main/res/raw/adhan_default.ogg` | ["Beautiful adhan.ogg"](https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg) by Adam-synagda, Wikimedia Commons (2 min 34 s) | CC0 1.0 (public domain dedication) |
 | Official timetable fixtures (tests only) | `core/prayer/src/test/resources/times/` | Collected by the adhan project from Umm al-Qura, Moonsighting Committee, Diyanet, MUIS and others | MIT (adhan project) |
 
 ## Planned (not bundled yet)
@@ -18,4 +19,4 @@ Everything bundled in Deen that isn't original code, with its license.
 |---|---|---|
 | Quran verses in adhkar | [Tanzil](https://tanzil.net/) Uthmani text | CC BY 3.0, text must not be modified |
 | Adhkar and hadith | To be decided with the reviewer | Every item needs a reference and grading |
-| Adhan recordings | To be decided | Only recordings we have the rights to |
+| Fajr adhan, more voices | To be decided | Only recordings we have the rights to; users can also pick their own file (planned) |

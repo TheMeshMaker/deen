@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -25,7 +26,8 @@ import kotlin.math.sin
 fun GeometricPattern(color: Color, modifier: Modifier = Modifier, cell: Dp = 40.dp, strokeWidth: Dp = 1.dp) {
     val cellPx = with(LocalDensity.current) { cell.toPx() }
     val star = remember(cellPx) { octagramPath(outerRadius = cellPx * 0.28f) }
-    Canvas(modifier) {
+    // Clipped: the tiling deliberately overdraws its edges so no half-empty border shows.
+    Canvas(modifier.clipToBounds()) {
         val stroke = Stroke(width = strokeWidth.toPx())
         var row = 0
         var y = 0f

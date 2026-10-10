@@ -15,4 +15,5 @@
     <string name="feature_more_theme_emerald">Emerald</string>
     <string name="feature_more_theme_kiswah">Kiswah</string>
     <string name="feature_more_theme_desert">Desert</string>
+    <string name="feature_more_reliability_body">Notifications, alarms and battery settings</string>
 </resources>

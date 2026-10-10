@@ -1,5 +1,6 @@
 package io.github.themeshmaker.dunya.core.domain
 
+import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.City
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
@@ -15,6 +16,11 @@ interface UserDataRepository {
     suspend fun setPrayerSettings(settings: PrayerSettings)
 
     suspend fun setThemeStyle(style: ThemeStyle)
+
+    suspend fun setAlertSettings(settings: AlertSettings)
+
+    /** Reliability steps Android can't detect (e.g. OEM auto-start), confirmed by the user. */
+    suspend fun setReliabilityStepConfirmed(step: String, confirmed: Boolean)
 
     suspend fun setOnboardingComplete()
 }

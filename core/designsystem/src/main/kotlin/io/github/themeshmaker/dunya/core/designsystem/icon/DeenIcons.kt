@@ -35,4 +35,19 @@ object DeenIcons {
     @DrawableRes val Search = R.drawable.deen_ic_search
 
     @DrawableRes val Tune = R.drawable.deen_ic_tune
+
+    // Alert modes and reliability states.
+    @DrawableRes val Adhan = R.drawable.deen_ic_adhan
+
+    @DrawableRes val Notification = R.drawable.deen_ic_notification
+
+    @DrawableRes val Silent = R.drawable.deen_ic_silent
+
+    @DrawableRes val Ok = R.drawable.deen_ic_ok
+
+    @DrawableRes val Problem = R.drawable.deen_ic_problem
+
+    @DrawableRes val Schedule = R.drawable.deen_ic_schedule
+
+    @DrawableRes val Battery = R.drawable.deen_ic_battery
 }

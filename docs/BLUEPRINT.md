@@ -257,32 +257,37 @@ flowchart TD
 
 ### 10.1 Checklist (live status)
 
+The checklist is **the same on every Android phone** and never names the phone maker (maintainer's
+decision, 2026-10-10). The two manual steps are worded "if your phone has this"; only the settings
+screen each button opens adapts to the phone (§10.2), invisibly.
+
 ```
 ┌────────────────────────────────────────┐
-│ ←  Make sure the adhan always plays    │
-│ Your phone: OPPO · ColorOS 17          │
+│ ←  Make sure the adhan plays           │
+│ 3 of 5 steps done                      │
+│ A few settings so Android never        │
+│ silences the adhan.                    │
 │                                        │
-│ ✅ Notifications allowed               │
-│ ✅ Exact alarms allowed                │
-│ ⬜ Battery: Unrestricted        [Fix]  │
-│ ⬜ Allow auto-launch (OPPO)     [Open] │  ← can't be detected → user ticks it
-│ ⬜ Lock Deen in recent apps     [How]  │  ← short animated guide
+│ ✅ Notifications                       │
+│ ✅ Exact alarms                        │
+│ ⬜ Battery: unrestricted       [Allow] │
+│ ⬜ Auto-start and background   [Open]  │  ← can't be detected → user ticks it
+│ ⬜ Lock Deen in recent apps    [ ✓ ]   │
 │                                        │
 │ [ ▶  Test adhan in 1 minute ]          │  ← real alarm; asks you to lock the screen
 │                                        │
-│ Last 7 alarms: all on time ✓           │
-│ ⚠ Alarms were cleared by the system    │  ← shown only if the guardian found it
-│   yesterday 23:10. See tips →          │
+│ Recent alarms: Isha · on time ✓        │
+│ Cleared by the phone ⚠                 │  ← logged when the guardian finds a gap
 └────────────────────────────────────────┘
 ```
 
-### 10.2 OEM routing table (data-driven, contributors can fix it via PR)
+### 10.2 OEM routing table (internal; contributors can fix it via PR)
 
-Each vendor has an **ordered list of candidate intents**. The first one `resolveActivity()` accepts gets launched; otherwise it falls back to App info (`ACTION_APPLICATION_DETAILS_SETTINGS`), then to Settings. Each vendor also links to its dontkillmyapp.com guide.
+Not shown to the user. Each vendor has an **ordered list of candidate intents**. The first one `resolveActivity()` accepts gets launched; otherwise it falls back to App info (`ACTION_APPLICATION_DETAILS_SETTINGS`), then to Settings. Each vendor also links to its dontkillmyapp.com guide.
 
 | Vendor / ROM | Detection | Candidate screens (verify on real devices) | What the user must do |
 |---|---|---|---|
-| OPPO / OnePlus / realme: ColorOS, OxygenOS, realme UI | `ro.build.version.oplusrom` | ColorOS 17: per-app battery page `com.android.settings/.fuelgauge.AdvancedPowerUsageDetailActivity` (*verified on the ColorOS 17 CN test phone*). Older versions: `com.coloros.safecenter` startup manager. | Allow background activity, allow auto-launch, lock in recents |
+| OPPO / OnePlus / realme: ColorOS, OxygenOS, realme UI | manufacturer / brand | **Verified on ColorOS 17 CN:** the standard `ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` opens ColorOS's own *Power consumption control* and switches the app from "Smart mode" to **"Allow background activity"** in one confirm. ColorOS's page itself (`com.oplus.battery/...PowerControlActivity`) refuses outside callers; App info → Battery usage reaches it manually. ColorOS also blocks notifications for new apps by default. | Allow background activity (via the battery step), lock in recents |
 | Xiaomi / Redmi / POCO: MIUI, HyperOS | `ro.miui.ui.version.name`, `ro.mi.os.version.name` | `com.miui.securitycenter` Autostart; `com.miui.powerkeeper` app battery saver | Autostart on, battery saver "No restrictions", lock in recents |
 | vivo / iQOO: OriginOS, Funtouch | `ro.vivo.os.version` | `com.iqoo.secure` / `com.vivo.permissionmanager` background start-up manager | Allow high background power use, auto-start |
 | Samsung: One UI | manufacturer | App battery page | "Unrestricted"; remove from Sleeping / Deep sleeping apps |
@@ -611,7 +616,7 @@ adb reboot
 |---|---|---|
 | **M0** ✅ | Foundation | Repo, build-logic, flavors, CI green, design system, empty screens in the nav shell, runs on the test phone |
 | **M1** ✅ | Prayer times | Engine + golden tests, location (both paths + city search), onboarding, Today screen with live countdown, colour themes |
-| **M2** | Adhan | Alarm pipeline, playback service, notifications, Reliability center, health log, all device scenarios pass on ColorOS 17 CN |
+| **M2** ✅ | Adhan | Alarm pipeline, playback service, notifications, Reliability center, health log. Verified on ColorOS 17 CN with the app open; the locked-screen run is still to do (docs/device-testing.md) |
 | **M3** | Adhkar and Tasbih | Content pipeline, reader, counter, haptics (sample content is debug-only until reviewed) |
 | **M4** | Hadith, Qibla, Hijri, widget | All four working, plus screenshot tests |
 | **M5** | Support, settings, polish | Tips/links, full settings, Arabic/English, accessibility pass, large-screen layouts |

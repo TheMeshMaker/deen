@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_alarm_channel_adhan">الأذان</string>
+    <string name="core_alarm_channel_prayer">مواقيت الصلاة</string>
+    <string name="core_alarm_channel_reminder">تذكير قبل الصلاة</string>
+
+    <string name="core_alarm_title">%1$s · %2$s</string>
+    <string name="core_alarm_time_for">حان الآن وقت صلاة %1$s</string>
+    <string name="core_alarm_stop">إيقاف</string>
+    <plurals name="core_alarm_reminder_title">
+        <item quantity="zero">%1$s بعد %2$d دقيقة</item>
+        <item quantity="one">%1$s بعد دقيقة واحدة</item>
+        <item quantity="two">%1$s بعد دقيقتين</item>
+        <item quantity="few">%1$s بعد %2$d دقائق</item>
+        <item quantity="many">%1$s بعد %2$d دقيقة</item>
+        <item quantity="other">%1$s بعد %2$d دقيقة</item>
+    </plurals>
+    <string name="core_alarm_reminder_body">في الساعة %1$s</string>
+
+    <string name="core_alarm_test_title">أذان تجريبي</string>
+    <string name="core_alarm_test_body">إذا سمعته والشاشة مقفلة، فالأذان يعمل على هذا الهاتف.</string>
+</resources>

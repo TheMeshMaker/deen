@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object MoreRoute
 
-fun NavGraphBuilder.moreScreen() {
-    composable<MoreRoute> { MoreScreenRoute() }
+fun NavGraphBuilder.moreScreen(onOpenReliability: () -> Unit) {
+    composable<MoreRoute> { MoreScreenRoute(onOpenReliability = onOpenReliability) }
 }

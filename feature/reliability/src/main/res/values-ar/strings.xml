@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_reliability_title">تأكّد من أن الأذان يعمل</string>
+    <string name="feature_reliability_back">رجوع</string>
+    <string name="feature_reliability_done">تم</string>
+    <string name="feature_reliability_progress">تم %1$d من %2$d خطوات</string>
+    <string name="feature_reliability_subtitle">بضعة إعدادات حتى لا يُسكت أندرويد الأذان أبدًا.</string>
+    <string name="feature_reliability_ok">تم</string>
+    <string name="feature_reliability_todo">يحتاج إلى إجراء</string>
+    <string name="feature_reliability_allow">سماح</string>
+    <string name="feature_reliability_open_settings">افتح الإعدادات</string>
+    <string name="feature_reliability_did_it">قمت بذلك</string>
+
+    <string name="feature_reliability_step_notifications">الإشعارات</string>
+    <string name="feature_reliability_step_notifications_body">ليظهر اسم الصلاة وزر الإيقاف مع الأذان.</string>
+    <string name="feature_reliability_step_exact">المنبّهات الدقيقة</string>
+    <string name="feature_reliability_step_exact_body">ليبدأ الأذان في وقته تمامًا، لا متأخرًا بدقائق.</string>
+    <string name="feature_reliability_step_battery">البطارية: دون قيود</string>
+    <string name="feature_reliability_step_battery_body">وإلا قد يؤخّر موفّر البطارية الأذان. إذا سألك الهاتف فاختر «السماح بالنشاط في الخلفية» أو «دون قيود».</string>
+    <string name="feature_reliability_step_background">التشغيل التلقائي والعمل في الخلفية</string>
+    <string name="feature_reliability_step_background_body">تضيف هواتف كثيرة قيودًا خاصة بها فوق أندرويد، باسم التشغيل التلقائي أو تشغيل التطبيقات أو النشاط في الخلفية. إن وُجد هذا الإعداد في هاتفك فاسمح به لدِين، وإن لم تجده فهاتفك لا يحتاجه: ضع علامة فقط.</string>
+    <string name="feature_reliability_step_recents">ثبّت دِين في التطبيقات الأخيرة</string>
+    <string name="feature_reliability_step_recents_body">في بعض الهواتف يوقف مسحُ التطبيقات الأخيرة منبّهاتِها أيضًا. افتح التطبيقات الأخيرة واضغط مطوّلًا على بطاقة دِين (أو اسحبها للأسفل) واختر «قفل» إن كان هاتفك يتيح ذلك.</string>
+
+    <string name="feature_reliability_test_title">جرّب الأذان</string>
+    <string name="feature_reliability_test_body">اضغط الزر ثم اقفل هاتفك وانتظر دقيقة. إذا سمعت الأذان فكل شيء يعمل.</string>
+    <string name="feature_reliability_test_button">أذان تجريبي بعد دقيقة</string>
+    <string name="feature_reliability_test_waiting">اقفل هاتفك الآن · %1$s</string>
+
+    <string name="feature_reliability_log_title">آخر التنبيهات</string>
+    <string name="feature_reliability_log_empty">لا توجد تنبيهات بعد.</string>
+    <string name="feature_reliability_log_test">تجربة</string>
+    <string name="feature_reliability_on_time">في وقته</string>
+    <string name="feature_reliability_late_by">متأخر %1$d ث</string>
+    <string name="feature_reliability_outcome_played">شُغّل الأذان</string>
+    <string name="feature_reliability_outcome_notified">عُرض إشعار</string>
+    <string name="feature_reliability_outcome_reminded">عُرض التذكير</string>
+    <string name="feature_reliability_outcome_vibrated">اهتزاز (الهاتف صامت)</string>
+    <string name="feature_reliability_outcome_in_call">تُخطّي أثناء مكالمة</string>
+    <string name="feature_reliability_outcome_late">متأخر جدًا: أخّره الهاتف</string>
+    <string name="feature_reliability_outcome_cleared">حذفه الهاتف</string>
+    <string name="feature_reliability_outcome_fallback">إشعار بدل الأذان</string>
+</resources>

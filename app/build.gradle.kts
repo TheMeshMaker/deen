@@ -57,6 +57,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.alarm)
     implementation(projects.core.data)
     implementation(projects.core.designsystem)
     implementation(projects.core.domain)
@@ -66,6 +67,7 @@ dependencies {
     implementation(projects.feature.more)
     implementation(projects.feature.onboarding)
     implementation(projects.feature.qibla)
+    implementation(projects.feature.reliability)
     implementation(projects.feature.tasbih)
     implementation(projects.feature.today)
 

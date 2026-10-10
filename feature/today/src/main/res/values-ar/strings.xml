@@ -19,4 +19,10 @@
         <item quantity="many">%d دقيقة</item>
         <item quantity="other">%d دقيقة</item>
     </plurals>
+    <string name="feature_today_alert_for">تنبيه %1$s: %2$s</string>
+    <string name="feature_today_mode_adhan">أذان</string>
+    <string name="feature_today_mode_notification">إشعار</string>
+    <string name="feature_today_mode_silent">صامت</string>
+    <string name="feature_today_setup_title">لم يكتمل إعداد الأذان</string>
+    <string name="feature_today_setup_body">اضغط للسماح بالإشعارات والمنبّهات الدقيقة.</string>
 </resources>
