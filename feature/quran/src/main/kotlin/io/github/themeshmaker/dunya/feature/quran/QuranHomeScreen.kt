@@ -1,6 +1,7 @@
 package io.github.themeshmaker.dunya.feature.quran
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -36,6 +38,8 @@ import io.github.themeshmaker.dunya.core.designsystem.component.DeenTabScaffold
 import io.github.themeshmaker.dunya.core.designsystem.component.GradientHero
 import io.github.themeshmaker.dunya.core.designsystem.component.PillChoice
 import io.github.themeshmaker.dunya.core.designsystem.component.StarBadge
+import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
+import io.github.themeshmaker.dunya.core.designsystem.component.rise
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
@@ -55,6 +59,11 @@ internal fun QuranHomeScreenRoute(onOpen: (surah: Int, ayah: Int) -> Unit, viewM
 @Composable
 private fun QuranHomeScreen(state: QuranHomeUiState, onOpen: (Int, Int) -> Unit, onQuery: (String) -> Unit, onTab: (QuranTab) -> Unit) {
     val look = DeenTheme.look
+    val entrance = rememberEntrance()
+    // Filtered rows glide into place (Sleek) instead of jumping.
+    val placement: @Composable androidx.compose.foundation.lazy.LazyItemScope.() -> Modifier = {
+        if (look.motion) Modifier.animateItem() else Modifier
+    }
     DeenTabScaffold(title = stringResource(R.string.feature_quran_title)) { padding ->
         LazyColumn(
             Modifier
@@ -65,7 +74,7 @@ private fun QuranHomeScreen(state: QuranHomeUiState, onOpen: (Int, Int) -> Unit,
         ) {
             state.lastRead?.let { position ->
                 state.surah(position.surah)?.let { surah ->
-                    item(key = "continue") { ContinueCard(surah, position, onOpen) }
+                    item(key = "continue") { Box(Modifier.rise(entrance, 0)) { ContinueCard(surah, position, onOpen) } }
                 }
             }
             item(key = "search") {
@@ -110,15 +119,17 @@ private fun QuranHomeScreen(state: QuranHomeUiState, onOpen: (Int, Int) -> Unit,
                 )
             }
             when (state.tab) {
-                QuranTab.SURAHS -> items(state.filtered, key = { "s${it.number}" }) { surah ->
-                    SurahRow(surah, onClick = { onOpen(surah.number, 1) })
+                QuranTab.SURAHS -> itemsIndexed(state.filtered, key = { _, s -> "s${s.number}" }) { index, surah ->
+                    SurahRow(surah, onClick = { onOpen(surah.number, 1) }, modifier = placement().rise(entrance, index + 1))
                 }
 
-                QuranTab.JUZ -> items(state.juz, key = { "j${it.juz}" }) { juz ->
+                QuranTab.JUZ -> itemsIndexed(state.juz, key = { _, j -> "j${j.juz}" }) { index, juz ->
                     val surah = state.surah(juz.surah)
-                    DeenCard(onClick = {
-                        onOpen(juz.surah, juz.ayah)
-                    }, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)) {
+                    DeenCard(
+                        onClick = { onOpen(juz.surah, juz.ayah) },
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                        modifier = placement().rise(entrance, index)
+                    ) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             StarBadge(localDigits(juz.juz))
                             Column(Modifier.weight(1f)) {
@@ -153,7 +164,7 @@ private fun QuranHomeScreen(state: QuranHomeUiState, onOpen: (Int, Int) -> Unit,
                         val surah = state.surah(mark.surah) ?: return@items
                         DeenCard(onClick = {
                             onOpen(mark.surah, mark.ayah)
-                        }, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)) {
+                        }, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp), modifier = placement()) {
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                                 Icon(
                                     painterResource(DeenIcons.BookmarkFilled),
@@ -216,8 +227,8 @@ private fun ContinueCard(surah: Surah, position: QuranPosition, onOpen: (Int, In
 internal fun surahTitle(surah: Surah): String = if (isArabicUi) surah.arabicName else surah.transliteration
 
 @Composable
-private fun SurahRow(surah: Surah, onClick: () -> Unit) {
-    DeenCard(onClick = onClick, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)) {
+private fun SurahRow(surah: Surah, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    DeenCard(onClick = onClick, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp), modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             StarBadge(localDigits(surah.number))
             Column(Modifier.weight(1f)) {

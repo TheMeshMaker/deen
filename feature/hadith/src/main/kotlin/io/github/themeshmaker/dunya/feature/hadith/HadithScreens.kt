@@ -57,6 +57,8 @@ import io.github.themeshmaker.dunya.core.designsystem.component.GradientHero
 import io.github.themeshmaker.dunya.core.designsystem.component.SectionLabel
 import io.github.themeshmaker.dunya.core.designsystem.component.StarBadge
 import io.github.themeshmaker.dunya.core.designsystem.component.Tag
+import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
+import io.github.themeshmaker.dunya.core.designsystem.component.rise
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
@@ -84,6 +86,7 @@ internal fun HadithHomeScreenRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val look = DeenTheme.look
+    val entrance = rememberEntrance()
     DeenTabScaffold(title = stringResource(R.string.feature_hadith_title)) { padding ->
         Column(
             Modifier
@@ -93,24 +96,29 @@ internal fun HadithHomeScreenRoute(
                 .padding(horizontal = look.gutter),
             verticalArrangement = Arrangement.spacedBy(look.gap)
         ) {
-            state.dailyHadith?.let { hadith -> DailyHadithCard(hadith, onClick = { onOpenNawawi(hadith.number) }) }
-            state.dailyFact?.let { fact -> DailyFactCard(fact, onClick = onOpenFacts) }
+            state.dailyHadith?.let { hadith ->
+                DailyHadithCard(hadith, onClick = { onOpenNawawi(hadith.number) }, modifier = Modifier.rise(entrance, 0))
+            }
+            state.dailyFact?.let { fact -> DailyFactCard(fact, onClick = onOpenFacts, modifier = Modifier.rise(entrance, 1)) }
 
             SectionLabel(stringResource(R.string.feature_hadith_collections))
             CollectionCard(
                 title = stringResource(R.string.feature_hadith_nawawi),
                 subtitle = stringResource(R.string.feature_hadith_nawawi_body),
                 badge = localDigits(state.nawawiCount),
-                onClick = { onOpenNawawi(1) }
+                onClick = { onOpenNawawi(1) },
+                modifier = Modifier.rise(entrance, 2)
             )
             CollectionCard(
                 title = stringResource(R.string.feature_hadith_facts),
                 subtitle = stringResource(R.string.feature_hadith_facts_body),
                 badge = localDigits(state.factCount),
-                onClick = onOpenFacts
+                onClick = onOpenFacts,
+                modifier = Modifier.rise(entrance, 3)
             )
-            state.collections.forEach { collection ->
+            state.collections.forEachIndexed { index, collection ->
                 CollectionCard(
+                    modifier = Modifier.rise(entrance, 4 + index),
                     title = collection.name.text(),
                     subtitle = listOfNotNull(
                         collection.author?.text(),
@@ -132,8 +140,8 @@ internal fun HadithHomeScreenRoute(
 }
 
 @Composable
-private fun CollectionCard(title: String, subtitle: String, badge: String?, onClick: () -> Unit) {
-    DeenCard(onClick = onClick, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 14.dp)) {
+private fun CollectionCard(title: String, subtitle: String, badge: String?, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    DeenCard(onClick = onClick, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 14.dp), modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             if (badge != null) {
                 StarBadge(badge, size = 44.dp)

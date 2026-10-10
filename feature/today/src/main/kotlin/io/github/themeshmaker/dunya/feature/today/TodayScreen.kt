@@ -1,10 +1,21 @@
 package io.github.themeshmaker.dunya.feature.today
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +51,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +61,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -67,10 +80,18 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
+import io.github.themeshmaker.dunya.core.designsystem.component.Entrance
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
 import io.github.themeshmaker.dunya.core.designsystem.component.LightSystemBarIcons
+import io.github.themeshmaker.dunya.core.designsystem.component.RollingText
+import io.github.themeshmaker.dunya.core.designsystem.component.pressScale
+import io.github.themeshmaker.dunya.core.designsystem.component.rememberDrawIn
+import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
+import io.github.themeshmaker.dunya.core.designsystem.component.rememberPatternDrift
+import io.github.themeshmaker.dunya.core.designsystem.component.rise
 import io.github.themeshmaker.dunya.core.designsystem.component.screen
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.domain.PrayerSchedule
@@ -248,24 +269,34 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
     val gradient = DeenTheme.gradient
     val timeFormatter = rememberTimeFormatter()
     val name = stringResource(state.next.prayer.labelRes(isFriday && state.next.prayer == Prayer.DHUHR))
+    val scroll = rememberScrollState()
+    val entrance = rememberEntrance()
+    val drift = rememberPatternDrift(PATTERN_CELL)
     LightSystemBarIcons()
     Box(
         Modifier
             .fillMaxSize()
             .background(look.page)
     ) {
-        Column(Modifier.verticalScroll(rememberScrollState())) {
+        Column(Modifier.verticalScroll(scroll)) {
             Box(
                 Modifier
                     .fillMaxWidth()
                     .clip(look.heroShape)
                     .background(gradient.brush)
             ) {
-                GeometricPattern(color = gradient.pattern, modifier = Modifier.matchParentSize(), cell = 48.dp)
+                GeometricPattern(color = gradient.pattern, modifier = Modifier.matchParentSize(), cell = PATTERN_CELL, offsetX = drift)
                 CompositionLocalProvider(LocalContentColor provides gradient.content) {
                     Column(
                         Modifier
                             .fillMaxWidth()
+                            // Parallax: the header's content moves at half speed and fades as it scrolls away.
+                            .graphicsLayer {
+                                if (look.motion) {
+                                    translationY = scroll.value * 0.45f
+                                    alpha = (1f - scroll.value / 900f).coerceIn(0f, 1f)
+                                }
+                            }
                             .windowInsetsPadding(WindowInsets.screen)
                             .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 64.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -306,9 +337,19 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
                                 .aspectRatio(1f),
                             contentAlignment = Alignment.Center
                         ) {
-                            ProgressRing(state.next.progress(state.now), gradient.content)
+                            val drawIn = rememberDrawIn()
+                            val progress by animateFloatAsState(state.next.progress(state.now), DeenMotion.gentle(), label = "ring")
+                            ProgressRing(progress * drawIn, gradient.content)
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(name, style = MaterialTheme.typography.headlineMedium)
+                                // When the next prayer changes, the old name lifts away and the new one rises in.
+                                AnimatedContent(
+                                    targetState = name,
+                                    transitionSpec = {
+                                        (fadeIn(tween(300)) + slideInVertically(DeenMotion.snappy()) { it / 2 }) togetherWith
+                                            (fadeOut(tween(200)) + slideOutVertically(DeenMotion.snappy()) { -it / 2 })
+                                    },
+                                    label = "nextPrayer"
+                                ) { shown -> Text(shown, style = MaterialTheme.typography.headlineMedium) }
                                 Countdown(Duration.between(state.now, state.next.at).coerceAtLeast(Duration.ZERO), name, 34f)
                                 Text(
                                     stringResource(R.string.feature_today_at, timeFormatter.format(state.next.at.atZone(zone))),
@@ -326,12 +367,12 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
                     .padding(horizontal = look.gutter),
                 verticalArrangement = Arrangement.spacedBy(look.gap)
             ) {
-                DeenCard(contentPadding = PaddingValues(vertical = 10.dp)) {
+                DeenCard(contentPadding = PaddingValues(vertical = 10.dp), modifier = Modifier.rise(entrance, 0, distance = 40.dp)) {
                     PrayerList(schedule, state.next, state.now, isFriday, state.alerts, onCycleAlert)
                 }
-                if (state.alarmSetupNeeded) SetupBanner(actions.onOpenReliability)
-                QuickActions(actions)
-                BelowTheTimes(schedule, extras, actions)
+                if (state.alarmSetupNeeded) Box(Modifier.rise(entrance, 1)) { SetupBanner(actions.onOpenReliability) }
+                Box(Modifier.rise(entrance, 2)) { QuickActions(actions) }
+                BelowTheTimes(schedule, extras, actions, entrance, firstIndex = 3)
             }
         }
         // Keeps the (white) status-bar icons readable once the header scrolls away.
@@ -343,6 +384,8 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
         )
     }
 }
+
+private val PATTERN_CELL = 48.dp
 
 @Composable
 private fun ProgressRing(progress: Float, color: Color) {
@@ -377,10 +420,12 @@ private fun Countdown(remaining: Duration, prayerName: String, sizeSp: Float) {
         pluralStringResource(R.plurals.feature_today_hours, hours, hours),
         pluralStringResource(R.plurals.feature_today_minutes, minutes, minutes)
     )
-    Text(
+    RollingText(
         text = String.format(currentLocale, "%02d:%02d:%02d", hours, minutes, seconds),
         style = MaterialTheme.typography.displayMedium.copy(fontFeatureSettings = "tnum", fontSize = sizeSp.sp),
         fontWeight = if (DeenTheme.look.sleek) FontWeight.Light else FontWeight.Medium,
+        color = LocalContentColor.current,
+        down = true,
         modifier = Modifier.clearAndSetSemantics {
             contentDescription = spoken
             liveRegion = LiveRegionMode.Polite
@@ -401,10 +446,17 @@ private fun QuickActions(actions: TodayActions) {
 @Composable
 private fun QuickAction(icon: Int, label: String, onClick: () -> Unit) {
     val look = DeenTheme.look
+    val interaction = remember { MutableInteractionSource() }
     Column(
         Modifier
+            .pressScale(interaction, enabled = look.motion, pressed = 0.9f)
             .clip(MaterialTheme.shapes.large)
-            .clickable(role = Role.Button, onClick = onClick)
+            .clickable(
+                interactionSource = interaction,
+                indication = androidx.compose.material3.ripple(),
+                role = Role.Button,
+                onClick = onClick
+            )
             .padding(horizontal = 6.dp, vertical = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -424,11 +476,18 @@ private fun QuickAction(icon: Int, label: String, onClick: () -> Unit) {
 
 /** Continue reading, hadith of the day, fact of the day and the method chip. */
 @Composable
-private fun BelowTheTimes(schedule: PrayerSchedule, extras: TodayExtras, actions: TodayActions) {
+private fun BelowTheTimes(
+    schedule: PrayerSchedule,
+    extras: TodayExtras,
+    actions: TodayActions,
+    entrance: Entrance? = null,
+    firstIndex: Int = 0
+) {
+    fun Modifier.enter(i: Int) = if (entrance != null) rise(entrance, firstIndex + i) else this
     val lastRead = extras.lastRead
     val surah = extras.lastReadSurah
     if (lastRead != null && surah != null) {
-        DeenCard(onClick = { actions.onOpenQuran(lastRead.surah, lastRead.ayah) }) {
+        DeenCard(onClick = { actions.onOpenQuran(lastRead.surah, lastRead.ayah) }, modifier = Modifier.enter(0)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Icon(painterResource(DeenIcons.Quran), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Column(Modifier.weight(1f)) {
@@ -450,7 +509,7 @@ private fun BelowTheTimes(schedule: PrayerSchedule, extras: TodayExtras, actions
             }
         }
     } else {
-        DeenCard(onClick = { actions.onOpenQuran(1, 1) }) {
+        DeenCard(onClick = { actions.onOpenQuran(1, 1) }, modifier = Modifier.enter(0)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Icon(painterResource(DeenIcons.Quran), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Text(
@@ -461,8 +520,8 @@ private fun BelowTheTimes(schedule: PrayerSchedule, extras: TodayExtras, actions
             }
         }
     }
-    extras.hadith?.let { DailyHadithCard(it, onClick = { actions.onOpenHadith(it.number) }) }
-    extras.fact?.let { DailyFactCard(it, onClick = actions.onOpenFacts) }
+    extras.hadith?.let { DailyHadithCard(it, onClick = { actions.onOpenHadith(it.number) }, modifier = Modifier.enter(1)) }
+    extras.fact?.let { DailyFactCard(it, onClick = actions.onOpenFacts, modifier = Modifier.enter(2)) }
     AssistChip(
         onClick = actions.onChangeMethod,
         label = {
@@ -518,13 +577,19 @@ private fun PrayerRow(name: String, time: String, isNext: Boolean, isMuted: Bool
         else -> MaterialTheme.colorScheme.onSurface
     }
     val weight = if (isNext) FontWeight.Bold else FontWeight.Normal
+    val pill by animateFloatAsState(
+        if (isNext) 1f else 0f,
+        if (DeenTheme.look.motion) tween(500, easing = DeenMotion.EaseOutSoft) else snap(),
+        label = "nextPill"
+    )
+    val shownColor by animateColorAsState(color, if (DeenTheme.look.motion) tween(400) else snap(), label = "rowColor")
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 2.dp)
             .then(
                 when {
-                    isNext && sleek -> Modifier.background(gradient.brush, CircleShape)
+                    sleek -> Modifier.background(gradient.brush, CircleShape, alpha = pill)
                     isNext -> Modifier.background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f), MaterialTheme.shapes.medium)
                     else -> Modifier
                 }
@@ -532,8 +597,8 @@ private fun PrayerRow(name: String, time: String, isNext: Boolean, isMuted: Bool
             .padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(name, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = color, modifier = Modifier.weight(1f))
-        Text(time, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = color, textAlign = TextAlign.End)
+        Text(name, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = shownColor, modifier = Modifier.weight(1f))
+        Text(time, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = shownColor, textAlign = TextAlign.End)
         val modeLabel = stringResource(mode.labelRes())
         val description = stringResource(R.string.feature_today_alert_for, name, modeLabel)
         IconButton(onClick = onCycleAlert, modifier = Modifier.semantics { contentDescription = description }) {

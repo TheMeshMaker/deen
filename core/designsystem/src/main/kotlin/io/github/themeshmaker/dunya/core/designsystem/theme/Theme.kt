@@ -72,12 +72,14 @@ data class DeenLook(
     val heroShape: Shape,
     /** Horizontal page padding and the gap between cards. */
     val gutter: Dp,
-    val gap: Dp
+    val gap: Dp,
+    /** Sleek's animations (screen transitions, rolling numbers, entrances); off in Classic and with reduced motion. */
+    val motion: Boolean = false
 ) {
     val sleek: Boolean get() = uiStyle == UiStyle.SLEEK
 }
 
-private fun lookFor(uiStyle: UiStyle, colors: ColorScheme, dark: Boolean): DeenLook = when (uiStyle) {
+private fun lookFor(uiStyle: UiStyle, colors: ColorScheme, dark: Boolean, reducedMotion: Boolean): DeenLook = when (uiStyle) {
     UiStyle.CLASSIC -> DeenLook(
         uiStyle = uiStyle,
         page = colors.background,
@@ -100,7 +102,8 @@ private fun lookFor(uiStyle: UiStyle, colors: ColorScheme, dark: Boolean): DeenL
         cardElevation = if (dark) 0.dp else 1.dp,
         heroShape = RoundedCornerShape(bottomStart = 36.dp, bottomEnd = 36.dp),
         gutter = 20.dp,
-        gap = 14.dp
+        gap = 14.dp,
+        motion = !reducedMotion
     )
 }
 
@@ -186,7 +189,7 @@ fun DeenTheme(
 
     CompositionLocalProvider(
         LocalDeenGradient provides style.gradient(),
-        LocalDeenLook provides lookFor(uiStyle, colors, dark)
+        LocalDeenLook provides lookFor(uiStyle, colors, dark, rememberReducedMotion())
     ) {
         MaterialTheme(
             colorScheme = colors,

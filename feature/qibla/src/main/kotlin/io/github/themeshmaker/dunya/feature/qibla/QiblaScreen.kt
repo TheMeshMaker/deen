@@ -8,6 +8,12 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.view.Surface
 import android.view.WindowManager
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,6 +55,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenScaffold
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.domain.UserDataRepository
 import io.github.themeshmaker.dunya.core.model.Coordinates
@@ -92,6 +99,18 @@ internal fun QiblaScreenRoute(onBack: () -> Unit, viewModel: QiblaViewModel = hi
     val offset = if (bearing != null && heading != null) angleDiff(bearing.toFloat(), heading!!.degrees) else null
     val aligned = offset != null && abs(offset) <= ALIGNED_DEGREES
     LaunchedEffect(aligned) { if (aligned) haptics.done() }
+    // Facing the Qibla: a soft halo breathes around the dial (Sleek).
+    val motion = DeenTheme.look.motion
+    val glow = if (aligned && motion) {
+        rememberInfiniteTransition(label = "halo").animateFloat(
+            initialValue = 0.25f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(tween(1_100, easing = DeenMotion.EaseInOutSoft), RepeatMode.Reverse),
+            label = "glow"
+        ).value
+    } else {
+        0f
+    }
 
     DeenScaffold(
         title = stringResource(R.string.feature_qibla_title),
@@ -128,6 +147,7 @@ internal fun QiblaScreenRoute(onBack: () -> Unit, viewModel: QiblaViewModel = hi
                 heading = heading?.degrees ?: 0f,
                 qibla = bearing.toFloat(),
                 aligned = aligned,
+                glow = glow,
                 modifier = Modifier
                     .widthIn(max = 360.dp)
                     .fillMaxWidth()
@@ -161,14 +181,18 @@ internal fun QiblaScreenRoute(onBack: () -> Unit, viewModel: QiblaViewModel = hi
 
 /** A dial that turns with the phone: north marker, ticks, and the Kaaba at the Qibla bearing. */
 @Composable
-private fun Compass(heading: Float, qibla: Float, aligned: Boolean, modifier: Modifier = Modifier) {
+private fun Compass(heading: Float, qibla: Float, aligned: Boolean, glow: Float, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
     val gradient = DeenTheme.gradient
+    val rim by animateColorAsState(if (aligned) colors.primary else colors.outlineVariant, tween(300), label = "rim")
     Canvas(modifier) {
-        val radius = size.minDimension / 2f
+        val radius = size.minDimension / 2f - 10.dp.toPx()
         val center = Offset(size.width / 2f, size.height / 2f)
+        if (glow > 0f) {
+            drawCircle(colors.primary.copy(alpha = 0.18f * glow), radius + 10.dp.toPx() * glow, center)
+        }
         drawCircle(colors.surfaceContainerHigh, radius)
-        drawCircle(if (aligned) colors.primary else colors.outlineVariant, radius, style = Stroke(3.dp.toPx()))
+        drawCircle(rim, radius, style = Stroke(3.dp.toPx()))
         rotate(-heading, center) {
             for (deg in 0 until 360 step 15) {
                 rotate(deg.toFloat(), center) {

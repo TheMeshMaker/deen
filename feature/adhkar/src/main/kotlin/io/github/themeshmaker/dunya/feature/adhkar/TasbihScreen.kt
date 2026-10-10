@@ -1,7 +1,10 @@
 package io.github.themeshmaker.dunya.feature.adhkar
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +31,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +41,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -50,13 +56,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenScaffold
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
+import io.github.themeshmaker.dunya.core.designsystem.component.RollingText
+import io.github.themeshmaker.dunya.core.designsystem.component.rememberPatternDrift
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.model.TasbihDhikr
 import io.github.themeshmaker.dunya.core.ui.R as UiR
 import io.github.themeshmaker.dunya.core.ui.localDigits
 import io.github.themeshmaker.dunya.core.ui.rememberHaptics
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlinx.coroutines.launch
 
 private val TARGETS = listOf(33, 99, 100, 0)
 
@@ -106,7 +118,11 @@ internal fun TasbihScreenRoute(onBack: () -> Unit, viewModel: TasbihViewModel = 
             CounterRing(
                 count = tasbih.count,
                 target = tasbih.target,
-                onTap = { if (viewModel.count()) haptics.done() else haptics.tick() },
+                onTap = {
+                    val completed = viewModel.count()
+                    if (completed) haptics.done() else haptics.tick()
+                    completed
+                },
                 label = stringResource(R.string.feature_tasbih_tap, localDigits(tasbih.count))
             )
 
@@ -135,28 +151,103 @@ internal fun TasbihScreenRoute(onBack: () -> Unit, viewModel: TasbihViewModel = 
 
 /** The big tap target: a ring that fills towards the target, the count in the middle. */
 @Composable
-private fun CounterRing(count: Int, target: Int, onTap: () -> Unit, label: String) {
+private fun CounterRing(count: Int, target: Int, onTap: () -> Boolean, label: String) {
     val gradient = DeenTheme.gradient
     val colors = MaterialTheme.colorScheme
-    val progress by animateFloatAsState(if (target > 0) count / target.toFloat() else 0f, spring(), label = "tasbih")
+    val motion = DeenTheme.look.motion
+    val progress by animateFloatAsState(
+        if (target >
+            0
+        ) {
+            count / target.toFloat()
+        } else {
+            0f
+        },
+        if (motion) DeenMotion.snappy() else spring(),
+        label = "tasbih"
+    )
+    val scope = rememberCoroutineScope()
+    // Each tap: the bead presses in and springs back, and a ring ripples outwards.
+    val press = remember { Animatable(1f) }
+    val ripples = remember { mutableStateListOf<Animatable<Float, AnimationVector1D>>() }
+    // A completed round: a wider ring of light and a burst of small beads.
+    val burst = remember { Animatable(0f) }
     Box(
         Modifier
             .widthIn(max = 340.dp)
             .fillMaxWidth(0.85f)
             .aspectRatio(1f)
-            .clip(CircleShape)
-            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, role = Role.Button, onClick = onTap)
+            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, role = Role.Button) {
+                val completed = onTap()
+                if (!motion) return@clickable
+                scope.launch {
+                    press.snapTo(0.94f)
+                    press.animateTo(1f, DeenMotion.bouncy())
+                }
+                val ripple = Animatable(0f)
+                if (ripples.size >= MAX_RIPPLES) ripples.removeAt(0)
+                ripples += ripple
+                scope.launch {
+                    ripple.animateTo(1f, tween(750, easing = DeenMotion.EaseOutSoft))
+                    ripples.remove(ripple)
+                }
+                if (completed) {
+                    scope.launch {
+                        burst.snapTo(0f)
+                        burst.animateTo(1f, tween(1_000, easing = DeenMotion.EaseOutSoft))
+                        burst.snapTo(0f)
+                    }
+                }
+            }
             .semantics { contentDescription = label },
         contentAlignment = Alignment.Center
     ) {
+        Canvas(Modifier.fillMaxSize()) {
+            val base = size.minDimension / 2f - 18.dp.toPx()
+            ripples.forEach { r ->
+                val v = r.value
+                drawCircle(
+                    colors.primary.copy(alpha = (1f - v) * 0.35f),
+                    radius = base * (1f + 0.22f * v),
+                    style = Stroke((1f - v) * 6.dp.toPx() + 1f)
+                )
+            }
+            val b = burst.value
+            if (b > 0f) {
+                drawCircle(
+                    gradient.end.copy(alpha = (1f - b) * 0.5f),
+                    radius = base * (1f + 0.35f * b),
+                    style = Stroke(10.dp.toPx() * (1f - b) + 1f)
+                )
+                for (i in 0 until BURST_BEADS) {
+                    val angle = Math.toRadians(i * 360.0 / BURST_BEADS - 90.0)
+                    val distance = base * (1.02f + 0.3f * b)
+                    drawCircle(
+                        colors.primary.copy(alpha = 1f - b),
+                        radius = 5.dp.toPx() * (1f - b * 0.6f),
+                        center = Offset(center.x + distance * cos(angle).toFloat(), center.y + distance * sin(angle).toFloat())
+                    )
+                }
+            }
+        }
         Box(
             Modifier
                 .fillMaxSize()
                 .padding(18.dp)
+                .graphicsLayer {
+                    val s = press.value * (1f + 0.05f * sin(burst.value * Math.PI).toFloat())
+                    scaleX = s
+                    scaleY = s
+                }
                 .clip(CircleShape)
                 .background(gradient.brush)
         ) {
-            GeometricPattern(color = gradient.pattern, modifier = Modifier.matchParentSize(), cell = 36.dp)
+            GeometricPattern(
+                color = gradient.pattern,
+                modifier = Modifier.matchParentSize(),
+                cell = 36.dp,
+                offsetX = rememberPatternDrift(36.dp, 30_000)
+            )
         }
         Canvas(Modifier.fillMaxSize()) {
             val stroke = 10.dp.toPx()
@@ -183,7 +274,7 @@ private fun CounterRing(count: Int, target: Int, onTap: () -> Unit, label: Strin
             }
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
+            RollingText(
                 localDigits(count),
                 style = MaterialTheme.typography.displayLarge.copy(fontSize = 72.sp),
                 color = gradient.content,
@@ -195,6 +286,9 @@ private fun CounterRing(count: Int, target: Int, onTap: () -> Unit, label: Strin
         }
     }
 }
+
+private const val MAX_RIPPLES = 4
+private const val BURST_BEADS = 12
 
 @Composable
 private fun Stat(label: String, value: String) {

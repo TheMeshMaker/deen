@@ -23,7 +23,7 @@ import kotlin.math.sin
  * between 8-pointed stars form cross shapes, which this app avoids.
  */
 @Composable
-fun GeometricPattern(color: Color, modifier: Modifier = Modifier, cell: Dp = 40.dp, strokeWidth: Dp = 1.dp) {
+fun GeometricPattern(color: Color, modifier: Modifier = Modifier, cell: Dp = 40.dp, strokeWidth: Dp = 1.dp, offsetX: Float = 0f) {
     val cellPx = with(LocalDensity.current) { cell.toPx() }
     val star = remember(cellPx) { octagramPath(outerRadius = cellPx * 0.28f) }
     // Clipped: the tiling deliberately overdraws its edges so no half-empty border shows.
@@ -32,7 +32,8 @@ fun GeometricPattern(color: Color, modifier: Modifier = Modifier, cell: Dp = 40.
         var row = 0
         var y = 0f
         while (y < size.height + cellPx) {
-            var x = if (row % 2 == 0) 0f else cellPx / 2f
+            // offsetX (0..cell) slides the tiling sideways; the extra column on the right keeps it covered.
+            var x = (if (row % 2 == 0) 0f else cellPx / 2f) - offsetX % cellPx
             while (x < size.width + cellPx) {
                 translate(x, y) { drawPath(star, color, style = stroke) }
                 x += cellPx

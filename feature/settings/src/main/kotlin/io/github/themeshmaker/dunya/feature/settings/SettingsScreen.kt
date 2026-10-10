@@ -6,6 +6,10 @@ import android.content.ContextWrapper
 import android.text.BidiFormatter
 import android.text.TextDirectionHeuristics
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -61,6 +66,7 @@ import io.github.themeshmaker.dunya.core.designsystem.component.MenuRow
 import io.github.themeshmaker.dunya.core.designsystem.component.PillChoice
 import io.github.themeshmaker.dunya.core.designsystem.component.SectionLabel
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.designsystem.theme.gradient
@@ -372,15 +378,32 @@ private fun StylePicker(selected: UiStyle, onSelect: (UiStyle) -> Unit) {
     ) {
         UiStyle.entries.forEach { style ->
             val isSelected = style == selected
+            val motion = DeenTheme.look.motion
+            val edge by animateColorAsState(
+                if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
+                if (motion) tween(250) else snap(),
+                label = "styleEdge"
+            )
+            val lift by animateFloatAsState(
+                if (isSelected ||
+                    !motion
+                ) {
+                    1f
+                } else {
+                    0.96f
+                },
+                if (motion) DeenMotion.bouncy() else snap(),
+                label = "styleLift"
+            )
             Column(
                 Modifier
                     .weight(1f)
+                    .graphicsLayer {
+                        scaleX = lift
+                        scaleY = lift
+                    }
                     .clip(RoundedCornerShape(18.dp))
-                    .border(
-                        if (isSelected) 2.dp else 1.dp,
-                        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
-                        RoundedCornerShape(18.dp)
-                    )
+                    .border(if (isSelected) 2.dp else 1.dp, edge, RoundedCornerShape(18.dp))
                     .clickable(role = Role.RadioButton) { onSelect(style) }
                     .padding(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally

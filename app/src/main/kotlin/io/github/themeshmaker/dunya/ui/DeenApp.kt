@@ -1,10 +1,28 @@
 package io.github.themeshmaker.dunya.ui
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -25,10 +43,12 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -45,6 +65,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import io.github.themeshmaker.dunya.core.designsystem.component.pressScale
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.model.DeenLinks
 import io.github.themeshmaker.dunya.feature.adhkar.AdhkarReaderRoute
@@ -106,8 +128,51 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
     val floatingBar = look.sleek && adaptive == NavigationSuiteType.NavigationBar
 
     val host: @Composable (Modifier) -> Unit = { modifier ->
-        NavHost(navController = navController, startDestination = startDestination, modifier = modifier) {
-            graph(navController)
+        if (look.motion) {
+            // Sleek: a pushed screen slides in from the end while the one below drifts back a
+            // quarter of the way and dims (and the reverse on back); tabs cross-fade.
+            NavHost(
+                navController = navController,
+                startDestination = startDestination,
+                modifier = modifier,
+                enterTransition = {
+                    if (initialState.destination.isTab() && targetState.destination.isTab()) {
+                        fadeIn(tween(240, delayMillis = 60)) +
+                            scaleIn(tween(DeenMotion.SCREEN_MS, easing = DeenMotion.EaseOutSoft), initialScale = 0.97f)
+                    } else {
+                        slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, DeenMotion.screen())
+                    }
+                },
+                exitTransition = {
+                    if (initialState.destination.isTab() && targetState.destination.isTab()) {
+                        fadeOut(tween(140))
+                    } else {
+                        slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, DeenMotion.screen()) { it / 4 } +
+                            fadeOut(DeenMotion.screen(), targetAlpha = 0.5f)
+                    }
+                },
+                popEnterTransition = {
+                    if (initialState.destination.isTab() && targetState.destination.isTab()) {
+                        fadeIn(tween(240, delayMillis = 60))
+                    } else {
+                        slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, DeenMotion.screen()) { it / 4 } +
+                            fadeIn(DeenMotion.screen(), initialAlpha = 0.5f)
+                    }
+                },
+                popExitTransition = {
+                    if (initialState.destination.isTab() && targetState.destination.isTab()) {
+                        fadeOut(tween(140))
+                    } else {
+                        slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, DeenMotion.screen())
+                    }
+                }
+            ) {
+                graph(navController)
+            }
+        } else {
+            NavHost(navController = navController, startDestination = startDestination, modifier = modifier) {
+                graph(navController)
+            }
         }
     }
 
@@ -116,7 +181,25 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
         Surface(color = look.page, modifier = Modifier.fillMaxSize()) {
             Column {
                 host(Modifier.weight(1f))
-                if (onTab) FloatingNavBar(currentDestination) { navController.navigateToTopLevel(it) }
+                // The bar slides away (and its space closes) when a reader opens, and back on the tabs.
+                AnimatedVisibility(
+                    visible = onTab,
+                    enter = if (look.motion) {
+                        expandVertically(DeenMotion.snappy(), expandFrom = Alignment.Top) + slideInVertically(DeenMotion.snappy()) { it } +
+                            fadeIn()
+                    } else {
+                        fadeIn(snap())
+                    },
+                    exit = if (look.motion) {
+                        shrinkVertically(DeenMotion.snappy(), shrinkTowards = Alignment.Top) +
+                            slideOutVertically(DeenMotion.snappy()) { it } +
+                            fadeOut()
+                    } else {
+                        fadeOut(snap())
+                    }
+                ) {
+                    FloatingNavBar(currentDestination) { navController.navigateToTopLevel(it) }
+                }
             }
         }
         return
@@ -169,7 +252,6 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
 /** Sleek: a rounded bar floating above the page, the selected tab as a filled pill. */
 @Composable
 private fun FloatingNavBar(current: NavDestination?, onSelect: (TopLevelDestination) -> Unit) {
-    val colors = MaterialTheme.colorScheme
     val look = DeenTheme.look
     Surface(
         shape = CircleShape,
@@ -183,36 +265,74 @@ private fun FloatingNavBar(current: NavDestination?, onSelect: (TopLevelDestinat
     ) {
         Row(Modifier.padding(6.dp), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
             TopLevelDestination.entries.forEach { destination ->
-                val selected = current.isOn(destination)
-                Row(
-                    Modifier
-                        .weight(if (selected) 2.6f else 1f)
-                        .clip(CircleShape)
-                        .background(if (selected) colors.primary else Color.Transparent)
-                        .clickable(role = Role.Tab) { onSelect(destination) }
-                        .semantics { this.selected = selected }
-                        .padding(vertical = 10.dp, horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painterResource(if (selected) destination.selectedIcon else destination.icon),
-                        contentDescription = if (selected) null else stringResource(destination.label),
-                        tint = if (selected) colors.onPrimary else colors.onSurfaceVariant,
-                        modifier = Modifier.size(22.dp)
-                    )
-                    if (selected) {
-                        Text(
-                            stringResource(destination.label),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = colors.onPrimary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(start = 6.dp)
-                        )
-                    }
-                }
+                NavPill(destination, selected = current.isOn(destination), motion = look.motion, onClick = { onSelect(destination) })
             }
+        }
+    }
+}
+
+/**
+ * One tab of the floating bar. The selected one widens into a filled pill with its label, so
+ * changing tabs looks like the pill flowing from one place to the other.
+ */
+@Composable
+private fun RowScope.NavPill(destination: TopLevelDestination, selected: Boolean, motion: Boolean, onClick: () -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    val weight by animateFloatAsState(if (selected) 2.6f else 1f, if (motion) DeenMotion.snappy() else snap(), label = "navWeight")
+    val fill by animateColorAsState(
+        if (selected) colors.primary else Color.Transparent,
+        if (motion) tween(260) else snap(),
+        label = "navFill"
+    )
+    val tint by animateColorAsState(
+        if (selected) colors.onPrimary else colors.onSurfaceVariant,
+        if (motion) tween(220) else snap(),
+        label = "navTint"
+    )
+    val bounce = remember { Animatable(1f) }
+    LaunchedEffect(selected, motion) {
+        if (selected && motion) {
+            bounce.snapTo(0.72f)
+            bounce.animateTo(1f, DeenMotion.bouncy())
+        }
+    }
+    val interaction = remember { MutableInteractionSource() }
+    Row(
+        Modifier
+            .weight(weight)
+            .pressScale(interaction, enabled = motion, pressed = 0.92f)
+            .clip(CircleShape)
+            .background(fill)
+            .clickable(interactionSource = interaction, indication = null, role = Role.Tab, onClick = onClick)
+            .semantics { this.selected = selected }
+            .padding(vertical = 10.dp, horizontal = 8.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painterResource(if (selected) destination.selectedIcon else destination.icon),
+            contentDescription = if (selected) null else stringResource(destination.label),
+            tint = tint,
+            modifier = Modifier
+                .size(22.dp)
+                .graphicsLayer {
+                    scaleX = bounce.value
+                    scaleY = bounce.value
+                }
+        )
+        AnimatedVisibility(
+            visible = selected,
+            enter = if (motion) fadeIn(tween(220, delayMillis = 70)) + expandHorizontally(DeenMotion.snappy()) else fadeIn(snap()),
+            exit = if (motion) fadeOut(tween(90)) + shrinkHorizontally(DeenMotion.snappy()) else fadeOut(snap())
+        ) {
+            Text(
+                stringResource(destination.label),
+                style = MaterialTheme.typography.labelLarge,
+                color = colors.onPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Clip,
+                modifier = Modifier.padding(start = 6.dp)
+            )
         }
     }
 }
@@ -292,6 +412,8 @@ private fun NavGraphBuilder.graph(navController: NavHostController) {
     qiblaScreen(onBack = back)
     timetableScreen(onBack = back)
 }
+
+private fun NavDestination.isTab(): Boolean = TopLevelDestination.entries.any { hasRoute(it.routeClass) }
 
 private fun NavDestination?.isOn(destination: TopLevelDestination): Boolean =
     this?.hierarchy?.any { it.hasRoute(destination.routeClass) } == true

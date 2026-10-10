@@ -1,9 +1,13 @@
 package io.github.themeshmaker.dunya.core.designsystem.component
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -28,10 +32,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
@@ -45,9 +54,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 
 /** A card in the current style: tinted and flat (Classic) or white, rounder and hairline-edged (Sleek). */
@@ -60,14 +71,18 @@ fun DeenCard(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val look = DeenTheme.look
+    val interaction = remember { MutableInteractionSource() }
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .pressScale(interaction, enabled = onClick != null && look.motion),
         shape = look.cardShape,
         color = containerColor,
         border = look.cardBorder,
         shadowElevation = look.cardElevation,
         onClick = onClick ?: {},
-        enabled = onClick != null
+        enabled = onClick != null,
+        interactionSource = interaction
     ) {
         Column(Modifier.padding(contentPadding), content = content)
     }
@@ -197,21 +212,32 @@ fun StarBadge(text: String, modifier: Modifier = Modifier, size: Dp = 40.dp, col
 @Composable
 fun <T> PillChoice(options: List<T>, selected: T, label: @Composable (T) -> String, onSelect: (T) -> Unit, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
+    val index = options.indexOf(selected).coerceAtLeast(0).toFloat()
+    // The highlight glides from option to option (Sleek) or jumps there (Classic).
+    val position by animateFloatAsState(index, if (DeenTheme.look.motion) DeenMotion.snappy() else snap(), label = "pill")
+    val gap = 4.dp
     Row(
         modifier
             .clip(CircleShape)
             .background(colors.surfaceContainerHigh)
-            .padding(4.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+            .padding(4.dp)
+            .drawBehind {
+                val gapPx = gap.toPx()
+                val segment = (size.width - gapPx * (options.size - 1)) / options.size
+                val start = position * (segment + gapPx)
+                val x = if (layoutDirection == LayoutDirection.Rtl) size.width - start - segment else start
+                drawRoundRect(colors.primary, Offset(x, 0f), Size(segment, size.height), CornerRadius(size.height / 2f))
+            },
+        horizontalArrangement = Arrangement.spacedBy(gap)
     ) {
         options.forEach { option ->
             val isSelected = option == selected
             val text = label(option)
+            val textColor by animateColorAsState(if (isSelected) colors.onPrimary else colors.onSurfaceVariant, label = "pillText")
             Box(
                 Modifier
                     .weight(1f)
                     .clip(CircleShape)
-                    .background(if (isSelected) colors.primary else Color.Transparent)
                     .clickable(role = Role.RadioButton) { onSelect(option) }
                     .semantics {
                         this.selected = isSelected
@@ -223,7 +249,7 @@ fun <T> PillChoice(options: List<T>, selected: T, label: @Composable (T) -> Stri
                 Text(
                     text,
                     style = MaterialTheme.typography.labelLarge,
-                    color = if (isSelected) colors.onPrimary else colors.onSurfaceVariant,
+                    color = textColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -297,6 +323,11 @@ fun GradientHero(
 /** A thin rounded progress bar in the primary colour. */
 @Composable
 fun ThinProgress(fraction: Float, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.primary) {
+    val shown by animateFloatAsState(
+        fraction.coerceIn(0f, 1f),
+        if (DeenTheme.look.motion) DeenMotion.gentle() else snap(),
+        label = "progress"
+    )
     Box(
         modifier
             .fillMaxWidth()
@@ -306,7 +337,7 @@ fun ThinProgress(fraction: Float, modifier: Modifier = Modifier, color: Color = 
     ) {
         Box(
             Modifier
-                .fillMaxWidth(fraction.coerceIn(0f, 1f))
+                .fillMaxWidth(shown)
                 .height(6.dp)
                 .clip(CircleShape)
                 .background(color)

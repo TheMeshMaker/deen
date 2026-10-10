@@ -1,6 +1,17 @@
 package io.github.themeshmaker.dunya.feature.adhkar
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -54,9 +67,13 @@ import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenScaffold
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenTabScaffold
 import io.github.themeshmaker.dunya.core.designsystem.component.GradientHero
+import io.github.themeshmaker.dunya.core.designsystem.component.RollingText
 import io.github.themeshmaker.dunya.core.designsystem.component.SectionLabel
 import io.github.themeshmaker.dunya.core.designsystem.component.ThinProgress
+import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
+import io.github.themeshmaker.dunya.core.designsystem.component.rise
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.model.AdhkarCategory
@@ -78,6 +95,7 @@ internal fun AdhkarHomeScreenRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val look = DeenTheme.look
+    val entrance = rememberEntrance()
     DeenTabScaffold(title = stringResource(R.string.feature_adhkar_title)) { padding ->
         Column(
             Modifier
@@ -87,15 +105,17 @@ internal fun AdhkarHomeScreenRoute(
                 .padding(horizontal = look.gutter),
             verticalArrangement = Arrangement.spacedBy(look.gap)
         ) {
-            TasbihCard(state, onOpenTasbih)
+            Box(Modifier.rise(entrance, 0)) { TasbihCard(state, onOpenTasbih) }
             val suggested = state.categories.firstOrNull { it.id == state.suggested }
             if (suggested != null) {
                 SectionLabel(stringResource(R.string.feature_adhkar_now))
-                CategoryCard(suggested, state.done[suggested.id] ?: 0, onClick = { onOpenCategory(suggested.id) })
+                CategoryCard(suggested, state.done[suggested.id] ?: 0, onClick = {
+                    onOpenCategory(suggested.id)
+                }, modifier = Modifier.rise(entrance, 1))
             }
             SectionLabel(stringResource(R.string.feature_adhkar_all))
-            state.categories.filter { it.id != state.suggested }.chunked(2).forEach { row ->
-                Row(horizontalArrangement = Arrangement.spacedBy(look.gap)) {
+            state.categories.filter { it.id != state.suggested }.chunked(2).forEachIndexed { rowIndex, row ->
+                Row(horizontalArrangement = Arrangement.spacedBy(look.gap), modifier = Modifier.rise(entrance, 2 + rowIndex)) {
                     row.forEach { category ->
                         CategoryCard(category, state.done[category.id] ?: 0, onClick = {
                             onOpenCategory(category.id)
@@ -303,10 +323,11 @@ private fun DhikrCard(item: DhikrView, scale: Float, showTranslation: Boolean, o
     var showDetails by rememberSaveable(dhikr.id) { mutableStateOf(false) }
     val remaining = (dhikr.count - item.count).coerceAtLeast(0)
     val countLabel = stringResource(R.string.feature_adhkar_count_label, localDigits(item.count), localDigits(dhikr.count))
+    val fade by animateFloatAsState(if (done) 0.6f else 1f, if (DeenTheme.look.motion) tween(450) else snap(), label = "done")
     DeenCard(
         onClick = onCount,
         modifier = Modifier
-            .alpha(if (done) 0.6f else 1f)
+            .alpha(fade)
             .animateContentSize()
             .semantics { contentDescription = countLabel }
     ) {
@@ -353,24 +374,56 @@ private fun DhikrCard(item: DhikrView, scale: Float, showTranslation: Boolean, o
 @Composable
 private fun CountBubble(done: Boolean, remaining: Int, total: Int) {
     val colors = MaterialTheme.colorScheme
+    val motion = DeenTheme.look.motion
+    val fill by animateColorAsState(
+        if (done) colors.primary else colors.primary.copy(alpha = 0.12f),
+        if (motion) tween(300) else snap(),
+        label = "bubble"
+    )
+    // A soft pulse on every count.
+    val pulse = remember { Animatable(1f) }
+    LaunchedEffect(remaining) {
+        if (motion && remaining < total) {
+            pulse.snapTo(1.14f)
+            pulse.animateTo(1f, DeenMotion.bouncy())
+        }
+    }
     Box(
         Modifier
             .size(52.dp)
+            .graphicsLayer {
+                scaleX = pulse.value
+                scaleY = pulse.value
+            }
             .clip(CircleShape)
-            .background(if (done) colors.primary else colors.primary.copy(alpha = 0.12f)),
+            .background(fill),
         contentAlignment = Alignment.Center
     ) {
-        if (done) {
-            Icon(painterResource(DeenIcons.Check), contentDescription = null, tint = colors.onPrimary)
-        } else {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    localDigits(remaining),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = colors.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-                if (total > 1) Text("/" + localDigits(total), style = MaterialTheme.typography.labelSmall, color = colors.primary)
+        AnimatedContent(
+            targetState = done,
+            transitionSpec = {
+                if (motion) {
+                    (scaleIn(DeenMotion.bouncy(), initialScale = 0.3f) + fadeIn(tween(150))) togetherWith
+                        (scaleOut(tween(150), targetScale = 0.6f) + fadeOut(tween(120)))
+                } else {
+                    fadeIn(snap()) togetherWith fadeOut(snap())
+                }
+            },
+            label = "check"
+        ) { isDone ->
+            if (isDone) {
+                Icon(painterResource(DeenIcons.Check), contentDescription = null, tint = colors.onPrimary)
+            } else {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    RollingText(
+                        localDigits(remaining),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = colors.primary,
+                        fontWeight = FontWeight.SemiBold,
+                        down = true
+                    )
+                    if (total > 1) Text("/" + localDigits(total), style = MaterialTheme.typography.labelSmall, color = colors.primary)
+                }
             }
         }
     }
