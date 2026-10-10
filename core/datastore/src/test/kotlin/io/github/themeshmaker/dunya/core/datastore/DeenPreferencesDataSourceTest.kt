@@ -2,13 +2,20 @@ package io.github.themeshmaker.dunya.core.datastore
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataStore
+import io.github.themeshmaker.dunya.core.model.AdhanVoice
+import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.AsrMethod
 import io.github.themeshmaker.dunya.core.model.CalculationMethod
+import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.Coordinates
 import io.github.themeshmaker.dunya.core.model.LocationSource
+import io.github.themeshmaker.dunya.core.model.MasjidReminder
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
+import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
+import io.github.themeshmaker.dunya.core.model.ThemeMode
+import io.github.themeshmaker.dunya.core.model.UiStyle
 import java.io.ByteArrayOutputStream
 import java.time.ZoneId
 import kotlinx.coroutines.flow.Flow
@@ -81,5 +88,39 @@ class DeenPreferencesDataSourceTest {
     @Test(expected = CorruptionException::class)
     fun garbageIsReportedAsCorruption() = runTest {
         decode("{not json")
+    }
+
+    @Test
+    fun newSettingsRoundTripAndOldFilesGetDefaults() = runTest {
+        val old = DeenPreferencesDataSource(
+            InMemoryDataStore(decode("""{"onboardingComplete":true,"alerts":{"reminderMinutes":10}}"""))
+        ).userData.first()
+        assertEquals(UiStyle.CLASSIC, old.uiStyle)
+        assertEquals(ThemeMode.SYSTEM, old.themeMode)
+        assertEquals(AdhanVoice.DEFAULT, old.alertSettings.voice)
+        assertFalse(old.alertSettings.masjid.enabled)
+        assertEquals(10, old.alertSettings.reminderMinutes)
+
+        val store = InMemoryDataStore()
+        val source = DeenPreferencesDataSource(store)
+        val alerts = AlertSettings(
+            voice = AdhanVoice.TRADITIONAL,
+            fajrVoice = AdhanVoice.CUSTOM,
+            masjid = MasjidReminder(enabled = true, minutesBefore = 35, prayers = setOf(Prayer.FAJR, Prayer.ISHA))
+        )
+        source.setAlertSettings(alerts)
+        source.setUiStyle(UiStyle.SLEEK)
+        source.setThemeMode(ThemeMode.OLED_BLACK)
+        source.setTimetableCalendar(CalendarType.HIJRI)
+        source.setReadingSettings(ReadingSettings(arabicScale = 1.3f, showTranslation = false, haptics = false))
+        source.setSecretsUnlocked(true)
+        val bytes = ByteArrayOutputStream().also { serializer.writeTo(store.data.first(), it) }.toByteArray()
+        val reloaded = DeenPreferencesDataSource(InMemoryDataStore(decode(bytes.decodeToString()))).userData.first()
+        assertEquals(alerts, reloaded.alertSettings)
+        assertEquals(UiStyle.SLEEK, reloaded.uiStyle)
+        assertEquals(ThemeMode.OLED_BLACK, reloaded.themeMode)
+        assertEquals(CalendarType.HIJRI, reloaded.timetableCalendar)
+        assertEquals(ReadingSettings(1.3f, showTranslation = false, haptics = false), reloaded.reading)
+        assertTrue(reloaded.secretsUnlocked)
     }
 }

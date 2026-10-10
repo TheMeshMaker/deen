@@ -9,7 +9,9 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.github.themeshmaker.dunya.core.model.AdhkarCategory
 import io.github.themeshmaker.dunya.core.model.AlertKind
+import io.github.themeshmaker.dunya.core.model.DeenLinks
 import io.github.themeshmaker.dunya.core.model.PlannedAlert
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.ui.labelRes
@@ -44,7 +46,8 @@ class AlertNotifications @Inject constructor(@ApplicationContext private val con
                 CHANNEL_REMINDER,
                 context.getString(R.string.core_alarm_channel_reminder),
                 NotificationManager.IMPORTANCE_DEFAULT
-            )
+            ),
+            NotificationChannel(CHANNEL_MASJID, context.getString(R.string.core_alarm_channel_masjid), NotificationManager.IMPORTANCE_HIGH)
         )
         context.getSystemService(NotificationManager::class.java).createNotificationChannels(channels)
     }
@@ -84,8 +87,36 @@ class AlertNotifications @Inject constructor(@ApplicationContext private val con
             .setWhen(alert.prayerAt.toEpochMilli())
             .setShowWhen(true)
             .setContentIntent(openAppIntent())
+            .addAction(0, context.getString(R.string.core_alarm_dua_after_adhan), openAppIntent(DeenLinks.adhkar(AdhkarCategory.ADHAN)))
             .build()
         manager.notify(PRAYER_NOTIFICATION_ID, notification)
+    }
+
+    /** "Time to head to the masjid": a few minutes' walk before the prayer. */
+    @SuppressLint("MissingPermission")
+    fun showMasjid(alert: PlannedAlert, zone: ZoneId) {
+        if (!manager.areNotificationsEnabled()) return
+        val minutes = Duration.between(alert.at, alert.prayerAt).toMinutes().toInt().coerceAtLeast(1)
+        val mosqueAdhkar = openAppIntent(DeenLinks.adhkar(AdhkarCategory.MOSQUE))
+        val notification = NotificationCompat.Builder(context, CHANNEL_MASJID)
+            .setSmallIcon(R.drawable.ic_stat_deen)
+            .setContentTitle(context.getString(R.string.core_alarm_masjid_title))
+            .setContentText(
+                context.resources.getQuantityString(
+                    R.plurals.core_alarm_masjid_body,
+                    minutes,
+                    prayerName(alert, zone),
+                    time(alert, zone),
+                    minutes
+                )
+            )
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setAutoCancel(true)
+            .setTimeoutAfter(Duration.between(alert.at, alert.prayerAt).toMillis().coerceAtLeast(60_000))
+            .setContentIntent(mosqueAdhkar)
+            .addAction(0, context.getString(R.string.core_alarm_masjid_action), mosqueAdhkar)
+            .build()
+        manager.notify(MASJID_NOTIFICATION_ID, notification)
     }
 
     @SuppressLint("MissingPermission")
@@ -122,11 +153,19 @@ class AlertNotifications @Inject constructor(@ApplicationContext private val con
         .apply { timeZone = TimeZone.getTimeZone(zone) }
         .format(Date(alert.prayerAt.toEpochMilli()))
 
-    private fun openAppIntent(): PendingIntent? {
+    /** Opens the app, optionally at an in-app [link] (see [DeenLinks]). */
+    private fun openAppIntent(link: String? = null): PendingIntent? {
         val launch = context.packageManager.getLaunchIntentForPackage(context.packageName) ?: return null
+        link?.let {
+            // Reach the running activity too (MainActivity is singleTop), not only a fresh start.
+            launch.putExtra(
+                DeenLinks.EXTRA_OPEN,
+                it
+            ).addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP or android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
         return PendingIntent.getActivity(
             context,
-            OPEN_APP_REQUEST_CODE,
+            OPEN_APP_REQUEST_CODE + (link?.let { LINK_CODES.indexOf(it) + 1 } ?: 0),
             launch,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -136,10 +175,15 @@ class AlertNotifications @Inject constructor(@ApplicationContext private val con
         const val CHANNEL_ADHAN = "adhan_playback"
         const val CHANNEL_PRAYER = "prayer_notification"
         const val CHANNEL_REMINDER = "prayer_reminder"
+        const val CHANNEL_MASJID = "masjid_reminder"
 
         internal const val ADHAN_NOTIFICATION_ID = 1
         private const val PRAYER_NOTIFICATION_ID = 2
         private const val REMINDER_NOTIFICATION_ID = 3
-        private const val OPEN_APP_REQUEST_CODE = 2001
+        private const val MASJID_NOTIFICATION_ID = 4
+        private const val OPEN_APP_REQUEST_CODE = 2100
+
+        /** Each in-app link gets its own PendingIntent (request code), or they would overwrite each other's extras. */
+        private val LINK_CODES = listOf(DeenLinks.adhkar(AdhkarCategory.ADHAN), DeenLinks.adhkar(AdhkarCategory.MOSQUE))
     }
 }

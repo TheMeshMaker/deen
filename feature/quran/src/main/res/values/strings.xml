@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_quran_title">Quran</string>
+    <string name="feature_quran_search">Search surahs</string>
+    <string name="feature_quran_tab_surahs">Surahs</string>
+    <string name="feature_quran_tab_juz">Juz</string>
+    <string name="feature_quran_tab_bookmarks">Bookmarks</string>
+    <string name="feature_quran_juz">Juz %1$s</string>
+    <string name="feature_quran_position">%1$s, verse %2$s</string>
+    <string name="feature_quran_verse">Verse %1$s</string>
+    <string name="feature_quran_continue">Continue reading</string>
+    <string name="feature_quran_continue_button">Continue</string>
+    <string name="feature_quran_meccan">Meccan</string>
+    <string name="feature_quran_medinan">Medinan</string>
+    <string name="feature_quran_surah_name">%1$s</string>
+    <string name="feature_quran_bookmarks_empty">Tap a verse while reading to bookmark it.</string>
+    <string name="feature_quran_bookmark">Bookmark</string>
+    <string name="feature_quran_unbookmark">Remove</string>
+    <string name="feature_quran_bookmarked">Bookmarked</string>
+    <string name="feature_quran_previous">Previous surah</string>
+    <string name="feature_quran_next">Next surah</string>
+    <plurals name="feature_quran_verses">
+        <item quantity="one">%1$s verse</item>
+        <item quantity="other">%1$s verses</item>
+    </plurals>
+</resources>

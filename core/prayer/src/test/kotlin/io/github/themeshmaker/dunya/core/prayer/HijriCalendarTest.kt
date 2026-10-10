@@ -3,6 +3,7 @@ package io.github.themeshmaker.dunya.core.prayer
 import io.github.themeshmaker.dunya.core.model.HijriDate
 import java.time.LocalDate
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HijriCalendarTest {
@@ -36,5 +37,18 @@ class HijriCalendarTest {
         val date = LocalDate.parse("2016-01-05")
         assertEquals(HijriDate(1437, 3, 26), calendar.toHijri(date, offsetDays = 1))
         assertEquals(HijriDate(1437, 3, 24), calendar.toHijri(date, offsetDays = -1))
+    }
+
+    @Test
+    fun monthDatesCoverExactlyThatHijriMonth() {
+        listOf(0, 1, -1).forEach { offset ->
+            val dates = calendar.monthDates(1448, 9, offset)
+            assertTrue(dates.size in 29..30)
+            dates.forEachIndexed { i, date ->
+                assertEquals(HijriDate(1448, 9, i + 1), calendar.toHijri(date, offset))
+            }
+            assertEquals(1448 to 8, calendar.toHijri(dates.first().minusDays(1), offset).let { it.year to it.month })
+            assertEquals(1448 to 10, calendar.toHijri(dates.last().plusDays(1), offset).let { it.year to it.month })
+        }
     }
 }

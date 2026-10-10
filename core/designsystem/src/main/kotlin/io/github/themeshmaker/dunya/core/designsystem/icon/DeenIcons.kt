@@ -50,4 +50,90 @@ object DeenIcons {
     @DrawableRes val Schedule = R.drawable.deen_ic_schedule
 
     @DrawableRes val Battery = R.drawable.deen_ic_battery
+
+    // Settings, Quran, adhkar and tools.
+    @DrawableRes val Quran = R.drawable.deen_ic_quran
+
+    @DrawableRes val QuranFilled = R.drawable.deen_ic_quran_filled
+
+    @DrawableRes val Settings = R.drawable.deen_ic_settings
+
+    @DrawableRes val Calendar = R.drawable.deen_ic_calendar
+
+    @DrawableRes val Language = R.drawable.deen_ic_language
+
+    @DrawableRes val Palette = R.drawable.deen_ic_palette
+
+    @DrawableRes val Style = R.drawable.deen_ic_style
+
+    @DrawableRes val Mosque = R.drawable.deen_ic_mosque
+
+    @DrawableRes val Play = R.drawable.deen_ic_play
+
+    @DrawableRes val Pause = R.drawable.deen_ic_pause
+
+    @DrawableRes val Stop = R.drawable.deen_ic_stop
+
+    /** Mirrors automatically in right-to-left layouts. */
+    @DrawableRes val ChevronStart = R.drawable.deen_ic_chevron_start
+
+    /** Mirrors automatically in right-to-left layouts. */
+    @DrawableRes val ChevronEnd = R.drawable.deen_ic_chevron_end
+
+    @DrawableRes val Bookmark = R.drawable.deen_ic_bookmark
+
+    @DrawableRes val BookmarkFilled = R.drawable.deen_ic_bookmark_filled
+
+    @DrawableRes val Reset = R.drawable.deen_ic_reset
+
+    @DrawableRes val Check = R.drawable.deen_ic_check
+
+    @DrawableRes val Info = R.drawable.deen_ic_info
+
+    @DrawableRes val Hadith = R.drawable.deen_ic_hadith
+
+    @DrawableRes val AudioFile = R.drawable.deen_ic_audio_file
+
+    @DrawableRes val Expand = R.drawable.deen_ic_expand
+
+    @DrawableRes val TextSize = R.drawable.deen_ic_text_size
+
+    @DrawableRes val DarkMode = R.drawable.deen_ic_dark_mode
+
+    @DrawableRes val Support = R.drawable.deen_ic_support
+
+    @DrawableRes val Code = R.drawable.deen_ic_code
+
+    @DrawableRes val Privacy = R.drawable.deen_ic_privacy
+
+    @DrawableRes val Vibration = R.drawable.deen_ic_vibration
+
+    @DrawableRes val Widgets = R.drawable.deen_ic_widgets
+
+    @DrawableRes val Touch = R.drawable.deen_ic_touch
+
+    @DrawableRes val Explore = R.drawable.deen_ic_explore
+
+    /** Mirrors automatically in right-to-left layouts. */
+    @DrawableRes val List = R.drawable.deen_ic_list
+
+    @DrawableRes val History = R.drawable.deen_ic_history
+
+    @DrawableRes val TranslationOff = R.drawable.deen_ic_translate_off
+
+    @DrawableRes val Sun = R.drawable.deen_ic_sun
+
+    @DrawableRes val Night = R.drawable.deen_ic_night
+
+    @DrawableRes val Water = R.drawable.deen_ic_water
+
+    @DrawableRes val Home = R.drawable.deen_ic_home
+
+    @DrawableRes val Twilight = R.drawable.deen_ic_twilight
+
+    @DrawableRes val Evening = R.drawable.deen_ic_evening
+
+    @DrawableRes val Bed = R.drawable.deen_ic_bed
+
+    @DrawableRes val AlarmOn = R.drawable.deen_ic_alarm_on
 }

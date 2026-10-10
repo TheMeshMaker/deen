@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_adhkar_title">الأذكار</string>
-    <string name="feature_adhkar_coming_soon">أذكار الصباح والمساء والنوم وما بعد الصلاة تصل في المرحلة الثالثة.</string>
+    <string name="feature_adhkar_now">الآن</string>
+    <string name="feature_adhkar_all">كل الأذكار</string>
+    <string name="feature_adhkar_progress">%1$s من %2$s اليوم</string>
+    <string name="feature_adhkar_tap_hint">اضغط على البطاقة كلما قلت الذكر، وتنتقل وحدها عند اكتماله.</string>
+    <string name="feature_adhkar_reset">البدء من جديد</string>
+    <string name="feature_adhkar_reset_body">مسح عدّ هذه الأذكار لليوم؟</string>
+    <string name="feature_adhkar_all_done">اكتملت، تقبّل الله منك.</string>
+    <string name="feature_adhkar_virtue">الفضل</string>
+    <string name="feature_adhkar_source">المصدر</string>
+    <string name="feature_adhkar_less">إخفاء</string>
+    <string name="feature_adhkar_count_label">قيل %1$s من %2$s مرات</string>
+    <string name="feature_adhkar_review_note">النص العربي مطابق للأحاديث المذكورة ولنص المصحف، والترجمة الإنجليزية من إعداد دِين وبانتظار المراجعة.</string>
+    <string name="feature_tasbih_title">السبحة</string>
+    <string name="feature_tasbih_today">%1$s اليوم</string>
+    <string name="feature_tasbih_open">افتح</string>
+    <string name="feature_tasbih_reset">تصفير العدّاد</string>
+    <string name="feature_tasbih_tap">العدد: %1$s. اضغط للزيادة.</string>
+    <string name="feature_tasbih_today_label">اليوم</string>
+    <string name="feature_tasbih_all_time">المجموع</string>
 </resources>

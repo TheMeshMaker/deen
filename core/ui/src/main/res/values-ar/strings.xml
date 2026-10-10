@@ -51,4 +51,17 @@
         <item>ذو الحجة</item>
     </string-array>
     <string name="core_ui_hijri_date">%1$d %2$s %3$d هـ</string>
+
+    <string name="core_ui_back">رجوع</string>
+    <string name="core_ui_theme_emerald">زمرّد</string>
+    <string name="core_ui_theme_kiswah">كسوة</string>
+    <string name="core_ui_theme_desert">صحراء</string>
+    <string name="core_ui_read_more">اقرأ المزيد</string>
+    <string name="core_ui_share">مشاركة</string>
+    <string name="core_ui_copy">نسخ</string>
+    <string name="core_ui_copied">تم النسخ</string>
+    <string name="core_ui_search">بحث</string>
+    <string name="core_ui_clear">مسح</string>
+    <string name="core_ui_daily_hadith">حديث اليوم</string>
+    <string name="core_ui_daily_fact">من سيرة النبي ﷺ</string>
 </resources>

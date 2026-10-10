@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_more_title">More</string>
+    <string name="feature_more_qibla">Qibla</string>
+    <string name="feature_more_qibla_body">Compass to the Kaaba</string>
+    <string name="feature_more_timetable">Monthly timetable</string>
+    <string name="feature_more_timetable_body">Prayer times by Hijri or Gregorian date</string>
+    <string name="feature_more_tasbih">Tasbih</string>
+    <string name="feature_more_tasbih_body">Counter with gentle vibration</string>
     <string name="feature_more_settings">Settings</string>
-    <string name="feature_more_reliability">Make sure the adhan always plays</string>
+    <string name="feature_more_settings_body">Theme, style, language, adhan and more</string>
+    <string name="feature_more_reliability">Make sure the adhan plays</string>
+    <string name="feature_more_reliability_body">Notifications, alarms and battery</string>
+    <string name="feature_more_sources">Sources and licences</string>
+    <string name="feature_more_sources_body">Where every text and recording comes from</string>
     <string name="feature_more_support">Support Deen</string>
-    <string name="feature_more_about">About &amp; licenses</string>
-    <string name="feature_more_milestone_2">Coming in Milestone 2</string>
-    <string name="feature_more_milestone_5">Coming in Milestone 5</string>
-    <string name="feature_more_channel_play">Google Play build</string>
-    <string name="feature_more_channel_foss">FOSS build (F-Droid)</string>
-    <string name="feature_more_build_line">Deen %1$s · %2$s</string>
-    <string name="feature_more_themes_title">Themes</string>
-    <string name="feature_more_themes_free">All themes are free.</string>
-    <string name="feature_more_theme_emerald">Emerald</string>
-    <string name="feature_more_theme_kiswah">Kiswah</string>
-    <string name="feature_more_theme_desert">Desert</string>
-    <string name="feature_more_reliability_body">Notifications, alarms and battery settings</string>
+    <string name="feature_more_support_body">Donations are coming. Deen will always be free, without ads.</string>
+    <string name="feature_more_footer">Free and open source. No ads, no tracking.</string>
 </resources>

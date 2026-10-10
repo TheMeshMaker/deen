@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DeenWidget" parent="android:Widget">
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="DeenWidget.Small">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#CCFFFFFF</item>
+    </style>
+
+    <style name="DeenWidget.Time">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="DeenWidget.Title">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="DeenWidget.Subtitle">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#E6FFFFFF</item>
+    </style>
+</resources>

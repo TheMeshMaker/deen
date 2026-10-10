@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_widget_name">Prayer times</string>
+    <string name="feature_widget_description">The next prayer with a countdown, and today\'s times.</string>
+    <string name="feature_widget_in">in %s</string>
+    <string name="feature_widget_setup">Open Deen to set your location</string>
+</resources>

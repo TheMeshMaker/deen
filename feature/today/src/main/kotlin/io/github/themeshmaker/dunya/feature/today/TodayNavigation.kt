@@ -7,8 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object TodayRoute
 
-fun NavGraphBuilder.todayScreen(onChangeLocation: () -> Unit, onChangeMethod: () -> Unit, onOpenReliability: () -> Unit) {
-    composable<TodayRoute> {
-        TodayRoute(onChangeLocation = onChangeLocation, onChangeMethod = onChangeMethod, onOpenReliability = onOpenReliability)
-    }
+fun NavGraphBuilder.todayScreen(actions: TodayActions) {
+    composable<TodayRoute> { TodayRoute(actions) }
 }

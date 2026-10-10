@@ -1,7 +1,9 @@
 package io.github.themeshmaker.dunya.core.designsystem.theme
 
 import android.os.Build
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -13,9 +15,13 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
+import io.github.themeshmaker.dunya.core.model.UiStyle
 
 /** The two-colour gradient each theme uses for its hero surfaces, plus what goes on top of it. */
 @Immutable
@@ -50,7 +56,56 @@ fun ThemeStyle.gradient(): DeenGradient = when (this) {
     ThemeStyle.DESERT -> DesertGradient
 }
 
+/**
+ * The app style (UiStyle) turned into concrete values: every screen draws its cards, pages and
+ * headers from here, so Classic and Sleek are the same screens in two looks.
+ */
+@Immutable
+data class DeenLook(
+    val uiStyle: UiStyle,
+    /** Page background behind cards. */
+    val page: Color,
+    val card: Color,
+    val cardShape: Shape,
+    val cardBorder: BorderStroke?,
+    val cardElevation: Dp,
+    val heroShape: Shape,
+    /** Horizontal page padding and the gap between cards. */
+    val gutter: Dp,
+    val gap: Dp
+) {
+    val sleek: Boolean get() = uiStyle == UiStyle.SLEEK
+}
+
+private fun lookFor(uiStyle: UiStyle, colors: ColorScheme, dark: Boolean): DeenLook = when (uiStyle) {
+    UiStyle.CLASSIC -> DeenLook(
+        uiStyle = uiStyle,
+        page = colors.background,
+        card = colors.surfaceContainerLow,
+        cardShape = RoundedCornerShape(20.dp),
+        cardBorder = null,
+        cardElevation = 0.dp,
+        heroShape = RoundedCornerShape(28.dp),
+        gutter = 16.dp,
+        gap = 12.dp
+    )
+
+    // Sleek: white cards floating on a faintly tinted page (light), hairline-edged dark cards (dark).
+    UiStyle.SLEEK -> DeenLook(
+        uiStyle = uiStyle,
+        page = if (dark) colors.background else colors.surfaceContainerLow,
+        card = if (dark) colors.surfaceContainer else Color.White,
+        cardShape = RoundedCornerShape(28.dp),
+        cardBorder = BorderStroke(1.dp, colors.outlineVariant.copy(alpha = if (dark) 0.45f else 0.35f)),
+        cardElevation = if (dark) 0.dp else 1.dp,
+        heroShape = RoundedCornerShape(bottomStart = 36.dp, bottomEnd = 36.dp),
+        gutter = 20.dp,
+        gap = 14.dp
+    )
+}
+
 private val LocalDeenGradient = staticCompositionLocalOf { EmeraldGradient }
+private val LocalDeenLook = staticCompositionLocalOf<DeenLook> { error("DeenTheme not set") }
 
 /** Deen-specific theme values, alongside [MaterialTheme]. */
 object DeenTheme {
@@ -58,6 +113,11 @@ object DeenTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalDeenGradient.current
+
+    val look: DeenLook
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalDeenLook.current
 }
 
 private fun ThemeStyle.lightScheme(): ColorScheme = when (this) {
@@ -98,6 +158,7 @@ private fun ColorScheme.toOledBlack(): ColorScheme = copy(
 
 /**
  * @param style one of the (free) colour themes; Emerald green-and-white by default.
+ * @param uiStyle the layout style (Classic or Sleek), independent of the colours.
  * @param dynamicColor use the wallpaper's Material You colours instead (Android 12+). Off by
  *   default: Deen keeps its own look.
  */
@@ -105,6 +166,7 @@ private fun ColorScheme.toOledBlack(): ColorScheme = copy(
 fun DeenTheme(
     style: ThemeStyle = ThemeStyle.EMERALD,
     themeMode: ThemeMode = ThemeMode.SYSTEM,
+    uiStyle: UiStyle = UiStyle.CLASSIC,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -122,10 +184,13 @@ fun DeenTheme(
     }
     val colors = if (themeMode == ThemeMode.OLED_BLACK) base.toOledBlack() else base
 
-    CompositionLocalProvider(LocalDeenGradient provides style.gradient()) {
+    CompositionLocalProvider(
+        LocalDeenGradient provides style.gradient(),
+        LocalDeenLook provides lookFor(uiStyle, colors, dark)
+    ) {
         MaterialTheme(
             colorScheme = colors,
-            typography = DeenTypography,
+            typography = if (uiStyle == UiStyle.SLEEK) SleekTypography else DeenTypography,
             shapes = DeenShapes,
             content = content
         )

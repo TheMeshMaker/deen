@@ -1,22 +1,47 @@
 # Content sources and third-party assets
 
-Everything bundled in Deen that isn't original code, with its license.
+Everything bundled in Deen that isn't original code, with its licence. The religious texts are
+built by the scripts in [`tools/content`](tools/content/README.md); the app shows a summary of this
+page under Settings → Sources and licences.
 
-| Asset | Where | Source | License |
+## Religious texts
+
+| Content | Where | Source | Licence |
+|---|---|---|---|
+| Quran text (Uthmani, 6,236 verses) | `core/content/src/main/assets/quran/quran-uthmani.txt` | [Tanzil Project](https://tanzil.net), Uthmani text 1.1 with pause marks and sajdah signs | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). **Bundled verbatim, with its copyright block; changing the text is not allowed.** The reader only shows the first four words of verse 1 (the Bismillah) as a header. |
+| Quran metadata (surah names, revelation place, juz, pages) | `core/content/src/main/assets/quran/quran-meta.json` | Tanzil `quran-data.xml`, via `tools/content/build_quran_meta.py` | CC BY 3.0 |
+| Morning and evening adhkar (Arabic, counts, Arabic virtues) | `core/content/src/main/assets/adhkar.json` | [Seen-Arabic/Morning-And-Evening-Adhkar-DB](https://github.com/Seen-Arabic/Morning-And-Evening-Adhkar-DB) `ar.json` (Hisn al-Muslim wording) | MIT, see [licenses/Seen-Arabic-Adhkar-MIT.txt](licenses/Seen-Arabic-Adhkar-MIT.txt). Their English was **not** used. Quranic passages are taken from the Tanzil text instead of their typed copy; one wrong source line was corrected. |
+| Other adhkar (after prayer, sleep, waking up, adhan, mosque, wudu, leaving home) | `core/content/src/main/assets/adhkar.json` | Compiled for Deen from the cited hadith; `build_adhkar.py` checks every clause against the Arabic of the cited collection | Classical texts (public domain); compilation GPL-3.0-or-later |
+| An-Nawawi's Forty (Arabic) | `core/content/src/main/assets/hadith/nawawi40.json` | [fawazahmed0/hadith-api](https://github.com/fawazahmed0/hadith-api) `ara-nawawi`, lightly cleaned | Classical text (public domain); dataset Unlicense |
+| Full hadith collections, Arabic: al-Bukhari, Muslim, Abu Dawud, at-Tirmidhi, an-Nasa'i, Ibn Majah, Malik's Muwatta, Forty Qudsi (about 36,000 hadith) | `core/content/src/main/assets/hadith/` | hadith-api `ara-*` editions: text, numbering, book ranges and gradings (al-Albani preferred, otherwise the listed scholar) | Classical texts (public domain); dataset [Unlicense](https://unlicense.org) |
+| Arabic book (kitab) titles of those collections | `hadith/collections.json` | The compilers' own titles, matched by English name from [AhmedBaset/hadith-json](https://github.com/AhmedBaset/hadith-json) (only the titles are used) | Public domain (classical titles) |
+| Facts about the Prophet ﷺ (61, Arabic and English) | `core/content/src/main/assets/prophet-facts.json` | Written for Deen from the cited hadith; `build_facts.py` checks each hadith's key phrase in the cited collection | GPL-3.0-or-later |
+| English translations of the adhkar, an-Nawawi's Forty and the facts | the JSON files above | Written for Deen. The English translations that come with the datasets above have unclear copyright and are **not** used. | GPL-3.0-or-later |
+
+**Review:** all religious content needs a qualified reviewer before the 1.0 release (docs/BLUEPRINT.md §15). The
+full collections are Arabic only until an English translation with a clear licence is found.
+
+## Adhan recordings
+
+| Voice | Where | Source | Licence |
+|---|---|---|---|
+| "Deen" (default, 2:34) | `core/alarm/src/main/res/raw/adhan_default.ogg` | ["Beautiful adhan.ogg"](https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg) by Adam-synagda, Wikimedia Commons | CC0 1.0 |
+| "Traditional" (3:03) | `core/alarm/src/main/res/raw/adhan_traditional.ogg` | ["Azan.ogg"](https://commons.wikimedia.org/wiki/File:Azan.ogg) by Andrewler, Wikimedia Commons, unmodified | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| "Aaqib Azeez" (1:27) | `core/alarm/src/main/res/raw/adhan_aaqib.ogg` | ["The Adhan - Muslim Call to Prayer - Aaqib Azeez.mp3"](https://commons.wikimedia.org/wiki/File:The_Adhan_-_Muslim_Call_to_Prayer_-_Aaqib_Azeez.mp3) by Atcovi, Wikimedia Commons. Changed: loudness normalised (−9 LUFS) and converted to Ogg Vorbis. | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); the changed file is under the same licence |
+| Your own recording | copied into the app's device-protected storage | Picked by the user | The user's own |
+
+None of the bundled recordings includes the Fajr phrase "as-salātu khayrun mina-n-nawm"; Settings lets the user
+pick a separate recording for Fajr.
+
+## Fonts, icons and data
+
+| Asset | Where | Source | Licence |
 |---|---|---|---|
 | Readex Pro font (variable) | `core/designsystem/src/main/res/font/readex_pro.ttf` | [ThomasJockin/readexpro](https://github.com/ThomasJockin/readexpro) via Google Fonts | SIL OFL 1.1, see [licenses/ReadexPro-OFL.txt](licenses/ReadexPro-OFL.txt) |
 | Amiri font (Regular, Bold) | `core/designsystem/src/main/res/font/` | [aliftype/amiri](https://github.com/aliftype/amiri) via Google Fonts | SIL OFL 1.1, see [licenses/Amiri-OFL.txt](licenses/Amiri-OFL.txt) |
-| UI icons | `core/designsystem/src/main/res/drawable/deen_ic_*.xml` | [Material Symbols Rounded](https://github.com/google/material-design-icons) | Apache-2.0 |
-| App icon (Rub el Hizb star) | `app/src/main/res/drawable/ic_launcher_*.xml` | Original, geometric construction | GPL-3.0-or-later (with the code) |
+| Amiri Quran font | `core/designsystem/src/main/res/font/amiri_quran.ttf` | [aliftype/amiri](https://github.com/aliftype/amiri) release 1.003 | SIL OFL 1.1, see [licenses/Amiri-OFL.txt](licenses/Amiri-OFL.txt) |
+| UI icons | `core/designsystem/src/main/res/drawable/deen_ic_*.xml` | [Material Symbols Rounded](https://github.com/google/material-design-icons), except the prayer-beads icon (`deen_ic_adhkar*.xml`), drawn for Deen | Apache-2.0 / GPL-3.0-or-later |
+| App icon (mihrab arch and crescent) | `app/src/main/res/drawable/ic_launcher_*.xml`, `core/alarm/.../ic_stat_deen.xml` | Original, geometric construction | GPL-3.0-or-later (with the code) |
 | City database | `core/location/src/main/assets/cities.tsv` | [GeoNames](https://www.geonames.org/) `cities5000`, `admin1CodesASCII`, `alternateNamesV2` (Arabic names), built by `tools/geonames/build_cities.py` | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Contains data from GeoNames. |
-| Prayer-time calculation | dependency `com.batoulapps.adhan:adhan2` | [batoulapps/adhan-kotlin](https://github.com/batoulapps/adhan-kotlin) | MIT |
-| Default adhan (provisional, awaiting the maintainer's approval) | `core/alarm/src/main/res/raw/adhan_default.ogg` | ["Beautiful adhan.ogg"](https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg) by Adam-synagda, Wikimedia Commons (2 min 34 s) | CC0 1.0 (public domain dedication) |
+| Prayer times and Qibla | dependency `com.batoulapps.adhan:adhan2` | [batoulapps/adhan-kotlin](https://github.com/batoulapps/adhan-kotlin) | MIT |
 | Official timetable fixtures (tests only) | `core/prayer/src/test/resources/times/` | Collected by the adhan project from Umm al-Qura, Moonsighting Committee, Diyanet, MUIS and others | MIT (adhan project) |
-
-## Planned (not bundled yet)
-
-| Content | Candidate source | Notes |
-|---|---|---|
-| Quran verses in adhkar | [Tanzil](https://tanzil.net/) Uthmani text | CC BY 3.0, text must not be modified |
-| Adhkar and hadith | To be decided with the reviewer | Every item needs a reference and grading |
-| Fajr adhan, more voices | To be decided | Only recordings we have the rights to; users can also pick their own file (planned) |

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_widget_name">مواقيت الصلاة</string>
+    <string name="feature_widget_description">الصلاة القادمة مع العدّ التنازلي، ومواقيت اليوم.</string>
+    <string name="feature_widget_in">بعد %s</string>
+    <string name="feature_widget_setup">افتح دِين لتحديد موقعك</string>
+</resources>

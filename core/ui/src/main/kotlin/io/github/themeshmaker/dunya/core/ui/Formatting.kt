@@ -10,7 +10,9 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import io.github.themeshmaker.dunya.core.model.City
 import io.github.themeshmaker.dunya.core.model.HijriDate
+import io.github.themeshmaker.dunya.core.model.LocalizedText
 import io.github.themeshmaker.dunya.core.model.SavedLocation
+import java.text.DecimalFormatSymbols
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DecimalStyle
@@ -68,4 +70,26 @@ fun City.displayName(): String = if (currentLocale.isArabic) arabicName ?: name 
 fun City.displayRegion(): String {
     val country = Locale.Builder().setRegion(countryCode).build().getDisplayCountry(currentLocale)
     return if (region.isBlank() || currentLocale.isArabic) country else "$region, $country"
+}
+
+/** True when the app is showing Arabic. */
+val isArabicUi: Boolean
+    @Composable
+    @ReadOnlyComposable
+    get() = currentLocale.isArabic
+
+/** The text in the current UI language, falling back to the other one. */
+@Composable
+@ReadOnlyComposable
+fun LocalizedText.text(): String = pick(currentLocale.isArabic)
+
+/** Numbers in the UI language's digits (Arabic-Indic in Arabic). */
+@Composable
+@ReadOnlyComposable
+fun localDigits(value: Any): String = value.toString().withDigitsOf(currentLocale)
+
+fun String.withDigitsOf(locale: Locale): String {
+    val zero = DecimalFormatSymbols.getInstance(locale).zeroDigit
+    if (zero == '0') return this
+    return buildString(length) { this@withDigitsOf.forEach { append(if (it in '0'..'9') zero + (it - '0') else it) } }
 }

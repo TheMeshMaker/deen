@@ -4,12 +4,16 @@ import io.github.themeshmaker.dunya.core.domain.DeviceLocationResult
 import io.github.themeshmaker.dunya.core.domain.LocationRepository
 import io.github.themeshmaker.dunya.core.domain.UserDataRepository
 import io.github.themeshmaker.dunya.core.model.AlertSettings
+import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.City
 import io.github.themeshmaker.dunya.core.model.Coordinates
 import io.github.themeshmaker.dunya.core.model.LocationSource
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
+import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
+import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
+import io.github.themeshmaker.dunya.core.model.UiStyle
 import io.github.themeshmaker.dunya.core.model.UserData
 import java.io.FileNotFoundException
 import java.time.ZoneId
@@ -46,6 +50,11 @@ class LocationViewModelTest {
         override suspend fun setOnboardingComplete() = Unit
         override suspend fun setThemeStyle(style: ThemeStyle) = Unit
         override suspend fun setAlertSettings(settings: AlertSettings) = Unit
+        override suspend fun setThemeMode(mode: ThemeMode) = Unit
+        override suspend fun setUiStyle(style: UiStyle) = Unit
+        override suspend fun setSecretsUnlocked(unlocked: Boolean) = Unit
+        override suspend fun setTimetableCalendar(calendar: CalendarType) = Unit
+        override suspend fun setReadingSettings(settings: ReadingSettings) = Unit
         override suspend fun setReliabilityStepConfirmed(step: String, confirmed: Boolean) = Unit
     }
 

@@ -22,7 +22,7 @@ import kotlinx.coroutines.sync.withLock
 /**
  * Turns the plan into AlarmManager alarms (docs/BLUEPRINT.md §9.1):
  * - adhan / prayer notification → `setAlarmClock` (exits Doze, not throttled, respected by OEMs);
- * - reminders → `setExactAndAllowWhileIdle`;
+ * - reminders (before the prayer, masjid) → `setExactAndAllowWhileIdle`;
  * - no exact-alarm permission → `setAndAllowWhileIdle` (may be late; the UI warns about it).
  *
  * Everything here reads only device-protected storage, so it also works before first unlock.
@@ -70,7 +70,7 @@ class AlertScheduler @Inject constructor(
         val at = alert.at.toEpochMilli()
         try {
             when {
-                canScheduleExact() && useAlarmClock && alert.kind != AlertKind.REMINDER ->
+                canScheduleExact() && useAlarmClock && alert.kind in ALARM_CLOCK_KINDS ->
                     alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(at, showAppIntent()), operation)
 
                 canScheduleExact() -> alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, operation)
@@ -110,5 +110,6 @@ class AlertScheduler @Inject constructor(
     private companion object {
         const val TAG = "AlertScheduler"
         const val SHOW_APP_REQUEST_CODE = 2000
+        val ALARM_CLOCK_KINDS = setOf(AlertKind.ADHAN, AlertKind.NOTIFICATION, AlertKind.TEST)
     }
 }

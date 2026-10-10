@@ -51,4 +51,17 @@
         <item>Dhū al-Ḥijjah</item>
     </string-array>
     <string name="core_ui_hijri_date">%1$d %2$s %3$d AH</string>
+
+    <string name="core_ui_back">Back</string>
+    <string name="core_ui_theme_emerald">Emerald</string>
+    <string name="core_ui_theme_kiswah">Kiswah</string>
+    <string name="core_ui_theme_desert">Desert</string>
+    <string name="core_ui_read_more">Read more</string>
+    <string name="core_ui_share">Share</string>
+    <string name="core_ui_copy">Copy</string>
+    <string name="core_ui_copied">Copied</string>
+    <string name="core_ui_search">Search</string>
+    <string name="core_ui_clear">Clear</string>
+    <string name="core_ui_daily_hadith">Hadith of the day</string>
+    <string name="core_ui_daily_fact">About the Prophet ﷺ</string>
 </resources>

@@ -40,18 +40,19 @@ AdMob policy forbids asking users to view ads to "support us", including in rewa
 
 | Area | v1 | Later |
 |---|---|---|
-| Prayer times | Offline calculation, all major methods, Hanafi/standard Asr, high-latitude rules, per-prayer minute offsets, Ramadan Isha +30 for Umm al-Qura | Iqama times, monthly timetable export |
-| Alerts | Per prayer: Adhan / Notification / Silent. Optional pre-adhan reminder. Separate Fajr adhan. Pick your own audio file. | Jumu'ah / Al-Kahf reminder, auto-silent during prayer |
-| Adhkar | Morning, Evening, Before sleep, After prayer. Tap-to-count with haptics. | More categories, adhkar reminders |
-| Tasbih | Presets (33/33/34, 100, custom), ring progress, haptics, daily totals | Volume-key counting |
-| Hadith | Daily card (Arabic + translation + reference + grading), copy/share | Browse/search, favourites |
-| Qibla | Compass with accuracy indicator and calibration hint | — |
-| Hijri | Umm al-Qura date with ±day adjustment | Islamic events calendar |
-| Widget | Next prayer + live countdown | More sizes |
-| Reliability | Setup checklist, OEM routing, "test adhan in 1 minute", alarm health log | — |
+| Prayer times | Offline calculation, all major methods, Hanafi/standard Asr, high-latitude rules, per-prayer minute offsets, Ramadan Isha +30 for Umm al-Qura. **Monthly timetable, paged by Gregorian or Hijri month** ✅ | Iqama times, timetable export |
+| Alerts | Per prayer: Adhan / Notification / Silent. Optional pre-adhan reminder. **Three bundled voices, a separate Fajr voice, your own audio file** ✅. **"Go to the masjid" reminder** (hidden option) ✅ | Jumu'ah / Al-Kahf reminder, auto-silent during prayer |
+| Quran | **Reader with all 114 surahs (Tanzil Uthmani text, Amiri Quran font), surah search, juz index, bookmarks, resumes where you stopped** ✅ | Translations, audio recitation, mushaf page view |
+| Adhkar | **Morning, evening, after prayer, before sleep, waking up, with the adhan, mosque, wudu, leaving home. Tap-to-count, haptics, daily progress** ✅ | Adhkar reminders |
+| Tasbih | **8 phrases, targets 33/99/100/∞, ring progress, haptics, today and all-time totals** ✅ | Volume-key counting |
+| Hadith | **Hadith of the day (an-Nawawi's Forty, Arabic + English), a daily fact about the Prophet ﷺ (61, sourced), the six books + Muwatta + Forty Qudsi in Arabic with gradings, browse by book, search, copy/share** ✅ | English for the full collections (needs a licensed translation), favourites |
+| Qibla | **Compass (rotation vector, true-north corrected), turn hints, vibration when aligned, calibration hint, distance to the Kaaba** ✅ | — |
+| Hijri | Umm al-Qura date with ±day adjustment; Hijri months in the timetable ✅ | Islamic events calendar |
+| Widget | **Next prayer, live countdown, today's five times (RemoteViews)** ✅ | More sizes |
+| Reliability | Setup checklist (the same on every phone), "test adhan in 1 minute", alarm health log ✅ | — |
+| Appearance | **Colour themes (Emerald, Kiswah, Desert) × style (Classic, Sleek) × light/dark/black; app language (phone / English / Arabic)** ✅ | — |
 | Support | Tips (play) / links (foss), share, contribute | — |
 | Platforms | Phones, foldables, tablets | Wear OS |
-| Not planned | Quran reader in v1 (a big separate project) | — |
 
 ---
 
@@ -83,33 +84,31 @@ Exact versions get pinned in `gradle/libs.versions.toml` at scaffold time, using
 
 ```
 Deen/
-├─ app/                      # Application, MainActivity, NavHost, flavor DI bindings
+├─ app/                      # Application, MainActivity, NavHost + tabs, flavor DI bindings
 │  └─ src/{main,play,foss}/
 ├─ build-logic/              # convention plugins (android-library, compose, hilt, feature…)
 ├─ core/
-│  ├─ model/                 # pure Kotlin data classes (PrayerDay, Dhikr, Hadith…)
+│  ├─ model/                 # pure Kotlin data classes (PrayerDay, Dhikr, Hadith, Surah…)
 │  ├─ domain/                # use cases + repository interfaces (pure Kotlin, no Android)
 │  ├─ data/                  # repository implementations
-│  ├─ database/              # Room: content.db (read-only) + user.db
-│  ├─ datastore/             # settings + device-protected schedule snapshot
-│  ├─ prayer/                # adhan2 wrapper, method presets, country→method map, Hijri
+│  ├─ datastore/             # settings (user_preferences.json) + activity (activity.json)
+│  ├─ content/               # bundled Quran, hadith, adhkar, facts (assets) + parsers
+│  ├─ prayer/                # adhan2 wrapper, method presets, Hijri, Qibla
 │  ├─ location/              # LocationSource interface, platform impl, city search
 │  ├─ location-gms/          # Fused impl (play only)
-│  ├─ alarm/                 # planner, scheduler, receivers, AdhanPlaybackService, health log
-│  ├─ oem/                   # ROM detection, settings-intent table, reliability checks
-│  ├─ billing/               # TipJar interface
-│  ├─ billing-play/          # Play Billing impl (play only)
-│  ├─ designsystem/          # theme, colors, type, shapes, components, geometric art
-│  └─ ui/                    # shared composables (PrayerRow, ArabicText, CounterRing…)
+│  ├─ alarm/                 # planner, scheduler, receivers, AdhanService, voices, health log, reliability checks
+│  ├─ designsystem/          # theme, DeenLook (Classic/Sleek), type, components, icons, geometric art
+│  └─ ui/                    # shared composables and formatting, app language, haptics
 ├─ feature/
-│  ├─ onboarding/  today/  adhkar/  tasbih/  qibla/
-│  ├─ reliability/ settings/ support/ about/
-├─ widget/                   # Glance next-prayer widget
-├─ content/                  # source JSON for adhkar, hadith, verses + licenses (human-editable)
-├─ tools/content-builder/    # JVM CLI: validates content → builds content.db
-├─ docs/                     # this blueprint, ADRs, device test runbook
-└─ fastlane/metadata/android/{en-US,ar}/   # store + F-Droid listings
+│  ├─ onboarding/ today/ quran/ hadith/ adhkar/ (incl. tasbih) qibla/ timetable/
+│  ├─ reliability/ settings/ more/ widget/
+├─ tools/geonames/           # builds cities.tsv
+├─ tools/content/            # builds the religious-text assets (see its README)
+└─ docs/                     # this blueprint, device test runbook
 ```
+
+Texts ship as plain assets (JSON, TSV, Tanzil's text file) read on demand, not as a Room database:
+one file per hadith book keeps memory low, and the files stay reviewable in git.
 
 **Dependency rule:** `feature → domain ← data`. Features never touch Room, AlarmManager or Android services directly; everything goes through domain interfaces. That keeps the core testable on the plain JVM.
 
@@ -447,9 +446,11 @@ content/*.json  ──▶  tools/content-builder  ──▶  app/src/main/assets
 
 ### 16.2 Navigation
 
-- **Bottom bar:** Today · Adhkar · Tasbih · Qibla · More.
+- **Bottom bar:** Today · Quran · Hadith · Adhkar · More, shown on those five tabs only (readers get the full screen).
+  In the Sleek style, phones get a floating pill-shaped bar.
 - **Large screens:** the bar becomes a navigation rail on unfolded and tablet screens (`NavigationSuiteScaffold`).
-- **More:** Settings · Reliability · Support · About & licenses.
+- **Today quick actions:** Qibla · Timetable · Tasbih · Settings.
+- **More:** Qibla · Timetable · Tasbih · Settings · Reliability · Sources and licences · Support.
 
 ### 16.3 Today screen
 
@@ -617,8 +618,9 @@ adb reboot
 | **M0** ✅ | Foundation | Repo, build-logic, flavors, CI green, design system, empty screens in the nav shell, runs on the test phone |
 | **M1** ✅ | Prayer times | Engine + golden tests, location (both paths + city search), onboarding, Today screen with live countdown, colour themes |
 | **M2** ✅ | Adhan | Alarm pipeline, playback service, notifications, Reliability center, health log. Verified on ColorOS 17 CN with the app open; the locked-screen run is still to do (docs/device-testing.md) |
-| **M3** | Adhkar and Tasbih | Content pipeline, reader, counter, haptics (sample content is debug-only until reviewed) |
-| **M4** | Hadith, Qibla, Hijri, widget | All four working, plus screenshot tests |
+| **M3** ✅ | Adhkar and Tasbih | Content pipeline (`tools/content`), 9 adhkar categories, reader with counting and haptics, tasbih. Content awaits the reviewer before 1.0 |
+| **M4** ✅ | Hadith, Qibla, Hijri, widget | Daily hadith and fact, full collections in Arabic, Qibla compass, Hijri timetable, home-screen widget. Screenshot tests still to do |
+| **M4+** ✅ | Maintainer requests (2026-10-10) | Quran reader with resume, settings, Classic/Sleek style, app language, adhan voices, masjid reminder, monthly timetable, new app icon |
 | **M5** | Support, settings, polish | Tips/links, full settings, Arabic/English, accessibility pass, large-screen layouts |
 | **M6** | Release | Privacy policy, store and F-Droid listings, Play closed test, OEM beta, v1.0 |
 
@@ -630,8 +632,23 @@ adb reboot
 |---|---|
 | ~~Confirm package spelling~~ `io.github.themeshmaker.dunya` | ✅ done |
 | ~~Repo name + public repo~~ `TheMeshMaker/deen` | ✅ done |
-| Adhan recordings we have the rights to (or approved CC-licensed ones) | M2 |
-| Hadith collections + translation languages | M3 |
+| Approve the three bundled adhan voices (CONTENT_SOURCES.md); a Fajr recording with “as-salātu khayrun mina-n-nawm” | before 1.0 |
+| ~~Hadith collections~~ the six books + Muwatta (Arabic) ✅; an English translation with a clear licence | before 1.0 |
 | Religious reviewer (name/contact) | M3 (content can't ship without them) |
 | Donation links (apply for GitHub Sponsors early, approval takes time) + tip amounts | M5 |
 | Google Play developer account + upload keystore (maintainer creates both) | M6 |
+
+---
+
+## 22. Decisions log (2026-10-10)
+
+Asked for by the maintainer and built in this round:
+
+- **Reliability screen is the same on every phone.** No brand names; the five steps say "if your phone has this". Brand-aware settings shortcuts stay internal (§10).
+- **Quran reader** moves into v1 (it was "not planned"): Tanzil text verbatim, resume position, bookmarks.
+- **Hadith tab** with every major collection. Arabic is public domain and ships in full; the English that circulates with these datasets has no clear licence, so the full collections are Arabic-only for now. Curated sets (an-Nawawi's Forty, facts about the Prophet ﷺ) have English written for Deen.
+- **Daily fact about the Prophet ﷺ**, each from a named hadith that the build checks.
+- **"Style" is separate from colour**: Classic (the M1 look) and Sleek (immersive header, floating cards, pill navigation). Classic stays the default.
+- **Masjid reminder is a hidden option**: About → tap the version seven times.
+- **Tabs:** Today · Quran · Hadith · Adhkar · More. Tasbih lives in Adhkar, Qibla and the timetable are quick actions on Today and in More.
+- **App icon:** a mihrab arch with a gold crescent on the Emerald gradient.

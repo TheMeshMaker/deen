@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_hadith_title">الحديث</string>
+    <string name="feature_hadith_collections">الكتب</string>
+    <string name="feature_hadith_nawawi">الأربعون النووية</string>
+    <string name="feature_hadith_nawawi_body">مع الترجمة · حديث كل يوم</string>
+    <string name="feature_hadith_facts">من سيرة النبي ﷺ</string>
+    <string name="feature_hadith_facts_body">معلومات قصيرة من الأحاديث · واحدة كل يوم</string>
+    <string name="feature_hadith_facts_intro">معلومات عن النبي ﷺ، كل واحدة مأخوذة من الحديث المذكور تحتها، وتظهر واحدة جديدة كل يوم في الشاشة الرئيسية.</string>
+    <string name="feature_hadith_today">اليوم</string>
+    <string name="feature_hadith_arabic_note">الكتب الكاملة بالعربية، مع رقم كل حديث وحكمه عند عالم معروف.</string>
+    <string name="feature_hadith_search">ابحث في النص أو برقم الحديث</string>
+    <string name="feature_hadith_number">رقم %1$s</string>
+    <string name="feature_hadith_sahih">صحيح</string>
+    <string name="feature_hadith_all_authentic">أحاديث هذا الكتاب صحيحة باتفاق العلماء.</string>
+    <string name="feature_hadith_graded">يظهر مع كل حديث حكم أحد العلماء: الأخضر صحيح، والأزرق حسن، والبرتقالي ضعيف، والأحمر موضوع.</string>
+    <string name="feature_hadith_graded_by">الحكم: %1$s</string>
+    <string name="feature_hadith_swipe">%1$s من %2$s · اسحب للمزيد</string>
+    <plurals name="feature_hadith_count">
+        <item quantity="zero">%1$s حديث</item>
+        <item quantity="one">حديث واحد</item>
+        <item quantity="two">حديثان</item>
+        <item quantity="few">%1$s أحاديث</item>
+        <item quantity="many">%1$s حديثًا</item>
+        <item quantity="other">%1$s حديث</item>
+    </plurals>
+    <plurals name="feature_hadith_results">
+        <item quantity="zero">لا نتائج</item>
+        <item quantity="one">نتيجة واحدة</item>
+        <item quantity="two">نتيجتان</item>
+        <item quantity="few">%1$s نتائج</item>
+        <item quantity="many">%1$s نتيجة</item>
+        <item quantity="other">%1$s نتيجة</item>
+    </plurals>
+</resources>

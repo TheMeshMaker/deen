@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object QiblaRoute
 
-fun NavGraphBuilder.qiblaScreen() {
-    composable<QiblaRoute> { QiblaScreen() }
+fun NavGraphBuilder.qiblaScreen(onBack: () -> Unit) {
+    composable<QiblaRoute> { QiblaScreenRoute(onBack = onBack) }
 }

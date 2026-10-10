@@ -42,5 +42,25 @@ data class UserData(
     val themeStyle: ThemeStyle = ThemeStyle.EMERALD,
     val alertSettings: AlertSettings = AlertSettings(),
     /** Reliability steps Android can't detect, confirmed by the user (e.g. OEM auto-start). */
-    val confirmedReliabilitySteps: Set<String> = emptySet()
+    val confirmedReliabilitySteps: Set<String> = emptySet(),
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val uiStyle: UiStyle = UiStyle.CLASSIC,
+    /** Hidden options were unlocked (About → tap the version seven times). */
+    val secretsUnlocked: Boolean = false,
+    val timetableCalendar: CalendarType = CalendarType.GREGORIAN,
+    val reading: ReadingSettings = ReadingSettings()
 )
+
+/** How Quran, hadith and adhkar text is shown. */
+data class ReadingSettings(
+    /** Multiplies the Arabic text size; 0.8–1.6. */
+    val arabicScale: Float = 1f,
+    /** Show translations under Arabic adhkar and hadith. */
+    val showTranslation: Boolean = true,
+    /** Vibrate on each count in the tasbih and adhkar. */
+    val haptics: Boolean = true
+) {
+    companion object {
+        val SCALE_RANGE: ClosedFloatingPointRange<Float> = 0.8f..1.6f
+    }
+}

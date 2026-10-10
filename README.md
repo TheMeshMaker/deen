@@ -1,25 +1,30 @@
 # Deen · دِين
 
 A free, open-source Islamic app for Android: accurate offline prayer times with an adhan
-that actually plays, daily adhkar with a tasbih counter, and a daily hadith with its source.
+that actually plays, the Quran, the major hadith collections, daily adhkar with a tasbih counter,
+and a Qibla compass.
 
 **No ads. No tracking. No paywalls. Ever.**
 
 تطبيق إسلامي مجاني ومفتوح المصدر لأندرويد: مواقيت صلاة دقيقة بدون إنترنت مع أذان يعمل فعلًا،
-وأذكار يومية مع عدّاد تسبيح، وحديث يومي مع مصدره. بلا إعلانات، بلا تتبّع، بلا اشتراكات.
+والقرآن الكريم، وكتب الحديث، والأذكار مع السبحة، واتجاه القبلة. بلا إعلانات، بلا تتبّع، بلا اشتراكات.
 
-> **Status:** early development. Milestone 1 is done: offline prayer times, location (GPS or offline
-> city search), onboarding, the Today screen with a live countdown, and three free colour themes.
-> Adhan alarms arrive in Milestone 2. The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
+> **Status:** in development, milestones 0–4 done. The full plan is in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
+> Religious content is awaiting review by a qualified person before version 1.0.
 
-## Planned for v1
+## Features
 
-- Prayer times calculated on the device (Umm al-Qura, MWL, ISNA, Egypt, Karachi and more)
-- Adhan alarms built to survive battery savers on Xiaomi, OPPO, vivo, Samsung, Huawei and others
-- Morning, evening, before-sleep and after-prayer adhkar, with a tasbih counter
-- Daily hadith with Arabic text, translation, reference and grading
-- Qibla compass, Hijri date, home-screen widget
-- Arabic and English, Light / Dark / OLED Black, and free colour themes (Emerald, Kiswah, Desert)
+- **Prayer times** calculated on the phone (Umm al-Qura, MWL, ISNA, Egypt, Karachi and more), with a live
+  countdown and a monthly timetable by Gregorian or Hijri month
+- **Adhan alarms** built to survive battery savers, a checklist that works on every Android phone, three adhan
+  voices or your own recording (also a separate one for Fajr), reminders before the prayer
+- **Quran** (Tanzil Uthmani text): every surah, juz index, bookmarks, and it opens where you stopped
+- **Hadith**: a hadith of the day from an-Nawawi's Forty, a daily fact about the Prophet ﷺ, and the six books,
+  the Muwatta and the Forty Qudsi in Arabic with gradings and search
+- **Adhkar** for morning, evening, after prayer, sleep, waking up, the adhan, the mosque, wudu and leaving
+  home, with tap-to-count; a **tasbih** with vibration
+- **Qibla** compass, Hijri date, home-screen widget
+- **Your look**: three free colour themes, two styles (Classic and Sleek), light / dark / black, Arabic or English
 
 ## Builds
 

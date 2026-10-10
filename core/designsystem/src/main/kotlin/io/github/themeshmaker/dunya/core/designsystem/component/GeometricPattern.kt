@@ -44,7 +44,7 @@ fun GeometricPattern(color: Color, modifier: Modifier = Modifier, cell: Dp = 40.
 }
 
 /** Outline of two squares rotated 45° from each other, centred on the origin. */
-private fun octagramPath(outerRadius: Float): Path {
+internal fun octagramPath(outerRadius: Float): Path {
     // Inner vertices sit where the two squares' edges cross.
     val innerRadius = outerRadius * 0.7654f
     return Path().apply {

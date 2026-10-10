@@ -16,8 +16,15 @@ data class AlertSettings(
     /** When the phone is on silent/vibrate, vibrate instead of playing the adhan. */
     val respectSilentMode: Boolean = true,
     /** Use Android's alarm-clock alarms for prayer alerts (most reliable; shows an alarm icon). */
-    val useAlarmClock: Boolean = true
+    val useAlarmClock: Boolean = true,
+    /** Adhan recording for every prayer; see [AdhanVoice]. */
+    val voice: String = AdhanVoice.DEFAULT,
+    /** A different recording for Fajr, or null to use [voice]. */
+    val fajrVoice: String? = null,
+    val masjid: MasjidReminder = MasjidReminder()
 ) {
+    fun voiceFor(prayer: Prayer): String = if (prayer == Prayer.FAJR) fajrVoice ?: voice else voice
+
     fun modeFor(prayer: Prayer): AlertMode {
         val mode = modes[prayer] ?: DEFAULT_MODES.getValue(prayer)
         return if (prayer == Prayer.SUNRISE && mode == AlertMode.ADHAN) AlertMode.NOTIFICATION else mode
@@ -29,12 +36,40 @@ data class AlertSettings(
     }
 }
 
+/**
+ * Adhan recordings. Bundled ones are ids; [CUSTOM] is a file the user picked, copied into the app
+ * (one slot for Fajr, one for the other prayers).
+ */
+object AdhanVoice {
+    const val DEFAULT = "default"
+    const val TRADITIONAL = "traditional"
+    const val AAQIB = "aaqib"
+    const val CUSTOM = "custom"
+
+    val bundled: List<String> = listOf(DEFAULT, TRADITIONAL, AAQIB)
+}
+
+/**
+ * "Time to head to the masjid": a reminder some minutes before each chosen prayer. A hidden
+ * option (Settings → About, tap the version seven times).
+ */
+data class MasjidReminder(val enabled: Boolean = false, val minutesBefore: Int = 20, val prayers: Set<Prayer> = Prayer.prayers.toSet()) {
+    fun isOnFor(prayer: Prayer): Boolean = enabled && prayer.isPrayer && prayer in prayers
+
+    companion object {
+        val MINUTES_RANGE: IntRange = 5..90
+    }
+}
+
 enum class AlertKind {
     ADHAN,
     NOTIFICATION,
 
     /** "Maghrib in 10 minutes". */
     REMINDER,
+
+    /** "Time to head to the masjid". */
+    MASJID,
 
     /** "Test adhan in 1 minute" from the reliability screen. */
     TEST

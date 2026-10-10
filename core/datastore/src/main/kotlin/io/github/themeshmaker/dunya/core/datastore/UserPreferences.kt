@@ -13,8 +13,16 @@ data class UserPreferences(
     val prayer: PrayerPreferences? = null,
     val themeStyle: String = "EMERALD",
     val alerts: AlertPreferences? = null,
-    val confirmedReliabilitySteps: Set<String> = emptySet()
+    val confirmedReliabilitySteps: Set<String> = emptySet(),
+    val themeMode: String = "SYSTEM",
+    val uiStyle: String = "CLASSIC",
+    val secretsUnlocked: Boolean = false,
+    val timetableCalendar: String = "GREGORIAN",
+    val reading: ReadingPreferences = ReadingPreferences()
 )
+
+@Serializable
+data class ReadingPreferences(val arabicScale: Float = 1f, val showTranslation: Boolean = true, val haptics: Boolean = true)
 
 @Serializable
 data class LocationPreferences(
@@ -42,5 +50,11 @@ data class AlertPreferences(
     val modes: Map<String, String> = emptyMap(),
     val reminderMinutes: Int = 0,
     val respectSilentMode: Boolean = true,
-    val useAlarmClock: Boolean = true
+    val useAlarmClock: Boolean = true,
+    val voice: String = "default",
+    val fajrVoice: String? = null,
+    val masjid: MasjidPreferences? = null
 )
+
+@Serializable
+data class MasjidPreferences(val enabled: Boolean = false, val minutesBefore: Int = 20, val prayers: List<String> = emptyList())

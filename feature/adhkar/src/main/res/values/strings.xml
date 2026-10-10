@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_adhkar_title">Adhkar</string>
-    <string name="feature_adhkar_coming_soon">Morning, evening, before-sleep and after-prayer adhkar arrive in Milestone 3.</string>
+    <string name="feature_adhkar_now">For now</string>
+    <string name="feature_adhkar_all">All adhkar</string>
+    <string name="feature_adhkar_progress">%1$s of %2$s done today</string>
+    <string name="feature_adhkar_tap_hint">Tap a card each time you say it. It moves on by itself when done.</string>
+    <string name="feature_adhkar_reset">Start again</string>
+    <string name="feature_adhkar_reset_body">Clear today\'s counts for these adhkar?</string>
+    <string name="feature_adhkar_all_done">All done. May Allah accept it from you.</string>
+    <string name="feature_adhkar_virtue">Virtue</string>
+    <string name="feature_adhkar_source">Source</string>
+    <string name="feature_adhkar_less">Less</string>
+    <string name="feature_adhkar_count_label">Said %1$s of %2$s times</string>
+    <string name="feature_adhkar_review_note">Arabic follows the cited hadith and the Quran text. The English is Deen\'s own and awaits review.</string>
+    <string name="feature_tasbih_title">Tasbih</string>
+    <string name="feature_tasbih_today">%1$s today</string>
+    <string name="feature_tasbih_open">Open</string>
+    <string name="feature_tasbih_reset">Reset count</string>
+    <string name="feature_tasbih_tap">Count: %1$s. Tap to add one.</string>
+    <string name="feature_tasbih_today_label">Today</string>
+    <string name="feature_tasbih_all_time">All time</string>
 </resources>

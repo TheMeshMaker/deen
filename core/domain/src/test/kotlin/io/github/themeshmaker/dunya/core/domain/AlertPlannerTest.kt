@@ -6,6 +6,7 @@ import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalculationMethod
 import io.github.themeshmaker.dunya.core.model.Coordinates
 import io.github.themeshmaker.dunya.core.model.LocationSource
+import io.github.themeshmaker.dunya.core.model.MasjidReminder
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
@@ -88,5 +89,33 @@ class AlertPlannerTest {
     fun planIsSortedByTime() {
         val plan = planner.plan(today[Prayer.DHUHR], riyadh, settings, AlertSettings(reminderMinutes = 15))
         assertEquals(plan.sortedBy { it.at }, plan)
+    }
+
+    @Test
+    fun masjidRemindersAreOffByDefault() {
+        val plan = planner.plan(today[Prayer.FAJR].minusSeconds(3_600), riyadh, settings, AlertSettings())
+        assertTrue(plan.none { it.kind == AlertKind.MASJID })
+    }
+
+    @Test
+    fun masjidRemindersComeTheChosenMinutesBeforeTheChosenPrayersEvenIfSilent() {
+        val alerts = AlertSettings(
+            modes = AlertSettings.DEFAULT_MODES + (Prayer.ISHA to AlertMode.SILENT),
+            masjid = MasjidReminder(enabled = true, minutesBefore = 25, prayers = setOf(Prayer.MAGHRIB, Prayer.ISHA))
+        )
+        val now = today[Prayer.ASR].plusSeconds(1)
+        val masjid = planner.plan(now, riyadh, settings, alerts).filter { it.kind == AlertKind.MASJID }.associateBy { it.prayer }
+        assertEquals(setOf(Prayer.MAGHRIB, Prayer.ISHA), masjid.keys)
+        assertEquals(today[Prayer.MAGHRIB].minus(Duration.ofMinutes(25)), masjid.getValue(Prayer.MAGHRIB).at)
+        assertEquals(today[Prayer.ISHA], masjid.getValue(Prayer.ISHA).prayerAt)
+    }
+
+    @Test
+    fun aMasjidReminderAlreadyDueMovesToTheNextDay() {
+        val alerts = AlertSettings(masjid = MasjidReminder(enabled = true, minutesBefore = 30, prayers = setOf(Prayer.DHUHR)))
+        // 10 minutes before Dhuhr: today's 30-minute reminder is already past.
+        val now = today[Prayer.DHUHR].minus(Duration.ofMinutes(10))
+        val reminder = planner.plan(now, riyadh, settings, alerts).single { it.kind == AlertKind.MASJID }
+        assertEquals(tomorrow[Prayer.DHUHR].minus(Duration.ofMinutes(30)), reminder.at)
     }
 }

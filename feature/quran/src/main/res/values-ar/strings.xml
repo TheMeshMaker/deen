@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_quran_title">القرآن الكريم</string>
+    <string name="feature_quran_search">ابحث عن سورة</string>
+    <string name="feature_quran_tab_surahs">السور</string>
+    <string name="feature_quran_tab_juz">الأجزاء</string>
+    <string name="feature_quran_tab_bookmarks">العلامات</string>
+    <string name="feature_quran_juz">الجزء %1$s</string>
+    <string name="feature_quran_position">%1$s، الآية %2$s</string>
+    <string name="feature_quran_verse">الآية %1$s</string>
+    <string name="feature_quran_continue">أكمل القراءة</string>
+    <string name="feature_quran_continue_button">متابعة</string>
+    <string name="feature_quran_meccan">مكية</string>
+    <string name="feature_quran_medinan">مدنية</string>
+    <string name="feature_quran_surah_name">سورة %1$s</string>
+    <string name="feature_quran_bookmarks_empty">اضغط على آية أثناء القراءة لتضع عليها علامة.</string>
+    <string name="feature_quran_bookmark">علامة</string>
+    <string name="feature_quran_unbookmark">إزالة</string>
+    <string name="feature_quran_bookmarked">عليها علامة</string>
+    <string name="feature_quran_previous">السورة السابقة</string>
+    <string name="feature_quran_next">السورة التالية</string>
+    <plurals name="feature_quran_verses">
+        <item quantity="zero">%1$s آية</item>
+        <item quantity="one">آية واحدة</item>
+        <item quantity="two">آيتان</item>
+        <item quantity="few">%1$s آيات</item>
+        <item quantity="many">%1$s آية</item>
+        <item quantity="other">%1$s آية</item>
+    </plurals>
+</resources>

@@ -47,11 +47,30 @@ internal val DeenTypography: Typography = Typography().run {
     )
 }
 
+/** The Sleek style: lighter, airier headings on the same font. */
+internal val SleekTypography: Typography = DeenTypography.run {
+    copy(
+        displayLarge = displayLarge.copy(fontWeight = FontWeight.Light),
+        displayMedium = displayMedium.copy(fontWeight = FontWeight.Light),
+        displaySmall = displaySmall.copy(fontWeight = FontWeight.Light),
+        headlineLarge = headlineLarge.copy(fontWeight = FontWeight.Medium, letterSpacing = (-0.5).sp),
+        headlineMedium = headlineMedium.copy(fontWeight = FontWeight.Medium, letterSpacing = (-0.25).sp),
+        headlineSmall = headlineSmall.copy(fontWeight = FontWeight.Medium),
+        titleLarge = titleLarge.copy(fontWeight = FontWeight.Medium)
+    )
+}
+
 /** Amiri (SIL OFL 1.1), used for religious text: adhkar, hadith, the app name. */
 val AmiriFontFamily = FontFamily(
     Font(R.font.amiri_regular, FontWeight.Normal),
     Font(R.font.amiri_bold, FontWeight.Bold)
 )
+
+/**
+ * Amiri Quran (SIL OFL 1.1): Amiri's companion face made for the Uthmani Quran text, with the
+ * small high letters and pause marks positioned for reading.
+ */
+val QuranFontFamily = FontFamily(Font(R.font.amiri_quran, FontWeight.Normal))
 
 /**
  * Text styles for Arabic reading text. Amiri needs generous line height for its
@@ -71,6 +90,15 @@ object DeenTextStyles {
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
         lineHeight = 40.sp,
+        textDirection = TextDirection.Rtl
+    )
+
+    /** Quran text: Amiri Quran, generous line height for the marks above and below. */
+    val quran = TextStyle(
+        fontFamily = QuranFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 26.sp,
+        lineHeight = 54.sp,
         textDirection = TextDirection.Rtl
     )
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.themeshmaker.dunya.core.alarm.AlertIntents.readAlert
+import io.github.themeshmaker.dunya.core.model.AdhanVoice
 import io.github.themeshmaker.dunya.core.model.AlertKind
 import io.github.themeshmaker.dunya.core.model.AlertLogEntry
 import io.github.themeshmaker.dunya.core.model.AlertOutcome
@@ -29,17 +30,29 @@ class AlertHandler @Inject constructor(
         val firedAt = clock.instant()
         val inputs = state.inputs()
         val zone = inputs?.location?.zoneId ?: ZoneId.systemDefault()
+        val ahead = alert.kind == AlertKind.REMINDER || alert.kind == AlertKind.MASJID
         val late = alert.kind != AlertKind.TEST && Duration.between(alert.at, firedAt) > MAX_LATENESS
+        val settings = inputs?.alertSettings
         try {
             when {
+                // A heads-up that arrives after the prayer has started is useless: drop it.
+                ahead && !firedAt.isBefore(alert.prayerAt) -> log(alert, firedAt, AlertOutcome.LATE)
+
                 // An adhan 20 minutes late would mislead; say what the time was, quietly.
-                late -> {
+                late && !ahead -> {
                     notifications.showPrayerTime(alert, zone, silent = true)
                     log(alert, firedAt, AlertOutcome.LATE)
                 }
 
-                alert.kind == AlertKind.ADHAN || alert.kind == AlertKind.TEST ->
-                    startAdhan(alert, zone, inputs?.alertSettings?.respectSilentMode ?: true, firedAt)
+                alert.kind == AlertKind.ADHAN || alert.kind == AlertKind.TEST -> startAdhan(
+                    alert,
+                    zone,
+                    respectSilent = settings?.respectSilentMode ?: true,
+                    // The test alarm is filed under Fajr but should sound like the everyday adhan.
+                    voice =
+                        settings?.let { if (alert.kind == AlertKind.TEST) it.voice else it.voiceFor(alert.prayer) } ?: AdhanVoice.DEFAULT,
+                    firedAt = firedAt
+                )
 
                 alert.kind == AlertKind.NOTIFICATION -> {
                     notifications.showPrayerTime(alert, zone, silent = false)
@@ -50,16 +63,21 @@ class AlertHandler @Inject constructor(
                     notifications.showReminder(alert, zone)
                     log(alert, firedAt, AlertOutcome.REMINDED)
                 }
+
+                alert.kind == AlertKind.MASJID -> {
+                    notifications.showMasjid(alert, zone)
+                    log(alert, firedAt, AlertOutcome.REMINDED)
+                }
             }
         } finally {
             if (alert.kind != AlertKind.TEST) scheduler.rescheduleAll("fired ${alert.prayer} ${alert.kind}")
         }
     }
 
-    private suspend fun startAdhan(alert: PlannedAlert, zone: ZoneId, respectSilent: Boolean, firedAt: Instant) {
+    private suspend fun startAdhan(alert: PlannedAlert, zone: ZoneId, respectSilent: Boolean, voice: String, firedAt: Instant) {
         try {
             // Allowed from the background because this broadcast came from an exact alarm.
-            ContextCompat.startForegroundService(context, AdhanService.intent(context, alert, zone, respectSilent, firedAt))
+            ContextCompat.startForegroundService(context, AdhanService.intent(context, alert, zone, respectSilent, voice, firedAt))
         } catch (e: IllegalStateException) {
             // ForegroundServiceStartNotAllowedException (e.g. the alarm was inexact): notify instead.
             Log.w(TAG, "Adhan service not allowed to start", e)

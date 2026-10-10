@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_timetable_title">جدول مواقيت الصلاة</string>
+    <string name="feature_timetable_gregorian">ميلادي</string>
+    <string name="feature_timetable_hijri">هجري</string>
+    <string name="feature_timetable_hijri_month">%1$s %2$s هـ</string>
+    <string name="feature_timetable_previous">الشهر السابق</string>
+    <string name="feature_timetable_next">الشهر التالي</string>
+    <string name="feature_timetable_this_month">العودة إلى هذا الشهر</string>
+    <string name="feature_timetable_day">اليوم</string>
+    <string name="feature_timetable_short_fajr">الفجر</string>
+    <string name="feature_timetable_short_sunrise">الشروق</string>
+    <string name="feature_timetable_short_dhuhr">الظهر</string>
+    <string name="feature_timetable_short_asr">العصر</string>
+    <string name="feature_timetable_short_maghrib">المغرب</string>
+    <string name="feature_timetable_short_isha">العشاء</string>
+</resources>

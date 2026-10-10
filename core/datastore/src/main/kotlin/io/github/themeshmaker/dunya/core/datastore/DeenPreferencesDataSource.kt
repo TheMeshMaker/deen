@@ -2,9 +2,13 @@ package io.github.themeshmaker.dunya.core.datastore
 
 import androidx.datastore.core.DataStore
 import io.github.themeshmaker.dunya.core.model.AlertSettings
+import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
+import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
+import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
+import io.github.themeshmaker.dunya.core.model.UiStyle
 import io.github.themeshmaker.dunya.core.model.UserData
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +23,16 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
             prayerSettings = prefs.prayer?.toModel(),
             themeStyle = enumOrNull<ThemeStyle>(prefs.themeStyle) ?: ThemeStyle.EMERALD,
             alertSettings = prefs.alerts?.toModel() ?: AlertSettings(),
-            confirmedReliabilitySteps = prefs.confirmedReliabilitySteps
+            confirmedReliabilitySteps = prefs.confirmedReliabilitySteps,
+            themeMode = enumOrNull<ThemeMode>(prefs.themeMode) ?: ThemeMode.SYSTEM,
+            uiStyle = enumOrNull<UiStyle>(prefs.uiStyle) ?: UiStyle.CLASSIC,
+            secretsUnlocked = prefs.secretsUnlocked,
+            timetableCalendar = enumOrNull<CalendarType>(prefs.timetableCalendar) ?: CalendarType.GREGORIAN,
+            reading = ReadingSettings(
+                arabicScale = prefs.reading.arabicScale.coerceIn(ReadingSettings.SCALE_RANGE),
+                showTranslation = prefs.reading.showTranslation,
+                haptics = prefs.reading.haptics
+            )
         )
     }
 
@@ -42,6 +55,28 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
     suspend fun setReliabilityStepConfirmed(step: String, confirmed: Boolean) {
         dataStore.updateData {
             it.copy(confirmedReliabilitySteps = if (confirmed) it.confirmedReliabilitySteps + step else it.confirmedReliabilitySteps - step)
+        }
+    }
+
+    suspend fun setThemeMode(mode: ThemeMode) {
+        dataStore.updateData { it.copy(themeMode = mode.name) }
+    }
+
+    suspend fun setUiStyle(style: UiStyle) {
+        dataStore.updateData { it.copy(uiStyle = style.name) }
+    }
+
+    suspend fun setSecretsUnlocked(unlocked: Boolean) {
+        dataStore.updateData { it.copy(secretsUnlocked = unlocked) }
+    }
+
+    suspend fun setTimetableCalendar(calendar: CalendarType) {
+        dataStore.updateData { it.copy(timetableCalendar = calendar.name) }
+    }
+
+    suspend fun setReadingSettings(settings: ReadingSettings) {
+        dataStore.updateData {
+            it.copy(reading = ReadingPreferences(settings.arabicScale, settings.showTranslation, settings.haptics))
         }
     }
 

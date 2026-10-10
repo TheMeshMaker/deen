@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_more_title">المزيد</string>
+    <string name="feature_more_qibla">القبلة</string>
+    <string name="feature_more_qibla_body">بوصلة نحو الكعبة</string>
+    <string name="feature_more_timetable">جدول الشهر</string>
+    <string name="feature_more_timetable_body">المواقيت بالتاريخ الهجري أو الميلادي</string>
+    <string name="feature_more_tasbih">السبحة</string>
+    <string name="feature_more_tasbih_body">عدّاد مع اهتزاز خفيف</string>
     <string name="feature_more_settings">الإعدادات</string>
-    <string name="feature_more_reliability">تأكّد من أن الأذان يعمل دائمًا</string>
+    <string name="feature_more_settings_body">الألوان والنمط واللغة والأذان وغيرها</string>
+    <string name="feature_more_reliability">تأكّد من أن الأذان يعمل</string>
+    <string name="feature_more_reliability_body">الإشعارات والمنبّهات والبطارية</string>
+    <string name="feature_more_sources">المصادر والتراخيص</string>
+    <string name="feature_more_sources_body">مصدر كل نص وتسجيل</string>
     <string name="feature_more_support">ادعم دِين</string>
-    <string name="feature_more_about">حول التطبيق والتراخيص</string>
-    <string name="feature_more_milestone_2">قريبًا في المرحلة الثانية</string>
-    <string name="feature_more_milestone_5">قريبًا في المرحلة الخامسة</string>
-    <string name="feature_more_channel_play">نسخة Google Play</string>
-    <string name="feature_more_channel_foss">النسخة الحرّة (F-Droid)</string>
-    <string name="feature_more_build_line">دِين %1$s · %2$s</string>
-    <string name="feature_more_themes_title">السمات</string>
-    <string name="feature_more_themes_free">كل السمات مجانية.</string>
-    <string name="feature_more_theme_emerald">زمرّد</string>
-    <string name="feature_more_theme_kiswah">كسوة</string>
-    <string name="feature_more_theme_desert">صحراء</string>
-    <string name="feature_more_reliability_body">الإشعارات والمنبّهات وإعدادات البطارية</string>
+    <string name="feature_more_support_body">التبرعات قريبًا، وسيبقى دِين مجانيًا دائمًا وبلا إعلانات.</string>
+    <string name="feature_more_footer">مجاني ومفتوح المصدر، بلا إعلانات ولا تتبّع.</string>
 </resources>

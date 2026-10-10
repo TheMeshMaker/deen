@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_qibla_title">Qibla</string>
-    <string name="feature_qibla_coming_soon">The Qibla compass arrives in Milestone 4.</string>
+    <string name="feature_qibla_no_location">Set your location first, from Settings.</string>
+    <string name="feature_qibla_no_compass">This phone has no compass. Use the bearing below with a compass.</string>
+    <string name="feature_qibla_aligned">You are facing the Qibla</string>
+    <string name="feature_qibla_turn_right">Turn right %1$s°</string>
+    <string name="feature_qibla_turn_left">Turn left %1$s°</string>
+    <string name="feature_qibla_bearing">Qibla: %1$s° from true north</string>
+    <string name="feature_qibla_distance">%1$s km to the Kaaba</string>
+    <string name="feature_qibla_tip">Hold the phone flat, away from metal and magnets.</string>
+    <string name="feature_qibla_calibrate">The compass needs calibrating: move the phone in a figure 8 a few times.</string>
 </resources>

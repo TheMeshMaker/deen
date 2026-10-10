@@ -11,7 +11,6 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -25,10 +24,12 @@ import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.themeshmaker.dunya.core.alarm.AlertIntents.putAlert
 import io.github.themeshmaker.dunya.core.alarm.AlertIntents.readAlert
+import io.github.themeshmaker.dunya.core.model.AdhanVoice
 import io.github.themeshmaker.dunya.core.model.AlertKind
 import io.github.themeshmaker.dunya.core.model.AlertLogEntry
 import io.github.themeshmaker.dunya.core.model.AlertOutcome
 import io.github.themeshmaker.dunya.core.model.PlannedAlert
+import io.github.themeshmaker.dunya.core.model.Prayer
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
@@ -53,6 +54,8 @@ class AdhanService : Service() {
 
     @Inject lateinit var notifications: AlertNotifications
 
+    @Inject lateinit var voices: AdhanVoices
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val mainHandler = Handler(Looper.getMainLooper())
     private val timeout = Runnable { finish(AlertOutcome.PLAYED) }
@@ -63,6 +66,7 @@ class AdhanService : Service() {
 
     private var current: PlannedAlert? = null
     private var currentZone: ZoneId = ZoneId.systemDefault()
+    private var currentVoice: String = AdhanVoice.DEFAULT
     private var firedAt: Instant = Instant.EPOCH
 
     private val screenOffReceiver = object : BroadcastReceiver() {
@@ -86,6 +90,7 @@ class AdhanService : Service() {
         current = alert
         currentZone = intent.getStringExtra(EXTRA_ZONE)?.let { runCatching { ZoneId.of(it) }.getOrNull() } ?: ZoneId.systemDefault()
         firedAt = Instant.ofEpochMilli(intent.getLongExtra(EXTRA_FIRED_AT, System.currentTimeMillis()))
+        currentVoice = intent.getStringExtra(EXTRA_VOICE) ?: AdhanVoice.DEFAULT
 
         // Must be first: the system only allows a few seconds between start and startForeground.
         ServiceCompat.startForeground(
@@ -111,7 +116,7 @@ class AdhanService : Service() {
         return START_NOT_STICKY
     }
 
-    private fun play(audio: AudioManager) {
+    private fun play(audio: AudioManager, voice: String = currentVoice) {
         val attributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_ALARM)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -123,24 +128,32 @@ class AdhanService : Service() {
             player = MediaPlayer().apply {
                 setAudioAttributes(attributes)
                 setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
-                setDataSource(applicationContext, Uri.parse("android.resource://$packageName/${R.raw.adhan_default}"))
+                voices.setSource(this, voice, fajr = current?.prayer == Prayer.FAJR && current?.kind != AlertKind.TEST)
                 setOnCompletionListener { finish(AlertOutcome.PLAYED) }
                 setOnErrorListener { _, what, extra ->
                     Log.w(TAG, "MediaPlayer error $what/$extra")
-                    finish(AlertOutcome.FALLBACK_NOTIFICATION)
+                    if (voice != AdhanVoice.DEFAULT) retryWithDefault(audio) else finish(AlertOutcome.FALLBACK_NOTIFICATION)
                     true
                 }
                 prepare()
                 start()
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Could not play adhan", e)
-            finish(AlertOutcome.FALLBACK_NOTIFICATION)
+            Log.w(TAG, "Could not play adhan ($voice)", e)
+            if (voice != AdhanVoice.DEFAULT) retryWithDefault(audio) else finish(AlertOutcome.FALLBACK_NOTIFICATION)
             return
         }
         ContextCompat.registerReceiver(this, screenOffReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF), ContextCompat.RECEIVER_NOT_EXPORTED)
         screenOffRegistered = true
         mainHandler.postDelayed(timeout, MAX_PLAY_MS)
+    }
+
+    /** A picked recording that won't play (deleted, unsupported codec): play ours instead of nothing. */
+    private fun retryWithDefault(audio: AudioManager) {
+        player?.runCatching { release() }
+        player = null
+        focusRequest?.let { audio.abandonAudioFocusRequest(it) }
+        play(audio, AdhanVoice.DEFAULT)
     }
 
     private fun finish(outcome: AlertOutcome, stopService: Boolean = true) {
@@ -203,16 +216,24 @@ class AdhanService : Service() {
         private const val EXTRA_ZONE = "deen.zone"
         private const val EXTRA_RESPECT_SILENT = "deen.respectSilent"
         private const val EXTRA_FIRED_AT = "deen.firedAt"
+        private const val EXTRA_VOICE = "deen.voice"
         private const val STOP_REQUEST_CODE = 3000
 
         /** Safety net in case the audio never reports completion. */
         private const val MAX_PLAY_MS = 6 * 60 * 1000L
 
-        internal fun intent(context: Context, alert: PlannedAlert, zone: ZoneId, respectSilent: Boolean, firedAt: Instant): Intent =
-            Intent(context, AdhanService::class.java)
-                .putAlert(alert)
-                .putExtra(EXTRA_ZONE, zone.id)
-                .putExtra(EXTRA_RESPECT_SILENT, respectSilent)
-                .putExtra(EXTRA_FIRED_AT, firedAt.toEpochMilli())
+        internal fun intent(
+            context: Context,
+            alert: PlannedAlert,
+            zone: ZoneId,
+            respectSilent: Boolean,
+            voice: String,
+            firedAt: Instant
+        ): Intent = Intent(context, AdhanService::class.java)
+            .putAlert(alert)
+            .putExtra(EXTRA_ZONE, zone.id)
+            .putExtra(EXTRA_RESPECT_SILENT, respectSilent)
+            .putExtra(EXTRA_VOICE, voice)
+            .putExtra(EXTRA_FIRED_AT, firedAt.toEpochMilli())
     }
 }

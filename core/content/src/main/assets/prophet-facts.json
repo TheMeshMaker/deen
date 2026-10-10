@@ -1,0 +1,677 @@
+{
+ "version": 1,
+ "license": "Written for Deen (GPL-3.0-or-later) from the cited hadith.",
+ "facts": [
+  {
+   "id": 1,
+   "text": {
+    "ar": "وُلد النبي ﷺ في مكة عام الفيل.",
+    "en": "The Prophet ﷺ was born in Makkah in the Year of the Elephant."
+   },
+   "source": {
+    "ar": "الترمذي (3619)",
+    "en": "At-Tirmidhi 3619"
+   }
+  },
+  {
+   "id": 2,
+   "text": {
+    "ar": "كان ﷺ يصوم يوم الاثنين، وقال: «ذاك يوم وُلدت فيه، ويوم بُعثت أو أُنزل عليّ فيه».",
+    "en": "He ﷺ fasted on Mondays and said: “That is the day I was born, and the day I was sent (or revelation came to me).”"
+   },
+   "source": {
+    "ar": "مسلم (1162)",
+    "en": "Muslim 1162"
+   }
+  },
+  {
+   "id": 3,
+   "text": {
+    "ar": "رعى ﷺ الغنم لأهل مكة على قراريط، وقال: «ما بعث الله نبيًّا إلا رعى الغنم».",
+    "en": "He ﷺ tended sheep for the people of Makkah for a few qirats, and said: “Allah never sent a prophet who did not tend sheep.”"
+   },
+   "source": {
+    "ar": "البخاري (2262)",
+    "en": "Al-Bukhari 2262"
+   }
+  },
+  {
+   "id": 4,
+   "text": {
+    "ar": "كان ﷺ قبل البعثة يخلو بغار حراء يتعبّد الليالي، وفيه نزل عليه أول الوحي: ﴿اقرأ باسم ربك الذي خلق﴾.",
+    "en": "Before prophethood he ﷺ would spend nights in worship in the cave of Hira, and there the first revelation came: “Read in the name of your Lord who created.”"
+   },
+   "source": {
+    "ar": "البخاري (3)",
+    "en": "Al-Bukhari 3"
+   }
+  },
+  {
+   "id": 5,
+   "text": {
+    "ar": "لما نزل الوحي على النبي ﷺ أول مرة طمأنته خديجة رضي الله عنها: «كلا والله ما يخزيك الله أبدًا، إنك لتصل الرحم، وتحمل الكَلّ، وتُكسب المعدوم، وتقري الضيف».",
+    "en": "When the first revelation shook him ﷺ, Khadijah comforted him: “By Allah, Allah will never disgrace you. You keep family ties, carry the burdens of the weak, help the destitute and honour your guests.”"
+   },
+   "source": {
+    "ar": "البخاري (3)",
+    "en": "Al-Bukhari 3"
+   }
+  },
+  {
+   "id": 6,
+   "text": {
+    "ar": "بُعث ﷺ وهو ابن أربعين سنة، فمكث بمكة ثلاث عشرة سنة، ثم بالمدينة عشر سنين، وتوفي وهو ابن ثلاث وستين.",
+    "en": "He ﷺ was sent as a prophet at forty, stayed thirteen years in Makkah and ten in Madinah, and passed away at sixty-three."
+   },
+   "source": {
+    "ar": "البخاري (3902)",
+    "en": "Al-Bukhari 3902"
+   }
+  },
+  {
+   "id": 7,
+   "text": {
+    "ar": "سُئلت عائشة رضي الله عنها عن خلقه ﷺ فقالت: «كان خلقه القرآن».",
+    "en": "Aishah was asked about his character ﷺ. She said: “His character was the Quran.”"
+   },
+   "source": {
+    "ar": "مسلم (746)",
+    "en": "Muslim 746"
+   }
+  },
+  {
+   "id": 8,
+   "text": {
+    "ar": "كان ﷺ في بيته في خدمة أهله، فإذا حضرت الصلاة خرج إلى الصلاة.",
+    "en": "At home he ﷺ helped his family with their work, and when the time for prayer came he went out to pray."
+   },
+   "source": {
+    "ar": "البخاري (676)",
+    "en": "Al-Bukhari 676"
+   }
+  },
+  {
+   "id": 9,
+   "text": {
+    "ar": "ما ضرب ﷺ بيده شيئًا قط، لا امرأة ولا خادمًا، إلا أن يجاهد في سبيل الله.",
+    "en": "He ﷺ never struck anyone with his hand, neither a woman nor a servant, except when fighting in the cause of Allah."
+   },
+   "source": {
+    "ar": "مسلم (2328)",
+    "en": "Muslim 2328"
+   }
+  },
+  {
+   "id": 10,
+   "text": {
+    "ar": "ما خُيّر ﷺ بين أمرين إلا أخذ أيسرهما ما لم يكن إثمًا، وما انتقم لنفسه قط.",
+    "en": "Whenever he ﷺ had to choose between two things, he chose the easier, as long as it was not sinful, and he never took revenge for himself."
+   },
+   "source": {
+    "ar": "البخاري (3560)",
+    "en": "Al-Bukhari 3560"
+   }
+  },
+  {
+   "id": 11,
+   "text": {
+    "ar": "ما عاب ﷺ طعامًا قط؛ إن اشتهاه أكله، وإلا تركه.",
+    "en": "He ﷺ never criticised food: if he liked it he ate it, and if not, he left it."
+   },
+   "source": {
+    "ar": "البخاري (3563)",
+    "en": "Al-Bukhari 3563"
+   }
+  },
+  {
+   "id": 12,
+   "text": {
+    "ar": "كان ﷺ أجود الناس، وكان أجود ما يكون في رمضان حين يلقاه جبريل فيدارسه القرآن.",
+    "en": "He ﷺ was the most generous of people, and most generous of all in Ramadan, when Jibril met him to review the Quran."
+   },
+   "source": {
+    "ar": "البخاري (6)",
+    "en": "Al-Bukhari 6"
+   }
+  },
+  {
+   "id": 13,
+   "text": {
+    "ar": "خدم أنسٌ رضي الله عنه النبيَّ ﷺ عشر سنين، فما قال له: أفٍّ قط، ولا: لِمَ صنعت؟",
+    "en": "Anas served him ﷺ for ten years, and he never once said “uff” to him, nor asked “Why did you do that?”"
+   },
+   "source": {
+    "ar": "البخاري (6038)",
+    "en": "Al-Bukhari 6038"
+   }
+  },
+  {
+   "id": 14,
+   "text": {
+    "ar": "قال عبد الله بن الحارث رضي الله عنه: «ما رأيت أحدًا أكثر تبسّمًا من رسول الله ﷺ».",
+    "en": "ʿAbdullah ibn al-Harith said: “I never saw anyone smile more than the Messenger of Allah ﷺ.”"
+   },
+   "source": {
+    "ar": "الترمذي (3641)",
+    "en": "At-Tirmidhi 3641"
+   }
+  },
+  {
+   "id": 15,
+   "text": {
+    "ar": "كان ﷺ يستغفر الله ويتوب إليه في اليوم أكثر من سبعين مرة.",
+    "en": "He ﷺ asked Allah's forgiveness and turned to Him more than seventy times a day."
+   },
+   "source": {
+    "ar": "البخاري (6307)",
+    "en": "Al-Bukhari 6307"
+   }
+  },
+  {
+   "id": 16,
+   "text": {
+    "ar": "كان ﷺ يقوم الليل حتى تتفطّر قدماه، فلما سُئل قال: «أفلا أكون عبدًا شكورًا؟».",
+    "en": "He ﷺ prayed at night until his feet cracked. When asked why, he said: “Should I not be a grateful servant?”"
+   },
+   "source": {
+    "ar": "البخاري (4837)، ومسلم (2820)",
+    "en": "Al-Bukhari 4837, Muslim 2820"
+   }
+  },
+  {
+   "id": 17,
+   "text": {
+    "ar": "كان ﷺ يحب التيمّن في تنعّله وترجّله وطهوره، وفي شأنه كله.",
+    "en": "He ﷺ liked to start with the right when putting on his sandals, combing his hair and purifying himself, and in all his affairs."
+   },
+   "source": {
+    "ar": "البخاري (168)",
+    "en": "Al-Bukhari 168"
+   }
+  },
+  {
+   "id": 18,
+   "text": {
+    "ar": "كان ﷺ أشدّ حياءً من العذراء في خِدرها، فإذا رأى شيئًا يكرهه عرفناه في وجهه.",
+    "en": "He ﷺ was more modest than a young girl behind her curtain; when he disliked something, it showed on his face."
+   },
+   "source": {
+    "ar": "البخاري (3562)",
+    "en": "Al-Bukhari 3562"
+   }
+  },
+  {
+   "id": 19,
+   "text": {
+    "ar": "نام ﷺ على حصير أثّر في جنبه، فقال: «ما لي وللدنيا! ما أنا في الدنيا إلا كراكب استظلّ تحت شجرة ثم راح وتركها».",
+    "en": "He ﷺ slept on a mat that left marks on his side, and said: “What have I to do with this world? I am in this world like a rider who rests in the shade of a tree, then goes on and leaves it.”"
+   },
+   "source": {
+    "ar": "الترمذي (2377)",
+    "en": "At-Tirmidhi 2377"
+   }
+  },
+  {
+   "id": 20,
+   "text": {
+    "ar": "قالت عائشة رضي الله عنها: كان يمرّ الهلال ثم الهلال ثم الهلال، ثلاثة أهلّة في شهرين، وما أوقدت في أبيات رسول الله ﷺ نار، وإنما هما الأسودان: التمر والماء.",
+    "en": "Aishah said three new moons could pass in two months without a fire being lit in the Prophet's houses ﷺ; they lived on the two black things: dates and water."
+   },
+   "source": {
+    "ar": "البخاري (2567)",
+    "en": "Al-Bukhari 2567"
+   }
+  },
+  {
+   "id": 21,
+   "text": {
+    "ar": "كان ﷺ أحسن الناس وجهًا وأحسنهم خَلقًا، ليس بالطويل البائن ولا بالقصير.",
+    "en": "He ﷺ had the most handsome face and the finest build, neither very tall nor short."
+   },
+   "source": {
+    "ar": "البخاري (3549)",
+    "en": "Al-Bukhari 3549"
+   }
+  },
+  {
+   "id": 22,
+   "text": {
+    "ar": "سُئل البراء رضي الله عنه: أكان وجه النبي ﷺ مثل السيف؟ قال: «لا، بل مثل القمر».",
+    "en": "Al-Bara was asked: “Was the Prophet's face ﷺ like a sword?” He said: “No, it was like the moon.”"
+   },
+   "source": {
+    "ar": "البخاري (3552)",
+    "en": "Al-Bukhari 3552"
+   }
+  },
+  {
+   "id": 23,
+   "text": {
+    "ar": "كان ﷺ يمازح أصحابه، وقال: «إني لا أقول إلا حقًّا».",
+    "en": "He ﷺ joked with his companions, and said: “I only ever say what is true.”"
+   },
+   "source": {
+    "ar": "الترمذي (1990)",
+    "en": "At-Tirmidhi 1990"
+   }
+  },
+  {
+   "id": 24,
+   "text": {
+    "ar": "سابق ﷺ زوجته عائشة رضي الله عنها فسبقته، ثم سابقها بعد أن حملت اللحم فسبقها، فقال: «هذه بتلك السبقة».",
+    "en": "He ﷺ raced his wife Aishah on foot and she won. Years later they raced again and he won, and said: “This one is for that one.”"
+   },
+   "source": {
+    "ar": "أبو داود (2578)",
+    "en": "Abu Dawud 2578"
+   }
+  },
+  {
+   "id": 25,
+   "text": {
+    "ar": "كان ﷺ إذا مرّ على الصبيان سلّم عليهم.",
+    "en": "When he ﷺ passed by children, he greeted them with salam."
+   },
+   "source": {
+    "ar": "البخاري (6247)",
+    "en": "Al-Bukhari 6247"
+   }
+  },
+  {
+   "id": 26,
+   "text": {
+    "ar": "صلّى ﷺ وهو حامل حفيدته أُمامة، فإذا سجد وضعها وإذا قام حملها.",
+    "en": "He ﷺ prayed while carrying his granddaughter Umamah, putting her down when he prostrated and picking her up when he stood."
+   },
+   "source": {
+    "ar": "البخاري (516)",
+    "en": "Al-Bukhari 516"
+   }
+  },
+  {
+   "id": 27,
+   "text": {
+    "ar": "كان ﷺ يدخل في الصلاة يريد إطالتها، فيسمع بكاء الصبي فيتجوّز رحمةً بأمه.",
+    "en": "He ﷺ would begin a prayer meaning to make it long, then shorten it on hearing a baby cry, out of mercy for its mother."
+   },
+   "source": {
+    "ar": "البخاري (707)",
+    "en": "Al-Bukhari 707"
+   }
+  },
+  {
+   "id": 28,
+   "text": {
+    "ar": "لما مات ابنه إبراهيم بكى ﷺ وقال: «إن العين تدمع، والقلب يحزن، ولا نقول إلا ما يُرضي ربنا».",
+    "en": "When his infant son Ibrahim died, he ﷺ wept and said: “The eyes shed tears and the heart grieves, but we say only what pleases our Lord.”"
+   },
+   "source": {
+    "ar": "البخاري (1303)",
+    "en": "Al-Bukhari 1303"
+   }
+  },
+  {
+   "id": 29,
+   "text": {
+    "ar": "كان ﷺ يقبل الهدية ويُثيب عليها.",
+    "en": "He ﷺ accepted gifts and always gave something in return."
+   },
+   "source": {
+    "ar": "البخاري (2585)",
+    "en": "Al-Bukhari 2585"
+   }
+  },
+  {
+   "id": 30,
+   "text": {
+    "ar": "مرض غلام يهودي كان يخدمه ﷺ، فأتاه النبي ﷺ يعوده.",
+    "en": "When a Jewish boy who served him fell ill, he ﷺ went to visit him."
+   },
+   "source": {
+    "ar": "البخاري (1356)",
+    "en": "Al-Bukhari 1356"
+   }
+  },
+  {
+   "id": 31,
+   "text": {
+    "ar": "مرّت به ﷺ جنازة فقام لها، فقيل: إنها جنازة يهودي، فقال: «أليست نفسًا؟».",
+    "en": "A funeral passed and he ﷺ stood up for it. Told that it was a Jew's funeral, he said: “Was it not a soul?”"
+   },
+   "source": {
+    "ar": "البخاري (1312)",
+    "en": "Al-Bukhari 1312"
+   }
+  },
+  {
+   "id": 32,
+   "text": {
+    "ar": "كان ﷺ يأكل بثلاث أصابع، ويلعقها قبل أن يمسحها.",
+    "en": "He ﷺ ate with three fingers and licked them before wiping them."
+   },
+   "source": {
+    "ar": "مسلم (2032)",
+    "en": "Muslim 2032"
+   }
+  },
+  {
+   "id": 33,
+   "text": {
+    "ar": "كان ﷺ يتنفّس في الشراب ثلاثًا.",
+    "en": "He ﷺ drank in three breaths, taking the cup away from his mouth between them."
+   },
+   "source": {
+    "ar": "مسلم (2028)",
+    "en": "Muslim 2028"
+   }
+  },
+  {
+   "id": 34,
+   "text": {
+    "ar": "كان ﷺ يحب الحلواء والعسل.",
+    "en": "He ﷺ loved sweet things and honey."
+   },
+   "source": {
+    "ar": "البخاري (5431)",
+    "en": "Al-Bukhari 5431"
+   }
+  },
+  {
+   "id": 35,
+   "text": {
+    "ar": "قال ﷺ: «لولا أن أشقّ على أمتي لأمرتهم بالسواك مع كل صلاة».",
+    "en": "He ﷺ said: “Were it not that it would be hard on my nation, I would have commanded them to use the siwak with every prayer.”"
+   },
+   "source": {
+    "ar": "البخاري (887)",
+    "en": "Al-Bukhari 887"
+   }
+  },
+  {
+   "id": 36,
+   "text": {
+    "ar": "اتخذ ﷺ خاتمًا من فضة نقشه «محمد رسول الله»، يختم به كتبه إلى الملوك.",
+    "en": "He ﷺ had a silver ring engraved “Muhammad Rasul Allah”, which he used to seal his letters to kings."
+   },
+   "source": {
+    "ar": "البخاري (5872)",
+    "en": "Al-Bukhari 5872"
+   }
+  },
+  {
+   "id": 37,
+   "text": {
+    "ar": "حجّ ﷺ بعد الهجرة حجة واحدة، هي حجة الوداع.",
+    "en": "After the Hijrah he ﷺ performed Hajj only once: the Farewell Pilgrimage."
+   },
+   "source": {
+    "ar": "البخاري (4404)",
+    "en": "Al-Bukhari 4404"
+   }
+  },
+  {
+   "id": 38,
+   "text": {
+    "ar": "في الغار يوم الهجرة قال ﷺ لأبي بكر رضي الله عنه: «ما ظنك يا أبا بكر باثنين الله ثالثهما؟».",
+    "en": "In the cave during the Hijrah he ﷺ said to Abu Bakr: “What do you think, Abu Bakr, of two when Allah is their third?”"
+   },
+   "source": {
+    "ar": "البخاري (3653)",
+    "en": "Al-Bukhari 3653"
+   }
+  },
+  {
+   "id": 39,
+   "text": {
+    "ar": "قال ﷺ: «خيركم خيركم لأهله، وأنا خيركم لأهلي».",
+    "en": "He ﷺ said: “The best of you are the best to their families, and I am the best of you to my family.”"
+   },
+   "source": {
+    "ar": "الترمذي (3895)",
+    "en": "At-Tirmidhi 3895"
+   }
+  },
+  {
+   "id": 40,
+   "text": {
+    "ar": "ما سُئل ﷺ عن شيء قط فقال: لا.",
+    "en": "He ﷺ was never asked for anything and answered “No.”"
+   },
+   "source": {
+    "ar": "البخاري (6034)",
+    "en": "Al-Bukhari 6034"
+   }
+  },
+  {
+   "id": 41,
+   "text": {
+    "ar": "ما كان ﷺ يزيد في رمضان ولا في غيره على إحدى عشرة ركعة، يصلّيهن بحُسن وطول.",
+    "en": "In Ramadan and outside it, his night prayer ﷺ did not go beyond eleven rak'ahs, prayed beautifully and at length."
+   },
+   "source": {
+    "ar": "البخاري (1147)",
+    "en": "Al-Bukhari 1147"
+   }
+  },
+  {
+   "id": 42,
+   "text": {
+    "ar": "مثّل ﷺ الأنبياء ببيت جميل ينقصه موضع لبنة، وقال: «فأنا اللبنة، وأنا خاتم النبيين».",
+    "en": "He ﷺ likened the prophets to a beautiful house missing one brick, and said: “I am that brick, and I am the last of the prophets.”"
+   },
+   "source": {
+    "ar": "البخاري (3535)",
+    "en": "Al-Bukhari 3535"
+   }
+  },
+  {
+   "id": 43,
+   "text": {
+    "ar": "حمل ﷺ التراب بنفسه يوم الخندق حتى وارى التراب بطنه.",
+    "en": "At the Battle of the Trench he ﷺ carried earth himself until the dust covered his stomach."
+   },
+   "source": {
+    "ar": "البخاري (2837)",
+    "en": "Al-Bukhari 2837"
+   }
+  },
+  {
+   "id": 44,
+   "text": {
+    "ar": "لما بُني مسجده ﷺ في المدينة كان ينقل الحجارة مع أصحابه.",
+    "en": "When his mosque in Madinah was built, he ﷺ carried stones alongside his companions."
+   },
+   "source": {
+    "ar": "البخاري (428)",
+    "en": "Al-Bukhari 428"
+   }
+  },
+  {
+   "id": 45,
+   "text": {
+    "ar": "لما آذاه أهل الطائف لم يدعُ عليهم ﷺ، وقال: «بل أرجو أن يُخرج الله من أصلابهم من يعبد الله وحده لا يشرك به شيئًا».",
+    "en": "After the people of Ta'if drove him away, he ﷺ did not ask for their destruction, but said: “Rather, I hope Allah will bring from their descendants people who worship Allah alone, associating nothing with Him.”"
+   },
+   "source": {
+    "ar": "البخاري (3231)",
+    "en": "Al-Bukhari 3231"
+   }
+  },
+  {
+   "id": 46,
+   "text": {
+    "ar": "كان ﷺ يوصي: «يسّروا ولا تعسّروا، وبشّروا ولا تنفّروا».",
+    "en": "He ﷺ taught: “Make things easy and do not make them difficult; give good news and do not drive people away.”"
+   },
+   "source": {
+    "ar": "البخاري (69)",
+    "en": "Al-Bukhari 69"
+   }
+  },
+  {
+   "id": 47,
+   "text": {
+    "ar": "فُرضت الصلوات الخمس على النبي ﷺ ليلة الإسراء والمعراج، فُرضت خمسين ثم خُفّفت إلى خمس.",
+    "en": "The daily prayers were given to him ﷺ on the night of the Ascension (al-Miʿraj): first fifty, then lightened to five."
+   },
+   "source": {
+    "ar": "البخاري (349)",
+    "en": "Al-Bukhari 349"
+   }
+  },
+  {
+   "id": 48,
+   "text": {
+    "ar": "قال أنس رضي الله عنه: «كان النبي ﷺ أحسن الناس خُلُقًا».",
+    "en": "Anas said: “The Prophet ﷺ was the best of people in character.”"
+   },
+   "source": {
+    "ar": "البخاري (6203)",
+    "en": "Al-Bukhari 6203"
+   }
+  },
+  {
+   "id": 49,
+   "text": {
+    "ar": "قبّل ﷺ حفيده الحسن، فقال رجل: إن لي عشرة من الولد ما قبّلت منهم أحدًا، فقال ﷺ: «من لا يَرحم لا يُرحم».",
+    "en": "He ﷺ kissed his grandson al-Hasan. A man said he had ten children and had never kissed one. The Prophet ﷺ said: “Whoever does not show mercy will not be shown mercy.”"
+   },
+   "source": {
+    "ar": "البخاري (5997)",
+    "en": "Al-Bukhari 5997"
+   }
+  },
+  {
+   "id": 50,
+   "text": {
+    "ar": "رأى ﷺ جملًا يبكي فمسح عليه، وقال لصاحبه: «أفلا تتقي الله في هذه البهيمة التي ملّكك الله إياها؟».",
+    "en": "He ﷺ saw a camel weeping and stroked it, then told its owner: “Do you not fear Allah regarding this animal that Allah has placed in your care?”"
+   },
+   "source": {
+    "ar": "أبو داود (2549)",
+    "en": "Abu Dawud 2549"
+   }
+  },
+  {
+   "id": 51,
+   "text": {
+    "ar": "قال ﷺ عن الأنصار الذين آووه ونصروه: «لا يحبهم إلا مؤمن، ولا يبغضهم إلا منافق».",
+    "en": "He ﷺ said of the Ansar, who sheltered and supported him: “Only a believer loves them, and only a hypocrite hates them.”"
+   },
+   "source": {
+    "ar": "البخاري (3783)",
+    "en": "Al-Bukhari 3783"
+   }
+  },
+  {
+   "id": 52,
+   "text": {
+    "ar": "صلّى معه حذيفة رضي الله عنه ليلة، فقرأ ﷺ في ركعة واحدة البقرة ثم النساء ثم آل عمران، مترسّلًا يسبّح ويسأل.",
+    "en": "Hudhayfah prayed with him ﷺ one night; in a single rak'ah he recited al-Baqarah, then an-Nisa', then Al ʿImran, slowly, glorifying Allah and asking of Him as he went."
+   },
+   "source": {
+    "ar": "مسلم (772)",
+    "en": "Muslim 772"
+   }
+  },
+  {
+   "id": 53,
+   "text": {
+    "ar": "كان ﷺ يجلس بين أصحابه، فيجيء الغريب فلا يدري أيّهم هو حتى يسأل.",
+    "en": "He ﷺ sat among his companions so simply that a stranger arriving could not tell which of them he was until he asked."
+   },
+   "source": {
+    "ar": "أبو داود (4698)",
+    "en": "Abu Dawud 4698"
+   }
+  },
+  {
+   "id": 54,
+   "text": {
+    "ar": "كان ﷺ إذا أخذ مضجعه من الليل وضع يده تحت خده، ثم قال: «باسمك اللهم أموت وأحيا».",
+    "en": "When he ﷺ lay down at night, he put his hand under his cheek and said: “In Your name, O Allah, I die and I live.”"
+   },
+   "source": {
+    "ar": "البخاري (6314)",
+    "en": "Al-Bukhari 6314"
+   }
+  },
+  {
+   "id": 55,
+   "text": {
+    "ar": "كان ﷺ يصوم الاثنين والخميس، وقال: «تُعرض الأعمال يوم الاثنين والخميس، فأحب أن يُعرض عملي وأنا صائم».",
+    "en": "He ﷺ fasted on Mondays and Thursdays, saying: “Deeds are presented on Monday and Thursday, and I love for my deeds to be presented while I am fasting.”"
+   },
+   "source": {
+    "ar": "الترمذي (747)",
+    "en": "At-Tirmidhi 747"
+   }
+  },
+  {
+   "id": 56,
+   "text": {
+    "ar": "كان ﷺ يأتي مسجد قباء كل سبت، ماشيًا وراكبًا.",
+    "en": "He ﷺ visited the Mosque of Quba every Saturday, walking or riding."
+   },
+   "source": {
+    "ar": "البخاري (1193)",
+    "en": "Al-Bukhari 1193"
+   }
+  },
+  {
+   "id": 57,
+   "text": {
+    "ar": "كان ﷺ إذا قدم من سفر ضحًى دخل المسجد فصلّى ركعتين قبل أن يجلس.",
+    "en": "Returning from a journey in the morning, he ﷺ went into the mosque and prayed two rak'ahs before sitting down."
+   },
+   "source": {
+    "ar": "البخاري (3088)",
+    "en": "Al-Bukhari 3088"
+   }
+  },
+  {
+   "id": 58,
+   "text": {
+    "ar": "كان ﷺ إذا قدم من سفر فنظر إلى جُدُرات المدينة أسرع براحلته، من حبّها.",
+    "en": "Coming home from a journey, when he ﷺ saw the walls of Madinah he urged his mount on, out of love for the city."
+   },
+   "source": {
+    "ar": "البخاري (1886)",
+    "en": "Al-Bukhari 1886"
+   }
+  },
+  {
+   "id": 59,
+   "text": {
+    "ar": "كان ﷺ يحب أن يخرج للسفر يوم الخميس.",
+    "en": "He ﷺ liked to set out on journeys on Thursdays."
+   },
+   "source": {
+    "ar": "البخاري (2950)",
+    "en": "Al-Bukhari 2950"
+   }
+  },
+  {
+   "id": 60,
+   "text": {
+    "ar": "كان ﷺ أحسن الناس وأجود الناس وأشجع الناس؛ فزع أهل المدينة ليلة فسبقهم إلى الصوت على فرس، ورجع يقول: «لن تُراعوا».",
+    "en": "He ﷺ was the best, most generous and bravest of people. One night Madinah was alarmed by a noise; he rode out ahead of everyone to check, and came back saying: “Do not be afraid.”"
+   },
+   "source": {
+    "ar": "البخاري (2908)",
+    "en": "Al-Bukhari 2908"
+   }
+  },
+  {
+   "id": 61,
+   "text": {
+    "ar": "توفي ﷺ يوم الاثنين.",
+    "en": "He ﷺ passed away on a Monday."
+   },
+   "source": {
+    "ar": "البخاري (1387)",
+    "en": "Al-Bukhari 1387"
+   }
+  }
+ ]
+}

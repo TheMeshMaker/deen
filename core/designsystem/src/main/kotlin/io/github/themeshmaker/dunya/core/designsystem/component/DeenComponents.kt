@@ -1,0 +1,330 @@
+package io.github.themeshmaker.dunya.core.designsystem.component
+
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+
+/** A card in the current style: tinted and flat (Classic) or white, rounder and hairline-edged (Sleek). */
+@Composable
+fun DeenCard(
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    containerColor: Color = DeenTheme.look.card,
+    contentPadding: PaddingValues = PaddingValues(16.dp),
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val look = DeenTheme.look
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = look.cardShape,
+        color = containerColor,
+        border = look.cardBorder,
+        shadowElevation = look.cardElevation,
+        onClick = onClick ?: {},
+        enabled = onClick != null
+    ) {
+        Column(Modifier.padding(contentPadding), content = content)
+    }
+}
+
+/**
+ * A pushed screen: top bar with back button, the style's page colour behind everything.
+ * Top-level tabs use [DeenTabScaffold] instead.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeenScaffold(
+    title: String,
+    onBack: (() -> Unit)?,
+    backLabel: String,
+    modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
+    content: @Composable (PaddingValues) -> Unit
+) {
+    val look = DeenTheme.look
+    Scaffold(
+        modifier = modifier,
+        containerColor = look.page,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        title,
+                        style = if (look.sleek) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                navigationIcon = { if (onBack != null) BackButton(onBack, backLabel) },
+                actions = actions,
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = look.page, scrolledContainerColor = look.page)
+            )
+        },
+        bottomBar = bottomBar,
+        content = content
+    )
+}
+
+/** A top-level tab: big title, no back button. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeenTabScaffold(
+    title: String,
+    modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
+    content: @Composable (PaddingValues) -> Unit
+) {
+    val look = DeenTheme.look
+    Scaffold(
+        modifier = modifier,
+        containerColor = look.page,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        title,
+                        style = if (look.sleek) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.headlineSmall
+                    )
+                },
+                actions = actions,
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = look.page, scrolledContainerColor = look.page)
+            )
+        },
+        content = content
+    )
+}
+
+@Composable
+private fun BackButton(onBack: () -> Unit, label: String) {
+    val look = DeenTheme.look
+    IconButton(
+        onClick = onBack,
+        colors = if (look.sleek) {
+            IconButtonDefaults.iconButtonColors(containerColor = look.card)
+        } else {
+            IconButtonDefaults.iconButtonColors()
+        },
+        modifier = if (look.sleek) Modifier.padding(start = 8.dp) else Modifier
+    ) {
+        Icon(painterResource(DeenIcons.Back), contentDescription = label)
+    }
+}
+
+/** Small heading above a group of cards or settings. */
+@Composable
+fun SectionLabel(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.SemiBold,
+        modifier = modifier.padding(top = 8.dp, bottom = 2.dp, start = 4.dp)
+    )
+}
+
+/**
+ * A number inside an eight-pointed star outline (the Rub el Hizb), as printed Mushafs mark
+ * surah and verse numbers.
+ */
+@Composable
+fun StarBadge(text: String, modifier: Modifier = Modifier, size: Dp = 40.dp, color: Color = MaterialTheme.colorScheme.primary) {
+    val px = with(LocalDensity.current) { size.toPx() }
+    val star = remember(px) { octagramPath(outerRadius = px * 0.46f) }
+    Box(modifier.size(size), contentAlignment = Alignment.Center) {
+        Canvas(Modifier.size(size)) {
+            translate(this.size.width / 2f, this.size.height / 2f) {
+                drawPath(star, color, style = Stroke(width = 1.5.dp.toPx()))
+            }
+        }
+        Text(
+            text,
+            style = MaterialTheme.typography.labelMedium.copy(fontSize = if (text.length > 2) 10.sp else 12.sp),
+            color = color,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+/** A pill-shaped single-choice control (e.g. Gregorian | Hijri), in place of Material's segmented buttons. */
+@Composable
+fun <T> PillChoice(options: List<T>, selected: T, label: @Composable (T) -> String, onSelect: (T) -> Unit, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
+    Row(
+        modifier
+            .clip(CircleShape)
+            .background(colors.surfaceContainerHigh)
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        options.forEach { option ->
+            val isSelected = option == selected
+            val text = label(option)
+            Box(
+                Modifier
+                    .weight(1f)
+                    .clip(CircleShape)
+                    .background(if (isSelected) colors.primary else Color.Transparent)
+                    .clickable(role = Role.RadioButton) { onSelect(option) }
+                    .semantics {
+                        this.selected = isSelected
+                        contentDescription = text
+                    }
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = if (isSelected) colors.onPrimary else colors.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+/** One row of a settings or menu list. */
+@Composable
+fun MenuRow(
+    title: String,
+    modifier: Modifier = Modifier,
+    icon: Int? = null,
+    subtitle: String? = null,
+    onClick: (() -> Unit)? = null,
+    trailing: @Composable (() -> Unit)? = null
+) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        if (icon != null) {
+            Box(
+                Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painterResource(icon),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+        }
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            if (subtitle != null) {
+                Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+        trailing?.invoke()
+    }
+}
+
+/** The themed gradient with the star pattern, in the style's hero shape. */
+@Composable
+fun GradientHero(
+    modifier: Modifier = Modifier,
+    shape: androidx.compose.ui.graphics.Shape = DeenTheme.look.heroShape,
+    content: @Composable BoxScope.() -> Unit
+) {
+    val gradient = DeenTheme.gradient
+    Box(
+        modifier
+            .clip(shape)
+            .background(gradient.brush)
+    ) {
+        GeometricPattern(color = gradient.pattern, modifier = Modifier.matchParentSize())
+        content()
+    }
+}
+
+/** A thin rounded progress bar in the primary colour. */
+@Composable
+fun ThinProgress(fraction: Float, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.primary) {
+    Box(
+        modifier
+            .fillMaxWidth()
+            .height(6.dp)
+            .clip(CircleShape)
+            .background(color.copy(alpha = 0.15f))
+    ) {
+        Box(
+            Modifier
+                .fillMaxWidth(fraction.coerceIn(0f, 1f))
+                .height(6.dp)
+                .clip(CircleShape)
+                .background(color)
+        )
+    }
+}
+
+/** A small rounded label, e.g. a hadith grade. */
+@Composable
+fun Tag(text: String, color: Color, modifier: Modifier = Modifier) {
+    Text(
+        text,
+        style = MaterialTheme.typography.labelMedium,
+        color = color,
+        modifier = modifier
+            .clip(CircleShape)
+            .border(1.dp, color.copy(alpha = 0.5f), CircleShape)
+            .background(color.copy(alpha = 0.08f))
+            .padding(horizontal = 10.dp, vertical = 3.dp)
+    )
+}

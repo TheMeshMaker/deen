@@ -15,7 +15,7 @@ import javax.inject.Inject
 /**
  * Decides which alarms the system should hold right now: the *next* occurrence of every enabled
  * alert (docs/BLUEPRINT.md §9.3). After each alarm fires, the plan is recomputed, so at most
- * 6 alerts + 5 reminders are ever scheduled.
+ * 6 alerts + 5 reminders + 5 masjid reminders are ever scheduled.
  */
 class AlertPlanner @Inject constructor(private val calculator: PrayerTimeCalculator) {
 
@@ -27,19 +27,22 @@ class AlertPlanner @Inject constructor(private val calculator: PrayerTimeCalcula
         return buildList {
             for (prayer in Prayer.entries) {
                 val mode = alerts.modeFor(prayer)
-                if (mode == AlertMode.SILENT) continue
                 val times = days.map { it[prayer] }
 
-                times.firstOrNull { it.isAfter(now) }?.let { at ->
-                    val kind = if (mode == AlertMode.ADHAN) AlertKind.ADHAN else AlertKind.NOTIFICATION
-                    add(PlannedAlert(prayer, kind, at, at))
+                fun addAhead(kind: AlertKind, minutes: Int) {
+                    val lead = Duration.ofMinutes(minutes.toLong())
+                    times.firstOrNull { it.minus(lead).isAfter(now) }?.let { at -> add(PlannedAlert(prayer, kind, at.minus(lead), at)) }
                 }
-                if (alerts.reminderMinutes > 0 && prayer.isPrayer) {
-                    val lead = Duration.ofMinutes(alerts.reminderMinutes.toLong())
-                    times.firstOrNull { it.minus(lead).isAfter(now) }?.let { at ->
-                        add(PlannedAlert(prayer, AlertKind.REMINDER, at.minus(lead), at))
+
+                if (mode != AlertMode.SILENT) {
+                    times.firstOrNull { it.isAfter(now) }?.let { at ->
+                        val kind = if (mode == AlertMode.ADHAN) AlertKind.ADHAN else AlertKind.NOTIFICATION
+                        add(PlannedAlert(prayer, kind, at, at))
                     }
+                    if (alerts.reminderMinutes > 0 && prayer.isPrayer) addAhead(AlertKind.REMINDER, alerts.reminderMinutes)
                 }
+                // Independent of the prayer's own alert: someone may keep Isha silent but still walk to the masjid.
+                if (alerts.masjid.isOnFor(prayer)) addAhead(AlertKind.MASJID, alerts.masjid.minutesBefore)
             }
         }.sortedBy { it.at }
     }

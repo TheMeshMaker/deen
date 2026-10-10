@@ -3,9 +3,13 @@ package io.github.themeshmaker.dunya.core.data
 import io.github.themeshmaker.dunya.core.datastore.DeenPreferencesDataSource
 import io.github.themeshmaker.dunya.core.domain.UserDataRepository
 import io.github.themeshmaker.dunya.core.model.AlertSettings
+import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
+import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
+import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
+import io.github.themeshmaker.dunya.core.model.UiStyle
 import io.github.themeshmaker.dunya.core.model.UserData
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -25,4 +29,14 @@ internal class OfflineUserDataRepository @Inject constructor(private val prefere
         preferences.setReliabilityStepConfirmed(step, confirmed)
 
     override suspend fun setOnboardingComplete() = preferences.setOnboardingComplete()
+
+    override suspend fun setThemeMode(mode: ThemeMode) = preferences.setThemeMode(mode)
+
+    override suspend fun setUiStyle(style: UiStyle) = preferences.setUiStyle(style)
+
+    override suspend fun setSecretsUnlocked(unlocked: Boolean) = preferences.setSecretsUnlocked(unlocked)
+
+    override suspend fun setTimetableCalendar(calendar: CalendarType) = preferences.setTimetableCalendar(calendar)
+
+    override suspend fun setReadingSettings(settings: ReadingSettings) = preferences.setReadingSettings(settings)
 }

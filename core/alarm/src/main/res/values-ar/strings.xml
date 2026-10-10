@@ -3,6 +3,7 @@
     <string name="core_alarm_channel_adhan">الأذان</string>
     <string name="core_alarm_channel_prayer">مواقيت الصلاة</string>
     <string name="core_alarm_channel_reminder">تذكير قبل الصلاة</string>
+    <string name="core_alarm_channel_masjid">الذهاب إلى المسجد</string>
 
     <string name="core_alarm_title">%1$s · %2$s</string>
     <string name="core_alarm_time_for">حان الآن وقت صلاة %1$s</string>
@@ -16,6 +17,23 @@
         <item quantity="other">%1$s بعد %2$d دقيقة</item>
     </plurals>
     <string name="core_alarm_reminder_body">في الساعة %1$s</string>
+
+    <string name="core_alarm_dua_after_adhan">الدعاء بعد الأذان</string>
+    <string name="core_alarm_masjid_title">حان وقت الذهاب إلى المسجد</string>
+    <plurals name="core_alarm_masjid_body">
+        <item quantity="zero">%1$s في الساعة %2$s، بعد %3$d دقيقة</item>
+        <item quantity="one">%1$s في الساعة %2$s، بعد دقيقة واحدة</item>
+        <item quantity="two">%1$s في الساعة %2$s، بعد دقيقتين</item>
+        <item quantity="few">%1$s في الساعة %2$s، بعد %3$d دقائق</item>
+        <item quantity="many">%1$s في الساعة %2$s، بعد %3$d دقيقة</item>
+        <item quantity="other">%1$s في الساعة %2$s، بعد %3$d دقيقة</item>
+    </plurals>
+    <string name="core_alarm_masjid_action">أذكار المسجد</string>
+
+    <string name="core_alarm_voice_default">دِين</string>
+    <string name="core_alarm_voice_traditional">تقليدي</string>
+    <string name="core_alarm_voice_aaqib">عاقب عزيز</string>
+    <string name="core_alarm_voice_custom">تسجيلك الخاص</string>
 
     <string name="core_alarm_test_title">أذان تجريبي</string>
     <string name="core_alarm_test_body">إذا سمعته والشاشة مقفلة، فالأذان يعمل على هذا الهاتف.</string>

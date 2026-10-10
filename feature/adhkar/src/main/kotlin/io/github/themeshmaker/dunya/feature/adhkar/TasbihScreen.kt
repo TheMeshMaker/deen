@@ -1,0 +1,205 @@
+package io.github.themeshmaker.dunya.feature.adhkar
+
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
+import io.github.themeshmaker.dunya.core.designsystem.component.DeenScaffold
+import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
+import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+import io.github.themeshmaker.dunya.core.model.TasbihDhikr
+import io.github.themeshmaker.dunya.core.ui.R as UiR
+import io.github.themeshmaker.dunya.core.ui.localDigits
+import io.github.themeshmaker.dunya.core.ui.rememberHaptics
+
+private val TARGETS = listOf(33, 99, 100, 0)
+
+@Composable
+internal fun TasbihScreenRoute(onBack: () -> Unit, viewModel: TasbihViewModel = hiltViewModel()) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val reading by viewModel.reading.collectAsStateWithLifecycle()
+    val haptics = rememberHaptics(reading.haptics)
+    DeenScaffold(
+        title = stringResource(R.string.feature_tasbih_title),
+        onBack = onBack,
+        backLabel = stringResource(UiR.string.core_ui_back),
+        actions = {
+            IconButton(onClick = viewModel::reset) {
+                Icon(painterResource(DeenIcons.Reset), contentDescription = stringResource(R.string.feature_tasbih_reset))
+            }
+        }
+    ) { padding ->
+        val tasbih = state ?: return@DeenScaffold
+        val dhikr = TasbihDhikr.byId(tasbih.dhikrId)
+        val look = DeenTheme.look
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = look.gutter, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(look.gap),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                items(TasbihDhikr.entries, key = { it.id }) { option ->
+                    FilterChip(
+                        selected = option == dhikr,
+                        onClick = { viewModel.setDhikr(option.id) },
+                        label = { Text(option.arabic, style = DeenTextStyles.arabicBody.copy(fontSize = 16.sp, lineHeight = 26.sp)) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
+            }
+            Text(dhikr.arabic, style = DeenTextStyles.arabicBody.copy(fontSize = 30.sp, lineHeight = 52.sp), textAlign = TextAlign.Center)
+            Text(dhikr.english, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+            CounterRing(
+                count = tasbih.count,
+                target = tasbih.target,
+                onTap = { if (viewModel.count()) haptics.done() else haptics.tick() },
+                label = stringResource(R.string.feature_tasbih_tap, localDigits(tasbih.count))
+            )
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TARGETS.forEach { target ->
+                    FilterChip(
+                        selected = tasbih.target == target,
+                        onClick = { viewModel.setTarget(target) },
+                        label = { Text(if (target == 0) "∞" else localDigits(target)) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
+            }
+            DeenCard {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    Stat(stringResource(R.string.feature_tasbih_today_label), localDigits(tasbih.todayTotal))
+                    Stat(stringResource(R.string.feature_tasbih_all_time), localDigits(tasbih.allTimeTotal))
+                }
+            }
+        }
+    }
+}
+
+/** The big tap target: a ring that fills towards the target, the count in the middle. */
+@Composable
+private fun CounterRing(count: Int, target: Int, onTap: () -> Unit, label: String) {
+    val gradient = DeenTheme.gradient
+    val colors = MaterialTheme.colorScheme
+    val progress by animateFloatAsState(if (target > 0) count / target.toFloat() else 0f, spring(), label = "tasbih")
+    Box(
+        Modifier
+            .widthIn(max = 340.dp)
+            .fillMaxWidth(0.85f)
+            .aspectRatio(1f)
+            .clip(CircleShape)
+            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, role = Role.Button, onClick = onTap)
+            .semantics { contentDescription = label },
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(18.dp)
+                .clip(CircleShape)
+                .background(gradient.brush)
+        ) {
+            GeometricPattern(color = gradient.pattern, modifier = Modifier.matchParentSize(), cell = 36.dp)
+        }
+        Canvas(Modifier.fillMaxSize()) {
+            val stroke = 10.dp.toPx()
+            val inset = stroke / 2
+            drawArc(
+                color = colors.primary.copy(alpha = 0.15f),
+                startAngle = 0f,
+                sweepAngle = 360f,
+                useCenter = false,
+                topLeft = Offset(inset, inset),
+                size = Size(size.width - stroke, size.height - stroke),
+                style = Stroke(stroke)
+            )
+            if (target > 0) {
+                drawArc(
+                    color = colors.primary,
+                    startAngle = -90f,
+                    sweepAngle = 360f * progress.coerceIn(0f, 1f),
+                    useCenter = false,
+                    topLeft = Offset(inset, inset),
+                    size = Size(size.width - stroke, size.height - stroke),
+                    style = Stroke(stroke, cap = StrokeCap.Round)
+                )
+            }
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                localDigits(count),
+                style = MaterialTheme.typography.displayLarge.copy(fontSize = 72.sp),
+                color = gradient.content,
+                fontWeight = FontWeight.Light
+            )
+            if (target > 0) {
+                Text("/ " + localDigits(target), style = MaterialTheme.typography.titleMedium, color = gradient.content.copy(alpha = 0.8f))
+            }
+        }
+    }
+}
+
+@Composable
+private fun Stat(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(value, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}

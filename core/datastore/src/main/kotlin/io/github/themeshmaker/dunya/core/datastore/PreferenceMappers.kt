@@ -7,6 +7,7 @@ import io.github.themeshmaker.dunya.core.model.CalculationMethod
 import io.github.themeshmaker.dunya.core.model.Coordinates
 import io.github.themeshmaker.dunya.core.model.HighLatitudeRule
 import io.github.themeshmaker.dunya.core.model.LocationSource
+import io.github.themeshmaker.dunya.core.model.MasjidReminder
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
@@ -67,12 +68,30 @@ fun AlertPreferences.toModel() = AlertSettings(
     },
     reminderMinutes = reminderMinutes.coerceIn(0, 60),
     respectSilentMode = respectSilentMode,
-    useAlarmClock = useAlarmClock
+    useAlarmClock = useAlarmClock,
+    voice = voice,
+    fajrVoice = fajrVoice,
+    masjid = masjid?.toModel() ?: MasjidReminder()
 )
 
 fun AlertSettings.toPreferences() = AlertPreferences(
     modes = modes.entries.associate { (prayer, mode) -> prayer.name to mode.name },
     reminderMinutes = reminderMinutes,
     respectSilentMode = respectSilentMode,
-    useAlarmClock = useAlarmClock
+    useAlarmClock = useAlarmClock,
+    voice = voice,
+    fajrVoice = fajrVoice,
+    masjid = masjid.toPreferences()
+)
+
+fun MasjidPreferences.toModel() = MasjidReminder(
+    enabled = enabled,
+    minutesBefore = minutesBefore.coerceIn(MasjidReminder.MINUTES_RANGE),
+    prayers = prayers.mapNotNull { enumOrNull<Prayer>(it) }.filter { it.isPrayer }.toSet().ifEmpty { Prayer.prayers.toSet() }
+)
+
+fun MasjidReminder.toPreferences() = MasjidPreferences(
+    enabled = enabled,
+    minutesBefore = minutesBefore,
+    prayers = Prayer.entries.filter { it in prayers }.map { it.name }
 )

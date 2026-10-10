@@ -1,0 +1,64 @@
+package io.github.themeshmaker.dunya.core.ui
+
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.LocaleManager
+import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
+import android.os.LocaleList
+import io.github.themeshmaker.dunya.core.model.AppLanguage
+import java.util.Locale
+
+/**
+ * The app's own language, independent of the phone's.
+ *
+ * Android 13+ has per-app languages built in (also reachable from system Settings → Apps →
+ * Deen → Language), so we use [LocaleManager]. Older versions store the choice here and the
+ * Application and Activity wrap their context with it ([wrap]).
+ */
+object AppLocales {
+    private const val PREFS = "deen_locale"
+    private const val KEY_TAG = "tag"
+
+    fun current(context: Context): AppLanguage {
+        val tag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.getSystemService(LocaleManager::class.java).applicationLocales.takeIf { !it.isEmpty }?.get(0)?.language
+        } else {
+            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_TAG, null)
+        }
+        return AppLanguage.entries.firstOrNull { it.tag != null && it.tag == tag } ?: AppLanguage.SYSTEM
+    }
+
+    /** Applies [language]; on older Android the activity restarts to pick it up. */
+    @SuppressLint("ApplySharedPref") // The restarted activity must read the new value: write it now.
+    fun set(activity: Activity, language: AppLanguage) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // The system recreates the activities itself.
+            activity.getSystemService(LocaleManager::class.java).applicationLocales =
+                language.tag?.let { LocaleList.forLanguageTags(it) } ?: LocaleList.getEmptyLocaleList()
+        } else {
+            activity.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString(KEY_TAG, language.tag).commit()
+            activity.recreate()
+        }
+    }
+
+    /** Android 12 and older: a context in the chosen language (unchanged if it follows the phone). */
+    fun wrap(base: Context): Context {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) return base
+        // Before the first unlock (direct boot, e.g. to play Fajr) credential storage is locked:
+        // fall back to the phone's language rather than crash.
+        val tag = try {
+            base.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_TAG, null)
+        } catch (_: IllegalStateException) {
+            null
+        } ?: return base
+        val locale = Locale.forLanguageTag(tag)
+        Locale.setDefault(locale)
+        val config = Configuration(base.resources.configuration).apply {
+            setLocale(locale)
+            setLayoutDirection(locale)
+        }
+        return base.createConfigurationContext(config)
+    }
+}

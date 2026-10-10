@@ -5,9 +5,9 @@ import androidx.annotation.StringRes
 import io.github.themeshmaker.dunya.R
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.feature.adhkar.AdhkarRoute
+import io.github.themeshmaker.dunya.feature.hadith.HadithRoute
 import io.github.themeshmaker.dunya.feature.more.MoreRoute
-import io.github.themeshmaker.dunya.feature.qibla.QiblaRoute
-import io.github.themeshmaker.dunya.feature.tasbih.TasbihRoute
+import io.github.themeshmaker.dunya.feature.quran.QuranRoute
 import io.github.themeshmaker.dunya.feature.today.TodayRoute
 import kotlin.reflect.KClass
 
@@ -20,8 +20,8 @@ enum class TopLevelDestination(
     @DrawableRes val selectedIcon: Int
 ) {
     TODAY(TodayRoute, TodayRoute::class, R.string.nav_today, DeenIcons.Today, DeenIcons.TodayFilled),
+    QURAN(QuranRoute, QuranRoute::class, R.string.nav_quran, DeenIcons.Quran, DeenIcons.QuranFilled),
+    HADITH(HadithRoute, HadithRoute::class, R.string.nav_hadith, DeenIcons.Hadith, DeenIcons.Hadith),
     ADHKAR(AdhkarRoute, AdhkarRoute::class, R.string.nav_adhkar, DeenIcons.Adhkar, DeenIcons.AdhkarFilled),
-    TASBIH(TasbihRoute, TasbihRoute::class, R.string.nav_tasbih, DeenIcons.Tasbih, DeenIcons.TasbihFilled),
-    QIBLA(QiblaRoute, QiblaRoute::class, R.string.nav_qibla, DeenIcons.Qibla, DeenIcons.QiblaFilled),
     MORE(MoreRoute, MoreRoute::class, R.string.nav_more, DeenIcons.More, DeenIcons.MoreFilled)
 }

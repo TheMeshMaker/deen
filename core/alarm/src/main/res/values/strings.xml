@@ -3,6 +3,7 @@
     <string name="core_alarm_channel_adhan">Adhan</string>
     <string name="core_alarm_channel_prayer">Prayer times</string>
     <string name="core_alarm_channel_reminder">Reminders before prayer</string>
+    <string name="core_alarm_channel_masjid">Go to the masjid</string>
 
     <string name="core_alarm_title">%1$s · %2$s</string>
     <string name="core_alarm_time_for">It\'s time for %1$s</string>
@@ -12,6 +13,19 @@
         <item quantity="other">%1$s in %2$d minutes</item>
     </plurals>
     <string name="core_alarm_reminder_body">At %1$s</string>
+
+    <string name="core_alarm_dua_after_adhan">Dua after the adhan</string>
+    <string name="core_alarm_masjid_title">Time to head to the masjid</string>
+    <plurals name="core_alarm_masjid_body">
+        <item quantity="one">%1$s at %2$s, in %3$d minute</item>
+        <item quantity="other">%1$s at %2$s, in %3$d minutes</item>
+    </plurals>
+    <string name="core_alarm_masjid_action">Mosque adhkar</string>
+
+    <string name="core_alarm_voice_default">Deen</string>
+    <string name="core_alarm_voice_traditional">Traditional</string>
+    <string name="core_alarm_voice_aaqib">Aaqib Azeez</string>
+    <string name="core_alarm_voice_custom">Your own recording</string>
 
     <string name="core_alarm_test_title">Test adhan</string>
     <string name="core_alarm_test_body">If you hear this with the screen locked, the adhan works on this phone.</string>

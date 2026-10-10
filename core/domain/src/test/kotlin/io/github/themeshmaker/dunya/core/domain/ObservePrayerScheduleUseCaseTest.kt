@@ -3,11 +3,15 @@ package io.github.themeshmaker.dunya.core.domain
 import app.cash.turbine.test
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalculationMethod
+import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.Coordinates
 import io.github.themeshmaker.dunya.core.model.LocationSource
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
+import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
+import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
+import io.github.themeshmaker.dunya.core.model.UiStyle
 import io.github.themeshmaker.dunya.core.model.UserData
 import io.github.themeshmaker.dunya.core.prayer.HijriCalendar
 import io.github.themeshmaker.dunya.core.prayer.PrayerTimeCalculator
@@ -45,6 +49,11 @@ class ObservePrayerScheduleUseCaseTest {
         override suspend fun setOnboardingComplete() = state.update { it.copy(onboardingComplete = true) }
         override suspend fun setThemeStyle(style: ThemeStyle) = state.update { it.copy(themeStyle = style) }
         override suspend fun setAlertSettings(settings: AlertSettings) = state.update { it.copy(alertSettings = settings) }
+        override suspend fun setThemeMode(mode: ThemeMode) = state.update { it.copy(themeMode = mode) }
+        override suspend fun setUiStyle(style: UiStyle) = state.update { it.copy(uiStyle = style) }
+        override suspend fun setSecretsUnlocked(unlocked: Boolean) = state.update { it.copy(secretsUnlocked = unlocked) }
+        override suspend fun setTimetableCalendar(calendar: CalendarType) = state.update { it.copy(timetableCalendar = calendar) }
+        override suspend fun setReadingSettings(settings: ReadingSettings) = state.update { it.copy(reading = settings) }
         override suspend fun setReliabilityStepConfirmed(step: String, confirmed: Boolean) = Unit
         private inline fun MutableStateFlow<UserData>.update(f: (UserData) -> UserData) {
             value = f(value)

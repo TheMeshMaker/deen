@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,4 +31,23 @@ object DataStoreModule {
         scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
         produceFile = { context.dataStoreFile("user_preferences.json") }
     )
+
+    @Provides
+    @Singleton
+    @ActivityStore
+    fun provideActivityDataStore(
+        @ApplicationContext context: Context,
+        serializer: ActivityPreferencesSerializer
+    ): DataStore<ActivityPreferences> = DataStoreFactory.create(
+        serializer = serializer,
+        // Losing a tasbih count or reading position is a nuisance, never a reason to crash.
+        corruptionHandler = ReplaceFileCorruptionHandler { serializer.defaultValue },
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+        produceFile = { context.dataStoreFile("activity.json") }
+    )
 }
+
+/** The activity DataStore (Quran position, adhkar counts, tasbih), as opposed to user settings. */
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ActivityStore

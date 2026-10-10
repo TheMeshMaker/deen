@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_hadith_title">Hadith</string>
+    <string name="feature_hadith_collections">Collections</string>
+    <string name="feature_hadith_nawawi">An-Nawawi\'s Forty</string>
+    <string name="feature_hadith_nawawi_body">With English · one each day</string>
+    <string name="feature_hadith_facts">The Prophet ﷺ</string>
+    <string name="feature_hadith_facts_body">Short facts from the hadith · one each day</string>
+    <string name="feature_hadith_facts_intro">Facts about the Prophet ﷺ, each taken from the hadith named under it. A new one appears on the Today screen every day.</string>
+    <string name="feature_hadith_today">Today</string>
+    <string name="feature_hadith_arabic_note">The full collections are in Arabic, with each hadith\'s number and its grading by a named scholar.</string>
+    <string name="feature_hadith_search">Search the Arabic text or a number</string>
+    <string name="feature_hadith_number">No. %1$s</string>
+    <string name="feature_hadith_sahih">Sahih</string>
+    <string name="feature_hadith_all_authentic">Every hadith in this collection is authentic (sahih) by scholarly consensus.</string>
+    <string name="feature_hadith_graded">Each hadith shows a scholar\'s grading: green authentic, blue good, amber weak, red fabricated.</string>
+    <string name="feature_hadith_graded_by">Grading: %1$s</string>
+    <string name="feature_hadith_swipe">%1$s of %2$s · swipe for more</string>
+    <plurals name="feature_hadith_count">
+        <item quantity="one">%1$s hadith</item>
+        <item quantity="other">%1$s hadith</item>
+    </plurals>
+    <plurals name="feature_hadith_results">
+        <item quantity="one">%1$s result</item>
+        <item quantity="other">%1$s results</item>
+    </plurals>
+</resources>

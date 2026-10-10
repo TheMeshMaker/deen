@@ -20,4 +20,14 @@ class HijriCalendar @Inject constructor() {
             day = hijrah.get(ChronoField.DAY_OF_MONTH)
         )
     }
+
+    /**
+     * The Gregorian dates that make up Hijri [month] of [year] (as shown with the same
+     * [offsetDays] correction as [toHijri]).
+     */
+    fun monthDates(year: Int, month: Int, offsetDays: Int = 0): List<LocalDate> {
+        val first = HijrahDate.of(year, month, 1)
+        val start = LocalDate.from(first).minusDays(offsetDays.toLong())
+        return (0 until first.lengthOfMonth()).map { start.plusDays(it.toLong()) }
+    }
 }

@@ -25,4 +25,12 @@
     <string name="feature_today_mode_silent">صامت</string>
     <string name="feature_today_setup_title">لم يكتمل إعداد الأذان</string>
     <string name="feature_today_setup_body">اضغط للسماح بالإشعارات والمنبّهات الدقيقة.</string>
+    <string name="feature_today_settings">الإعدادات</string>
+    <string name="feature_today_qibla">القبلة</string>
+    <string name="feature_today_timetable">الجدول</string>
+    <string name="feature_today_tasbih">السبحة</string>
+    <string name="feature_today_at">الساعة %1$s</string>
+    <string name="feature_today_continue_quran">أكمل القراءة</string>
+    <string name="feature_today_quran_position">%1$s · الآية %2$s</string>
+    <string name="feature_today_start_quran">اقرأ القرآن الكريم</string>
 </resources>

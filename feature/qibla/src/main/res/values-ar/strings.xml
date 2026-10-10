@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_qibla_title">القبلة</string>
-    <string name="feature_qibla_coming_soon">بوصلة القبلة تصل في المرحلة الرابعة.</string>
+    <string name="feature_qibla_no_location">حدّد موقعك أولًا من الإعدادات.</string>
+    <string name="feature_qibla_no_compass">لا يوجد في هذا الهاتف بوصلة. استخدم الاتجاه أدناه مع بوصلة.</string>
+    <string name="feature_qibla_aligned">أنت متّجه إلى القبلة</string>
+    <string name="feature_qibla_turn_right">استدر يمينًا %1$s°</string>
+    <string name="feature_qibla_turn_left">استدر يسارًا %1$s°</string>
+    <string name="feature_qibla_bearing">القبلة: %1$s° من الشمال الجغرافي</string>
+    <string name="feature_qibla_distance">%1$s كم إلى الكعبة</string>
+    <string name="feature_qibla_tip">أمسك الهاتف أفقيًا وبعيدًا عن المعادن والمغناطيس.</string>
+    <string name="feature_qibla_calibrate">البوصلة تحتاج إلى معايرة: حرّك الهاتف على شكل رقم ٨ عدة مرات.</string>
 </resources>

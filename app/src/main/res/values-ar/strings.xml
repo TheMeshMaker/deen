@@ -3,7 +3,7 @@
     <string name="app_name">دِين</string>
     <string name="nav_today">اليوم</string>
     <string name="nav_adhkar">الأذكار</string>
-    <string name="nav_tasbih">التسبيح</string>
-    <string name="nav_qibla">القبلة</string>
     <string name="nav_more">المزيد</string>
+    <string name="nav_quran">القرآن</string>
+    <string name="nav_hadith">الحديث</string>
 </resources>
