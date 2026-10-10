@@ -25,6 +25,20 @@ android {
         }
     }
 
+    // Release signing comes from the maintainer's own machine (~/.gradle/gradle.properties), never from
+    // this repository: deen.keystore, deen.keystore.password, deen.key.alias, deen.key.password.
+    val releaseKeystore = providers.gradleProperty("deen.keystore").orNull
+    signingConfigs {
+        if (releaseKeystore != null) {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = providers.gradleProperty("deen.keystore.password").get()
+                keyAlias = providers.gradleProperty("deen.key.alias").get()
+                keyPassword = providers.gradleProperty("deen.key.password").get()
+            }
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
@@ -33,6 +47,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.findByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
