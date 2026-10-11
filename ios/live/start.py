@@ -29,7 +29,7 @@ ARTIFACT = "live-session"
 
 
 def run(*command, capture=True, check=True):
-    result = subprocess.run(command, cwd=ROOT, capture_output=capture, text=True)
+    result = subprocess.run(command, cwd=ROOT, capture_output=capture, text=True, encoding="utf-8", errors="replace")
     if check and result.returncode != 0:
         sys.exit(f"Failed: {' '.join(command)}\n{result.stderr or result.stdout}")
     return result.stdout.strip() if capture else ""
@@ -77,7 +77,7 @@ def main():
     finally:
         os.unlink(note.name)
     run("git", "push", "--quiet", "origin", f"refs/tags/{tag}")
-    print(f"Requested a session ({tag}). The iPhone takes about ten minutes to start…")
+    print(f"Requested a session ({tag}). The iPhone takes about ten minutes to start...")
 
     try:
         run_id = wait_for_run(repo, tag)
@@ -103,7 +103,7 @@ def wait_for_run(repo, tag):
 
 
 def wait_for_link(repo, run_id, openssl, private):
-    started = time.time()
+    started, shown = time.time(), -1
     while time.time() - started < 40 * 60:
         status = json.loads(run("gh", "run", "view", str(run_id), "--json", "status,conclusion"))
         artifacts = json.loads(run("gh", "api", f"repos/{repo}/actions/runs/{run_id}/artifacts"))
@@ -118,7 +118,9 @@ def wait_for_link(repo, run_id, openssl, private):
         if status.get("status") == "completed":
             sys.exit(f"The session didn't start ({status.get('conclusion')}). See the run's logs on GitHub.")
         minutes = int((time.time() - started) / 60)
-        print(f"  still starting… {minutes} min", end="\r", flush=True)
+        if minutes != shown:
+            shown = minutes
+            print(f"  still starting... {minutes} min", flush=True)
         time.sleep(15)
     sys.exit("The session took too long to start.")
 
