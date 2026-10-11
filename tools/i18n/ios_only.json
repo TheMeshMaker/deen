@@ -1,0 +1,47 @@
+{
+ "ios_adhan_note": {
+  "en": "On iPhone, the adhan alarm plays the first 30 seconds and rings even on silent. Tap “Full adhan” on the alarm to hear all of it.",
+  "ar": "على الآيفون يُشغِّل منبّه الأذان أول ٣٠ ثانية ويرنّ ولو كان الهاتف صامتًا. اضغط «الأذان كاملًا» على المنبّه لسماعه كله.",
+  "ur": "آئی فون پر اذان کا الارم پہلے 30 سیکنڈ چلاتا ہے اور فون خاموش ہونے پر بھی بجتا ہے۔ پوری اذان سننے کے لیے الارم پر “مکمل اذان” دبائیں۔",
+  "id": "Di iPhone, alarm azan memutar 30 detik pertama dan tetap berbunyi meski dalam mode senyap. Ketuk “Azan lengkap” pada alarm untuk mendengar seluruhnya.",
+  "tr": "iPhone'da ezan alarmı kaydın ilk 30 saniyesini çalar ve sessizdeyken de çalar. Tamamını dinlemek için alarmda “Tam ezan”a dokunun.",
+  "bn": "আইফোনে আজানের অ্যালার্ম প্রথম ৩০ সেকেন্ড বাজায় এবং ফোন সাইলেন্টে থাকলেও বাজে। পুরো আজান শুনতে অ্যালার্মে “পূর্ণ আজান” চাপুন।",
+  "fr": "Sur iPhone, l’alarme de l’adhan joue les 30 premières secondes et sonne même en mode silencieux. Touchez « Adhan complet » sur l’alarme pour l’entendre en entier."
+ },
+ "ios_full_adhan": {
+  "en": "Full adhan",
+  "ar": "الأذان كاملًا",
+  "ur": "مکمل اذان",
+  "id": "Azan lengkap",
+  "tr": "Tam ezan",
+  "bn": "পূর্ণ আজান",
+  "fr": "Adhan complet"
+ },
+ "ios_alarms_off": {
+  "en": "Alarms are turned off for Deen, so the adhan comes as a notification instead. Turn alarms on in Settings so it rings even on silent.",
+  "ar": "المنبّهات متوقفة لتطبيق دِين، فيصل الأذان إشعارًا بدلًا منها. فعِّل المنبّهات من الإعدادات ليرنّ ولو كان الهاتف صامتًا.",
+  "ur": "دین کے لیے الارم بند ہیں، اس لیے اذان اطلاع کے طور پر آتی ہے۔ ترتیبات میں الارم آن کریں تاکہ فون خاموش ہونے پر بھی بجے۔",
+  "id": "Alarm dimatikan untuk Deen, jadi azan datang sebagai notifikasi. Nyalakan alarm di Pengaturan agar tetap berbunyi meski dalam mode senyap.",
+  "tr": "Deen için alarmlar kapalı, bu yüzden ezan bildirim olarak gelir. Sessizdeyken de çalması için Ayarlar'dan alarmları açın.",
+  "bn": "Deen-এর জন্য অ্যালার্ম বন্ধ, তাই আজান নোটিফিকেশন হিসেবে আসে। ফোন সাইলেন্টে থাকলেও যেন বাজে, সেজন্য সেটিংসে অ্যালার্ম চালু করুন।",
+  "fr": "Les alarmes sont désactivées pour Deen : l’adhan arrive donc en notification. Activez les alarmes dans Réglages pour qu’il sonne même en mode silencieux."
+ },
+ "ios_alert_for": {
+  "en": "Alert",
+  "ar": "التنبيه",
+  "ur": "اطلاع",
+  "id": "Pemberitahuan",
+  "tr": "Uyarı",
+  "bn": "সতর্কতা",
+  "fr": "Alerte"
+ },
+ "ios_test_scheduled": {
+  "en": "The test adhan rings in about a minute. Lock your phone now.",
+  "ar": "سيرنّ الأذان التجريبي بعد دقيقة تقريبًا. اقفل هاتفك الآن.",
+  "ur": "آزمائشی اذان تقریباً ایک منٹ میں بجے گی۔ اب اپنا فون لاک کریں۔",
+  "id": "Azan uji akan berbunyi sekitar satu menit lagi. Kunci ponsel Anda sekarang.",
+  "tr": "Deneme ezanı yaklaşık bir dakika içinde çalacak. Şimdi telefonunuzu kilitleyin.",
+  "bn": "পরীক্ষামূলক আজান প্রায় এক মিনিটে বাজবে। এখন ফোন লক করুন।",
+  "fr": "L’adhan d’essai sonnera dans une minute environ. Verrouillez votre téléphone maintenant."
+ }
+}

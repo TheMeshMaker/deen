@@ -146,3 +146,30 @@ private func method(_ name: String) -> CalculationMethod {
     #expect(quran.search("36").first?.number == 36)
     #expect(quran.juz.count == 30)
 }
+
+@Test func alertPlanMatchesTheSettings() throws {
+    let makkah = SavedLocation(name: "Makkah", coordinates: Coordinates(latitude: 21.4225, longitude: 39.8262), timeZoneID: "Asia/Riyadh")
+    let settings = PrayerSettings(method: .ummAlQura)
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = makkah.timeZone
+    let morning = calendar.date(from: DateComponents(year: 2026, month: 1, day: 10, hour: 8))!
+
+    // Defaults: an adhan for the five prayers, nothing at sunrise, no reminders.
+    let plain = AlertPlanner.plan(now: morning, location: makkah, prayer: settings, alerts: AlertSettings(), days: 2)
+    #expect(plain.allSatisfy { $0.kind == .adhan && $0.prayer.isPrayer })
+    #expect(plain.first?.prayer == .dhuhr)
+    #expect(plain == plain.sorted { $0.at < $1.at })
+
+    var alerts = AlertSettings(reminderMinutes: 10, afterAdhanMinutes: [.dhuhr: 15])
+    alerts.modes[.isha] = .notification
+    alerts.modes[.asr] = .silent
+    let plan = AlertPlanner.plan(now: morning, location: makkah, prayer: settings, alerts: alerts, days: 1)
+    let dhuhr = try #require(plan.first { $0.prayer == .dhuhr && $0.kind == .adhan })
+    let before = try #require(plan.first { $0.prayer == .dhuhr && $0.kind == .reminder })
+    let after = try #require(plan.first { $0.prayer == .dhuhr && $0.kind == .afterAdhan })
+    #expect(before.at == dhuhr.at.addingTimeInterval(-600))
+    #expect(after.at == dhuhr.at.addingTimeInterval(900))
+    #expect(plan.contains { $0.prayer == .isha && $0.kind == .notification })
+    #expect(!plan.contains { $0.prayer == .asr })
+    #expect(AlertSettings(modes: [.sunrise: .adhan]).mode(for: .sunrise) == .notification)
+}

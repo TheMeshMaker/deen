@@ -54,6 +54,9 @@ targets:
         UIAppFonts: [amiri_regular.ttf, amiri_bold.ttf, amiri_quran.ttf]
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSLocationWhenInUseUsageDescription: "Deen uses your location once, to calculate prayer times and the Qibla. It stays on your phone."
+        NSAlarmKitUsageDescription: "Deen sets an alarm for each adhan so it can sound even when your phone is on silent."
+        UIBackgroundModes: [audio, fetch]
+        BGTaskSchedulerPermittedIdentifiers: [io.github.themeshmaker.dunya.refresh]
         ITSAppUsesNonExemptEncryption: false
     settings:
       base:

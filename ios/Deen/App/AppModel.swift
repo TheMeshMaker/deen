@@ -33,6 +33,7 @@ struct AppSettings: Codable, Equatable {
     var appearance: AppearanceMode = .system
     var lastRead: QuranPosition?
     var bookmarks: [QuranPosition] = []
+    var alerts = AlertSettings()
 
     var isSetUp: Bool { onboardingComplete && location != nil && prayer != nil }
 
@@ -49,6 +50,7 @@ struct AppSettings: Codable, Equatable {
         appearance = (try? c.decodeIfPresent(AppearanceMode.self, forKey: .appearance)) ?? .system
         lastRead = try? c.decodeIfPresent(QuranPosition.self, forKey: .lastRead)
         bookmarks = (try? c.decodeIfPresent([QuranPosition].self, forKey: .bookmarks)) ?? []
+        alerts = (try? c.decodeIfPresent(AlertSettings.self, forKey: .alerts)) ?? AlertSettings()
     }
 }
 
@@ -62,7 +64,13 @@ final class AppModel {
     /// Screenshot mode (`-DeenDemo today|more|settings|onboarding`): fixed sample data, nothing saved.
     let demo: String?
 
-    private static let storageKey = "deen.settings"
+    nonisolated static let storageKey = "deen.settings"
+
+    /// Settings as saved, for work done without the UI (the background refresh).
+    nonisolated static func savedSettings() -> AppSettings? {
+        guard let data = UserDefaults.standard.data(forKey: storageKey) else { return nil }
+        return try? JSONDecoder().decode(AppSettings.self, from: data)
+    }
 
     init() {
         let defaults = UserDefaults.standard

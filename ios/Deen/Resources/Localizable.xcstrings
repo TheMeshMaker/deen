@@ -19872,6 +19872,241 @@
         }
       }
     },
+    "ios_adhan_note": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On iPhone, the adhan alarm plays the first 30 seconds and rings even on silent. Tap “Full adhan” on the alarm to hear all of it."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "على الآيفون يُشغِّل منبّه الأذان أول ٣٠ ثانية ويرنّ ولو كان الهاتف صامتًا. اضغط «الأذان كاملًا» على المنبّه لسماعه كله."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آئی فون پر اذان کا الارم پہلے 30 سیکنڈ چلاتا ہے اور فون خاموش ہونے پر بھی بجتا ہے۔ پوری اذان سننے کے لیے الارم پر “مکمل اذان” دبائیں۔"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di iPhone, alarm azan memutar 30 detik pertama dan tetap berbunyi meski dalam mode senyap. Ketuk “Azan lengkap” pada alarm untuk mendengar seluruhnya."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone'da ezan alarmı kaydın ilk 30 saniyesini çalar ve sessizdeyken de çalar. Tamamını dinlemek için alarmda “Tam ezan”a dokunun."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "আইফোনে আজানের অ্যালার্ম প্রথম ৩০ সেকেন্ড বাজায় এবং ফোন সাইলেন্টে থাকলেও বাজে। পুরো আজান শুনতে অ্যালার্মে “পূর্ণ আজান” চাপুন।"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sur iPhone, l’alarme de l’adhan joue les 30 premières secondes et sonne même en mode silencieux. Touchez « Adhan complet » sur l’alarme pour l’entendre en entier."
+          }
+        }
+      }
+    },
+    "ios_alarms_off": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarms are turned off for Deen, so the adhan comes as a notification instead. Turn alarms on in Settings so it rings even on silent."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المنبّهات متوقفة لتطبيق دِين، فيصل الأذان إشعارًا بدلًا منها. فعِّل المنبّهات من الإعدادات ليرنّ ولو كان الهاتف صامتًا."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دین کے لیے الارم بند ہیں، اس لیے اذان اطلاع کے طور پر آتی ہے۔ ترتیبات میں الارم آن کریں تاکہ فون خاموش ہونے پر بھی بجے۔"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarm dimatikan untuk Deen, jadi azan datang sebagai notifikasi. Nyalakan alarm di Pengaturan agar tetap berbunyi meski dalam mode senyap."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deen için alarmlar kapalı, bu yüzden ezan bildirim olarak gelir. Sessizdeyken de çalması için Ayarlar'dan alarmları açın."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deen-এর জন্য অ্যালার্ম বন্ধ, তাই আজান নোটিফিকেশন হিসেবে আসে। ফোন সাইলেন্টে থাকলেও যেন বাজে, সেজন্য সেটিংসে অ্যালার্ম চালু করুন।"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les alarmes sont désactivées pour Deen : l’adhan arrive donc en notification. Activez les alarmes dans Réglages pour qu’il sonne même en mode silencieux."
+          }
+        }
+      }
+    },
+    "ios_alert_for": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alert"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "التنبيه"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اطلاع"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pemberitahuan"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyarı"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "সতর্কতা"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerte"
+          }
+        }
+      }
+    },
+    "ios_full_adhan": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full adhan"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الأذان كاملًا"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مکمل اذان"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azan lengkap"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tam ezan"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "পূর্ণ আজান"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adhan complet"
+          }
+        }
+      }
+    },
+    "ios_test_scheduled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The test adhan rings in about a minute. Lock your phone now."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سيرنّ الأذان التجريبي بعد دقيقة تقريبًا. اقفل هاتفك الآن."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آزمائشی اذان تقریباً ایک منٹ میں بجے گی۔ اب اپنا فون لاک کریں۔"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azan uji akan berbunyi sekitar satu menit lagi. Kunci ponsel Anda sekarang."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deneme ezanı yaklaşık bir dakika içinde çalacak. Şimdi telefonunuzu kilitleyin."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "পরীক্ষামূলক আজান প্রায় এক মিনিটে বাজবে। এখন ফোন লক করুন।"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’adhan d’essai sonnera dans une minute environ. Verrouillez votre téléphone maintenant."
+          }
+        }
+      }
+    },
     "nav_adhkar": {
       "extractionState": "manual",
       "localizations": {

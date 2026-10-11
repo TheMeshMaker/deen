@@ -35,10 +35,14 @@ struct OnboardingFlow: View {
             case .method:
                 if let city {
                     MethodStep(city: city, onBack: { withAnimation(.smooth) { step = .location } }) { settings in
-                        model.update {
-                            $0.location = city.asLocation
-                            $0.prayer = settings
-                            $0.onboardingComplete = true
+                        Task {
+                            // Ask for notifications and alarms now, so the first adhan can ring.
+                            await AlertScheduler.requestPermissions()
+                            model.update {
+                                $0.location = city.asLocation
+                                $0.prayer = settings
+                                $0.onboardingComplete = true
+                            }
                         }
                     }
                     .transition(.move(edge: .trailing).combined(with: .opacity))

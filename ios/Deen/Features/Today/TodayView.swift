@@ -107,6 +107,14 @@ private struct TodayContent: View {
                 .padding(.top, 4)
 
                 PrayerList(today: today, next: next, zone: zone, isFriday: isFriday)
+                if AdhanPlayer.shared.playing != nil {
+                    Button {
+                        AdhanPlayer.shared.stop()
+                    } label: {
+                        Label(L("core_alarm_stop"), systemImage: "stop.fill").padding(.horizontal, 12)
+                    }
+                    .buttonStyle(.glass)
+                }
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 32)
@@ -121,7 +129,7 @@ private struct PrayerList: View {
     let next: NextPrayer
     let zone: TimeZone
     let isFriday: Bool
-    @Namespace private var glass
+    @Environment(AppModel.self) private var model
 
     var body: some View {
         VStack(spacing: 2) {
@@ -137,6 +145,18 @@ private struct PrayerList: View {
                     Text(Formats.time(today[prayer], in: zone))
                         .font(.body.weight(isNext ? .semibold : .regular))
                         .monospacedDigit()
+                    let mode = model.settings.alerts.mode(for: prayer)
+                    Button {
+                        withAnimation(.snappy) { model.update { $0.alerts.modes[prayer] = mode.next(for: prayer) } }
+                    } label: {
+                        Image(systemName: mode.symbol)
+                            .font(.footnote.weight(.semibold))
+                            .frame(width: 34, height: 34)
+                            .contentTransition(.symbolEffect(.replace))
+                    }
+                    .buttonStyle(.plain)
+                    .opacity(mode == .silent ? 0.55 : 1)
+                    .accessibilityLabel(L("feature_today_alert_for", prayer.name(friday: isFriday), mode.title))
                 }
                 .opacity(prayer.isPrayer ? 1 : 0.7)
                 .padding(.horizontal, 16)
@@ -146,7 +166,7 @@ private struct PrayerList: View {
                         Capsule().fill(.white.opacity(0.16))
                     }
                 }
-                .accessibilityElement(children: .combine)
+                .accessibilityElement(children: .contain)
             }
         }
         .padding(6)

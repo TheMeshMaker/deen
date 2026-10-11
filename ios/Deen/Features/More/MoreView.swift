@@ -106,6 +106,8 @@ struct SettingsView: View {
                 }
             }
 
+            AlertSettingsSection()
+
             Section(L("feature_settings_prayer_times")) {
                 NavigationLink {
                     LocationSearchView { city in model.update { $0.location = city.asLocation } }

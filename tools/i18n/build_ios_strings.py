@@ -6,7 +6,7 @@ Run from the repository root after build_strings.py:
 
 Placeholders become iOS ones (%1$s → %1$@, %d → %lld). Plurals with exactly one number become plural
 variations; plurals with more than one placeholder are written as their "other" form under the key
-"<name>.other" (the iOS app does not use them yet).
+"<name>.other". Strings only the iOS app needs are added from tools/i18n/ios_only.json.
 """
 import glob
 import json
@@ -65,6 +65,11 @@ def main():
                 elif e.tag == "string-array":
                     for i, item in enumerate(e):
                         strings.setdefault(f"{name}.{i}", {})[lang] = unit(ios(unescape(item.text)))
+    # iOS-only strings (things that differ on iPhone, like AlarmKit's 30-second sounds), in every language.
+    extra = json.load(open(os.path.join(ROOT, "tools", "i18n", "ios_only.json"), encoding="utf-8"))
+    for key, by_lang in extra.items():
+        for lang in LANGUAGES.values():
+            strings.setdefault(key, {})[lang] = unit(by_lang[lang])
     catalog = {
         "sourceLanguage": "en",
         "strings": {key: {"extractionState": "manual", "localizations": strings[key]} for key in sorted(strings)},
