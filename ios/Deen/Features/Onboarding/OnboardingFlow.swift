@@ -131,6 +131,7 @@ struct WelcomeView: View {
             .scrollIndicators(.hidden)
         }
         .foregroundStyle(content)
+        .environment(\.colorScheme, theme.gradient.hasDarkContent ? .light : .dark)
         .onAppear { appeared = true }
     }
 }

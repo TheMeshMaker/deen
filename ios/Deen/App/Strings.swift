@@ -5,7 +5,10 @@ import Foundation
 /// tools/i18n/build_ios_strings.py), with its placeholders filled in.
 func L(_ key: String, _ args: CVarArg...) -> String {
     let format = Bundle.main.localizedString(forKey: key, value: nil, table: nil)
-    return args.isEmpty ? format : String(format: format, locale: Locale.current, arguments: args)
+    guard !args.isEmpty else { return format }
+    // Formatted without a locale (so a year never gets a thousands separator), then shown in the
+    // language's own digits, as Android does.
+    return Formats.localDigits(String(format: format, arguments: args))
 }
 
 /// A plural string: the language's own rules pick the form for [count].
@@ -58,15 +61,18 @@ enum Formats {
     static func time(_ date: Date, in zone: TimeZone) -> String {
         let f = DateFormatter()
         f.locale = .current
+        f.calendar = Calendar(identifier: .gregorian)
         f.timeZone = zone
         f.timeStyle = .short
         f.dateStyle = .none
         return f.string(from: date)
     }
 
+    /// Always the Gregorian date (Arabic locales default to the Islamic calendar; the Hijri date is shown beside it).
     static func longDate(_ date: Date, in zone: TimeZone) -> String {
         let f = DateFormatter()
         f.locale = .current
+        f.calendar = Calendar(identifier: .gregorian)
         f.timeZone = zone
         f.setLocalizedDateFormatFromTemplate("EEEEdMMMM")
         return f.string(from: date)

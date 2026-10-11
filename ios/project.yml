@@ -29,6 +29,10 @@ targets:
           - "Resources/AppIcon.svg"
       - path: ../core/location/src/main/assets/cities.tsv
         buildPhase: resources
+      - path: ../core/content/src/main/assets/quran/quran-uthmani.txt
+        buildPhase: resources
+      - path: ../core/content/src/main/assets/quran/quran-meta.json
+        buildPhase: resources
       - path: ../core/designsystem/src/main/res/font/amiri_regular.ttf
         buildPhase: resources
       - path: ../core/designsystem/src/main/res/font/amiri_bold.ttf

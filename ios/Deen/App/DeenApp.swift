@@ -34,7 +34,7 @@ struct RootView: View {
 }
 
 enum AppTab: String, Hashable {
-    case today, more, settings
+    case today, quran, more, settings, reader
 }
 
 /// The tab bar: Liquid Glass, shrinking away as the page scrolls.
@@ -42,16 +42,25 @@ struct MainTabs: View {
     @State private var tab: AppTab
 
     init(initial: AppTab) {
-        _tab = State(initialValue: initial == .settings ? .more : initial)
+        switch initial {
+        case .settings: _tab = State(initialValue: .more)
+        case .reader: _tab = State(initialValue: .quran)
+        default: _tab = State(initialValue: initial)
+        }
         openSettings = initial == .settings
+        openReader = initial == .reader
     }
 
     private let openSettings: Bool
+    private let openReader: Bool
 
     var body: some View {
         TabView(selection: $tab) {
             Tab(L("nav_today"), systemImage: "sun.horizon.fill", value: AppTab.today) {
                 TodayView()
+            }
+            Tab(L("nav_quran"), systemImage: "book.closed.fill", value: AppTab.quran) {
+                QuranHomeView(openLastRead: openReader)
             }
             Tab(L("nav_more"), systemImage: "square.grid.2x2.fill", value: AppTab.more) {
                 MoreView(openSettings: openSettings)

@@ -30,6 +30,8 @@ shot 01-welcome -DeenDemo onboarding
 shot 02-today -DeenDemo today
 shot 03-today-andalus -DeenDemo today -DeenTheme andalus
 shot 04-more -DeenDemo more
+shot 04b-quran -DeenDemo quran
+shot 04c-reader -DeenDemo reader
 shot 05-settings -DeenDemo settings
 shot 06-today-arabic -DeenDemo today -AppleLanguages "(ar)" -AppleLocale ar_SA
 shot 07-welcome-urdu -DeenDemo onboarding -AppleLanguages "(ur)" -AppleLocale ur_PK
@@ -38,3 +40,4 @@ shot 08-today-french -DeenDemo today -DeenTheme rose -AppleLanguages "(fr)" -App
 xcrun simctl ui "$DEVICE" appearance dark
 shot 09-today-dark -DeenDemo today -DeenTheme midnight
 shot 10-settings-dark -DeenDemo settings -DeenTheme kiswah
+shot 11-reader-dark -DeenDemo reader -DeenTheme midnight

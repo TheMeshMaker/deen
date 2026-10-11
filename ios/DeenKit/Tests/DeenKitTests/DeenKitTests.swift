@@ -131,3 +131,18 @@ private func method(_ name: String) -> CalculationMethod {
     #expect(abs(bearing - 118.99) < 0.5)
     #expect(abs(QiblaFinder.distanceKm(from: Coordinates(latitude: 51.5072, longitude: -0.1276)) - 4790) < 60)
 }
+
+@Test func quranLoadsEveryVerseAndSplitsTheBismillah() throws {
+    let base = repoRoot.appendingPathComponent("core/content/src/main/assets/quran")
+    let quran = try Quran.load(text: base.appendingPathComponent("quran-uthmani.txt"), meta: base.appendingPathComponent("quran-meta.json"))
+    #expect(quran.surahs.count == 114)
+    #expect(quran.surahs.reduce(0) { $0 + quran.ayahs(of: $1.number).count } == 6236)
+    #expect(quran.surahs.allSatisfy { quran.ayahs(of: $0.number).count == $0.ayahCount })
+    #expect(quran.ayahs(of: 1).first?.bismillah == nil)
+    #expect(quran.ayahs(of: 2).first?.bismillah?.split(separator: " ").count == 4)
+    #expect(quran.ayahs(of: 9).first?.bismillah == nil)
+    #expect(quran.search("baqara").first?.number == 2)
+    #expect(quran.search("البقرة").first?.number == 2)
+    #expect(quran.search("36").first?.number == 36)
+    #expect(quran.juz.count == 30)
+}

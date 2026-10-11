@@ -22,13 +22,19 @@ struct TodayView: View {
                 }
             }
             .foregroundStyle(theme.gradient.content)
+            // The gradient is dark (except a light custom one), so glass on it uses its dark look.
+            .environment(\.colorScheme, theme.gradient.hasDarkContent ? .light : .dark)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink {
                         LocationSearchView { city in model.update { $0.location = city.asLocation } }
                     } label: {
-                        Label(model.settings.location?.displayName(arabic: isArabicUI) ?? "", systemImage: "location.fill")
-                            .labelStyle(.titleAndIcon)
+                        HStack(spacing: 6) {
+                            Image(systemName: "location.fill")
+                            Text(model.settings.location?.displayName(arabic: isArabicUI) ?? "").lineLimit(1)
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .padding(.horizontal, 4)
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
