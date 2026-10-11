@@ -29,6 +29,7 @@ struct HadithHomeView: View {
                             NavigationLink { NawawiListView(hadiths: library.nawawi) } label: {
                                 MenuLabel(L("feature_hadith_nawawi"), detail: L("feature_hadith_nawawi_body"), symbol: "text.book.closed.fill")
                             }
+                            .accessibilityIdentifier("nawawiLink")
                             NavigationLink { FactsView(facts: library.facts) } label: {
                                 MenuLabel(L("feature_hadith_facts"), detail: L("feature_hadith_facts_body"), symbol: "sparkles")
                             }

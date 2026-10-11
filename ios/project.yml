@@ -40,6 +40,13 @@ targets:
       - path: ../core/content/src/main/assets/hadith
         type: folder
         buildPhase: resources
+      - path: ../core/content/src/main/assets/audio
+        type: folder
+        buildPhase: resources
+      - path: ../core/content/src/main/assets/tafsir/jalalayn.tsv
+        buildPhase: resources
+      - path: ../core/content/src/main/assets/quran/pickthall.tsv
+        buildPhase: resources
       - path: ../core/designsystem/src/main/res/font/amiri_regular.ttf
         buildPhase: resources
       - path: ../core/designsystem/src/main/res/font/amiri_bold.ttf

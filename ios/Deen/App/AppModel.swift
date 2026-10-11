@@ -35,6 +35,9 @@ struct AppSettings: Codable, Equatable {
     var bookmarks: [QuranPosition] = []
     var alerts = AlertSettings()
     var tasbih = TasbihState()
+    var reciterID = Reciter.alafasy.rawValue
+    var tafsirID = TafsirSource.jalalayn.rawValue
+    var timetableKind: MonthCalendar.Kind = .gregorian
     /// Today's adhkar counts ("category/id" → times said); cleared on a new day.
     var adhkarDay = ""
     var adhkarCounts: [String: Int] = [:]
@@ -56,6 +59,9 @@ struct AppSettings: Codable, Equatable {
         bookmarks = (try? c.decodeIfPresent([QuranPosition].self, forKey: .bookmarks)) ?? []
         alerts = (try? c.decodeIfPresent(AlertSettings.self, forKey: .alerts)) ?? AlertSettings()
         tasbih = (try? c.decodeIfPresent(TasbihState.self, forKey: .tasbih)) ?? TasbihState()
+        reciterID = (try? c.decodeIfPresent(String.self, forKey: .reciterID)) ?? Reciter.alafasy.rawValue
+        tafsirID = (try? c.decodeIfPresent(String.self, forKey: .tafsirID)) ?? TafsirSource.jalalayn.rawValue
+        timetableKind = (try? c.decodeIfPresent(MonthCalendar.Kind.self, forKey: .timetableKind)) ?? .gregorian
         adhkarDay = (try? c.decodeIfPresent(String.self, forKey: .adhkarDay)) ?? ""
         adhkarCounts = (try? c.decodeIfPresent([String: Int].self, forKey: .adhkarCounts)) ?? [:]
     }
@@ -70,6 +76,8 @@ final class AppModel {
     private(set) var quran: Quran?
     private(set) var adhkar: [AdhkarCategory]?
     private(set) var hadith: HadithLibrary?
+    private var jalalayn: [Int: [Int: String]]?
+    private var pickthall: [Int: [Int: String]]?
     /// Screenshot mode (`-DeenDemo today|more|settings|onboarding`): fixed sample data, nothing saved.
     let demo: String?
 
@@ -135,6 +143,32 @@ final class AppModel {
         guard hadith == nil, let folder = Bundle.main.resourceURL?.appendingPathComponent("hadith"),
               let facts = Bundle.main.url(forResource: "prophet-facts", withExtension: "json") else { return }
         hadith = await Task.detached(priority: .userInitiated) { try? HadithLibrary.load(hadithFolder: folder, facts: facts) }.value
+    }
+
+    // MARK: Tafsir
+
+    /// The surah's tafsir from the chosen source: al-Jalalayn from the app, the others downloaded once
+    /// and kept. Nil when a download is needed and there is no internet.
+    func tafsir(surah: Surah) async -> [TafsirEntry]? {
+        let source = TafsirSource(rawValue: settings.tafsirID) ?? .jalalayn
+        if source.bundled {
+            if jalalayn == nil { jalalayn = await Self.table("jalalayn") }
+            return tafsirEntries(jalalayn?[surah.number] ?? [:], ayahCount: surah.ayahCount)
+        }
+        let cache = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        guard let texts = await RemoteTafsir.fetch(source, surah: surah.number, cache: cache) else { return nil }
+        return tafsirEntries(texts, ayahCount: surah.ayahCount)
+    }
+
+    /// Pickthall's English meaning (1930), shown with the tafsir outside Arabic.
+    func meaning(surah: Int) async -> [Int: String] {
+        if pickthall == nil { pickthall = await Self.table("pickthall") }
+        return pickthall?[surah] ?? [:]
+    }
+
+    private static func table(_ name: String) async -> [Int: [Int: String]]? {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "tsv") else { return nil }
+        return await Task.detached { (try? String(contentsOf: url, encoding: .utf8)).map(parseVerseTable) }.value
     }
 
     // MARK: Adhkar counts

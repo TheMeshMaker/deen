@@ -61,7 +61,7 @@ private struct AlertInputs: Equatable {
 }
 
 enum AppTab: String, Hashable {
-    case today, quran, hadith, adhkar, more, settings, reader
+    case today, quran, hadith, adhkar, more, settings, reader, qibla, timetable
 }
 
 /// The tab bar: Liquid Glass, shrinking away as the page scrolls.
@@ -72,13 +72,16 @@ struct MainTabs: View {
         switch initial {
         case .settings: _tab = State(initialValue: .more)
         case .reader: _tab = State(initialValue: .quran)
+        case .qibla, .timetable: _tab = State(initialValue: .more)
         default: _tab = State(initialValue: initial)
         }
         openSettings = initial == .settings
+        openTool = initial == .qibla || initial == .timetable ? initial.rawValue : nil
         openReader = initial == .reader
     }
 
     private let openSettings: Bool
+    private let openTool: String?
     private let openReader: Bool
 
     var body: some View {
@@ -96,7 +99,7 @@ struct MainTabs: View {
                 AdhkarHomeView()
             }
             Tab(L("nav_more"), systemImage: "square.grid.2x2.fill", value: AppTab.more) {
-                MoreView(openSettings: openSettings)
+                MoreView(openSettings: openSettings, openTool: openTool)
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)

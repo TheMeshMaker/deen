@@ -197,3 +197,36 @@ private func method(_ name: String) -> CalculationMethod {
     let b = DailyContent.pick(library.nawawi, year: 2026, month: 10, day: 12)
     #expect(a != nil && a != b)
 }
+
+@Test func wordTimingsCoverEveryVerse() throws {
+    let text = try String(contentsOf: repoRoot.appendingPathComponent("core/content/src/main/assets/audio/timings/Alafasy_128kbps.tsv"), encoding: .utf8)
+    let table = parseTimings(text)
+    #expect(table.count == 6236)
+    let kursi = try #require(table[2 * 1000 + 255])
+    #expect(kursi.count > 40)
+    #expect(kursi.wordAt(-1) == nil)
+    #expect(kursi.wordAt(kursi[0].startMs) == kursi[0].firstWord)
+    // Between two words the previous one stays lit.
+    #expect(kursi.wordAt(kursi[1].startMs - 1) == kursi[0].firstWord)
+}
+
+@Test func tafsirTablesAndGrouping() throws {
+    let jalalayn = parseVerseTable(try String(contentsOf: repoRoot.appendingPathComponent("core/content/src/main/assets/tafsir/jalalayn.tsv"), encoding: .utf8))
+    #expect(jalalayn.count == 114)
+    #expect(jalalayn[2]?[255]?.isEmpty == false)
+    let grouped = tafsirEntries([1: "", 2: "a", 4: "b"], ayahCount: 4)
+    #expect(grouped[0].coveredBy == 2) // an opening verse points forward
+    #expect(grouped[2].coveredBy == 2)
+    #expect(grouped[3].coveredBy == nil)
+    #expect(cleanHTML("<p>one</p><p>two<br>three</p>") == "one\n\ntwo\nthree")
+}
+
+@Test func monthDays() {
+    let october = MonthCalendar.days(year: 2026, month: 10, kind: .gregorian)
+    #expect(october.count == 31)
+    #expect(october.first.map { [$0.year, $0.month, $0.day] } == [2026, 10, 1])
+    let ramadan = MonthCalendar.days(year: 1446, month: 9, kind: .hijri)
+    #expect((29...30).contains(ramadan.count))
+    #expect(ramadan.first.map { [$0.year, $0.month, $0.day] } == [2025, 3, 1])
+    #expect(ramadan.allSatisfy { $0.hijri.month == 9 })
+}

@@ -34,6 +34,8 @@ shot 04b-quran -DeenDemo quran
 shot 04c-reader -DeenDemo reader
 shot 04d-hadith -DeenDemo hadith
 shot 04e-adhkar -DeenDemo adhkar
+shot 04f-qibla -DeenDemo qibla
+shot 04g-timetable -DeenDemo timetable
 shot 05-settings -DeenDemo settings
 shot 06-today-arabic -DeenDemo today -AppleLanguages "(ar)" -AppleLocale ar_SA
 shot 07-welcome-urdu -DeenDemo onboarding -AppleLanguages "(ur)" -AppleLocale ur_PK

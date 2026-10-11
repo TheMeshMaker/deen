@@ -5,6 +5,8 @@ import SwiftUI
 /// through in-app purchase.)
 struct MoreView: View {
     var openSettings = false
+    /// Screenshot mode: open "qibla" or "timetable" directly.
+    var openTool: String?
     @State private var path: [String] = []
     private let repository = URL(string: "https://github.com/TheMeshMaker/deen")!
 
@@ -12,9 +14,21 @@ struct MoreView: View {
         NavigationStack(path: $path) {
             List {
                 Section {
+                    NavigationLink { QiblaView() } label: {
+                        MenuLabel(L("feature_more_qibla"), detail: L("feature_more_qibla_body"), symbol: "location.north.circle.fill")
+                    }
+                    NavigationLink { TimetableView() } label: {
+                        MenuLabel(L("feature_more_timetable"), detail: L("feature_more_timetable_body"), symbol: "calendar")
+                    }
+                    NavigationLink { TasbihView() } label: {
+                        MenuLabel(L("feature_more_tasbih"), detail: L("feature_more_tasbih_body"), symbol: "circle.hexagongrid.fill")
+                    }
+                }
+                Section {
                     NavigationLink(value: "settings") {
                         MenuLabel(L("feature_more_settings"), detail: L("feature_more_settings_body"), symbol: "gearshape.fill")
                     }
+                    .accessibilityIdentifier("settingsLink")
                 }
                 Section {
                     ShareLink(item: URL(string: "https://github.com/TheMeshMaker/deen/releases")!,
@@ -40,10 +54,18 @@ struct MoreView: View {
                 }
             }
             .navigationTitle(L("feature_more_title"))
-            .navigationDestination(for: String.self) { _ in SettingsView() }
+            .navigationDestination(for: String.self) { page in
+                switch page {
+                case "qibla": QiblaView()
+                case "timetable": TimetableView()
+                default: SettingsView()
+                }
+            }
         }
         .onAppear {
-            if openSettings && path.isEmpty { path = ["settings"] }
+            if path.isEmpty {
+                if openSettings { path = ["settings"] } else if let openTool { path = [openTool] }
+            }
         }
     }
 }
@@ -190,6 +212,7 @@ private struct ThemePicker: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(selected ? .isSelected : [])
+                .accessibilityIdentifier("theme-\(style.rawValue)")
             }
         }
     }

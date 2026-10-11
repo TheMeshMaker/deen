@@ -88,17 +88,20 @@ struct AdhkarHomeView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     NavigationLink { TasbihView() } label: { tasbihCard }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("tasbihCard")
                     if let categories = model.adhkar {
                         if let id = suggested, let category = categories.first(where: { $0.id == id }) {
                             Text(L("feature_adhkar_now")).font(.headline).padding(.top, 6)
                             NavigationLink { AdhkarReaderView(category: category) } label: { CategoryCard(category: category, wide: true) }
                                 .buttonStyle(.plain)
+                                .accessibilityIdentifier("category-\(category.id)")
                         }
                         Text(L("feature_adhkar_all")).font(.headline).padding(.top, 6)
                         LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                             ForEach(categories.filter { $0.id != suggested }) { category in
                                 NavigationLink { AdhkarReaderView(category: category) } label: { CategoryCard(category: category, wide: false) }
                                     .buttonStyle(.plain)
+                                    .accessibilityIdentifier("category-\(category.id)")
                             }
                         }
                         Text(L("feature_adhkar_review_note")).font(.footnote).foregroundStyle(.secondary).padding(.top, 4)
@@ -208,6 +211,7 @@ struct AdhkarReaderView: View {
                             }
                         }
                         .id(dhikr.id)
+                        .accessibilityIdentifier("dhikr-\(dhikr.id)")
                     }
                     if done == category.items.count {
                         Text(L("feature_adhkar_all_done")).font(.headline).foregroundStyle(.tint).padding()
@@ -360,6 +364,7 @@ struct TasbihView: View {
                     .glassEffect(.regular.interactive(), in: .circle)
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("tasbihButton")
                 .sensoryFeedback(.increase, trigger: tasbih.count)
                 .sensoryFeedback(.success, trigger: tasbih.target > 0 && tasbih.count > 0 && tasbih.count % tasbih.target == 0)
                 .accessibilityLabel(L("feature_tasbih_tap", Formats.localDigits("\(tasbih.count)")))

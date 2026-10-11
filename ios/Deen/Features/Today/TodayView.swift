@@ -109,6 +109,7 @@ private struct TodayContent: View {
                 .padding(.top, 4)
 
                 PrayerList(today: today, next: next, zone: zone, isFriday: isFriday)
+                QuickActions()
                 if AdhanPlayer.shared.playing != nil {
                     Button {
                         AdhanPlayer.shared.stop()
