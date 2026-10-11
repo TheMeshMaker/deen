@@ -69,8 +69,17 @@ public final class CityIndex: @unchecked Sendable {
         var prefix: [City] = []
         var other: [City] = []
         for (i, key) in keys.enumerated() {
-            guard let range = key.range(of: needle) else { continue }
-            let atWordStart = range.lowerBound == key.startIndex || key[key.index(before: range.lowerBound)] == " "
+            guard let first = key.range(of: needle) else { continue }
+            // Any occurrence at the start of a word counts ("رياض" is a word of "الرياض رياض").
+            var atWordStart = false
+            var range: Range<String.Index>? = first
+            while let r = range {
+                if r.lowerBound == key.startIndex || key[key.index(before: r.lowerBound)] == " " {
+                    atWordStart = true
+                    break
+                }
+                range = key.range(of: needle, range: key.index(after: r.lowerBound)..<key.endIndex)
+            }
             if atWordStart {
                 prefix.append(cities[i])
                 if prefix.count == limit { break }
