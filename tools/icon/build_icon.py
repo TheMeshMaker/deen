@@ -6,7 +6,8 @@ vector drawables (108x108 adaptive-icon viewport; safe zone r=33 around 54,54).
 
 Usage (from the repository root):
   python -I tools/icon/build_icon.py <preview dir> app/src/main/res \
-      core/alarm/src/main/res/drawable/ic_stat_deen.xml core/designsystem/src/main/res/drawable/deen_mark.xml
+      core/alarm/src/main/res/drawable/ic_stat_deen.xml core/designsystem/src/main/res/drawable/deen_mark.xml \
+      ios/Deen/Resources/AppIcon.svg
 """
 import math
 import sys
@@ -249,5 +250,20 @@ if len(sys.argv) > 4:
         </path>
     </group>
 </vector>
+""")
+if len(sys.argv) > 5:
+    # iOS: a full square (iOS rounds the corners itself), the mark a little larger than on Android.
+    # Rasterise to a 1024×1024 PNG without transparency for the asset catalog (see ios/README.md).
+    open(sys.argv[5], "w", encoding="utf-8", newline="\n").write(f"""<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="16 16 76 76">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{BG_A}"/><stop offset="1" stop-color="{BG_B}"/></linearGradient>
+<radialGradient id="glow" cx="54" cy="46" r="40" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7FFFD0" stop-opacity="0.22"/><stop offset="1" stop-color="#7FFFD0" stop-opacity="0"/></radialGradient>
+<linearGradient id="gold" x1="40" y1="24" x2="70" y2="84" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="{GOLD_A}"/><stop offset="1" stop-color="{GOLD_B}"/></linearGradient>
+</defs>
+<rect x="0" y="0" width="108" height="108" fill="url(#bg)"/><rect x="0" y="0" width="108" height="108" fill="url(#glow)"/>
+<path d="{ring}" fill="url(#gold)" fill-rule="evenodd" opacity="0.9"/>
+<path d="{bowl}" fill="url(#gold)"/>
+<path d="{dot}" fill="url(#gold)"/>
+</svg>
 """)
 print("ok")

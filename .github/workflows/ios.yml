@@ -1,0 +1,91 @@
+name: iOS
+
+# Builds and tests the iOS app on GitHub's Mac runners (free for public repositories) and takes
+# Simulator screenshots, so the app can be developed without a Mac at hand.
+on:
+  push:
+    branches: [ios]
+    paths:
+      - "ios/**"
+      - "tools/i18n/**"
+      - "core/location/src/main/assets/**"
+      - "core/content/src/main/assets/**"
+      - "core/prayer/src/test/resources/**"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths:
+      - "ios/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Use the newest released Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | grep -v -i beta | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: String catalog is up to date
+        run: |
+          python3 tools/i18n/build_ios_strings.py
+          git diff --exit-code -- ios/Deen/Resources/Localizable.xcstrings
+
+      - name: DeenKit tests (prayer times, Hijri, Qibla, cities)
+        run: swift test --package-path ios/DeenKit
+
+      - name: Generate the Xcode project
+        run: |
+          brew install xcodegen
+          cd ios && xcodegen generate
+
+      - name: Pick a simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          data = json.load(sys.stdin)["devices"]
+          runtimes = sorted((r for r in data if "iOS" in r), key=lambda r: [int(x) for x in r.split("iOS-")[-1].split("-")])
+          for runtime in reversed(runtimes):
+              phones = [d for d in data[runtime] if d["name"].startswith("iPhone")]
+              pro = [d for d in phones if d["name"].endswith(" Pro")]
+              if phones:
+                  print((pro or phones)[0]["udid"]); break
+          ')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl list devices | grep "$UDID"
+
+      - name: Build for the simulator
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/Deen.xcodeproj -scheme Deen -configuration Debug \
+            -destination "id=${{ steps.sim.outputs.udid }}" -derivedDataPath ios/DerivedData \
+            CODE_SIGNING_ALLOWED=NO build | tee ios/build.log | grep -E "error:|warning: .*Deen/|BUILD" || true
+          test -d ios/DerivedData/Build/Products/Debug-iphonesimulator/Deen.app
+
+      - name: Screenshots
+        run: |
+          chmod +x ios/scripts/screenshots.sh
+          ios/scripts/screenshots.sh "${{ steps.sim.outputs.udid }}" ios/DerivedData/Build/Products/Debug-iphonesimulator/Deen.app ios/screenshots
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-screenshots
+          path: ios/screenshots
+          if-no-files-found: ignore
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-build-log
+          path: ios/build.log
+          if-no-files-found: ignore

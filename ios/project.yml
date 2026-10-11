@@ -1,0 +1,63 @@
+# Deen for iOS. The Xcode project is generated from this file: `brew install xcodegen && xcodegen generate`
+# (see ios/README.md). The Quran, hadith, adhkar, city and font files are used straight from the Android
+# modules, so both apps always ship the same content.
+name: Deen
+options:
+  bundleIdPrefix: io.github.themeshmaker
+  developmentLanguage: en
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: NO
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+packages:
+  DeenKit:
+    path: DeenKit
+targets:
+  Deen:
+    type: application
+    platform: iOS
+    sources:
+      - path: Deen
+        excludes:
+          - "Resources/AppIcon.svg"
+      - path: ../core/location/src/main/assets/cities.tsv
+        buildPhase: resources
+      - path: ../core/designsystem/src/main/res/font/amiri_regular.ttf
+        buildPhase: resources
+      - path: ../core/designsystem/src/main/res/font/amiri_bold.ttf
+        buildPhase: resources
+      - path: ../core/designsystem/src/main/res/font/amiri_quran.ttf
+        buildPhase: resources
+    dependencies:
+      - package: DeenKit
+        product: DeenKit
+    info:
+      path: Deen/Info.plist
+      properties:
+        CFBundleDisplayName: Deen
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, ar, ur, id, tr, bn, fr]
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIAppFonts: [amiri_regular.ttf, amiri_bold.ttf, amiri_quran.ttf]
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSLocationWhenInUseUsageDescription: "Deen uses your location once, to calculate prayer times and the Qibla. It stays on your phone."
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.themeshmaker.dunya
+        PRODUCT_NAME: Deen
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_STYLE: Automatic
+    scheme:
+      gatherCoverageData: false

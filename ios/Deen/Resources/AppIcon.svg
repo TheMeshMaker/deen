@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="16 16 76 76">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#03392B"/><stop offset="1" stop-color="#0E8A62"/></linearGradient>
+<radialGradient id="glow" cx="54" cy="46" r="40" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7FFFD0" stop-opacity="0.22"/><stop offset="1" stop-color="#7FFFD0" stop-opacity="0"/></radialGradient>
+<linearGradient id="gold" x1="40" y1="24" x2="70" y2="84" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF4D6"/><stop offset="1" stop-color="#E3B858"/></linearGradient>
+</defs>
+<rect x="0" y="0" width="108" height="108" fill="url(#bg)"/><rect x="0" y="0" width="108" height="108" fill="url(#glow)"/>
+<path d="M65.86,25.36 L70.78,37.22 L82.64,42.14 L77.73,54 L82.64,65.86 L70.78,70.78 L65.86,82.64 L54,77.73 L42.14,82.64 L37.22,70.78 L25.36,65.86 L30.27,54 L25.36,42.14 L37.22,37.22 L42.14,25.36 L54,30.27 Z M65.16,27.06 L69.78,38.22 L80.94,42.84 L76.32,54 L80.94,65.16 L69.78,69.78 L65.16,80.94 L54,76.32 L42.84,80.94 L38.22,69.78 L27.06,65.16 L31.68,54 L27.06,42.84 L38.22,38.22 L42.84,27.06 L54,31.68 Z" fill="url(#gold)" fill-rule="evenodd" opacity="0.9"/>
+<path d="M42.22,45.93 A15.5,15.5 0 1,0 69.04,52.23 A13.9,13.9 0 1,1 42.22,45.93 Z" fill="url(#gold)"/>
+<path d="M54.8,42.2 L58.4,46.4 L54.8,50.6 L51.2,46.4 Z" fill="url(#gold)"/>
+</svg>

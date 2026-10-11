@@ -24,3 +24,10 @@ Thumbs.db
 # JVM crash logs
 hs_err_pid*.log
 replay_pid*.log
+
+# iOS (the Xcode project is generated from ios/project.yml by XcodeGen)
+ios/*.xcodeproj/
+ios/DerivedData/
+ios/DeenKit/.build/
+ios/DeenKit/.swiftpm/
+xcuserdata/
