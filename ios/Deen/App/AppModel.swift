@@ -44,6 +44,12 @@ struct AppSettings: Codable, Equatable {
 
     var isSetUp: Bool { onboardingComplete && location != nil && prayer != nil }
 
+    /// What the home-screen widget shows.
+    var widgetSnapshot: WidgetSnapshot? {
+        guard let location, let prayer else { return nil }
+        return WidgetSnapshot(location: location, prayer: prayer, theme: theme.rawValue, customStart: custom.start, customEnd: custom.end)
+    }
+
     init() {}
 
     /// Every field is optional on disk, so settings saved by an older version keep loading.
@@ -110,6 +116,7 @@ final class AppModel {
         if demo == nil, let data = try? JSONEncoder().encode(next) {
             UserDefaults.standard.set(data, forKey: Self.storageKey)
         }
+        if let snapshot = next.widgetSnapshot, snapshot != WidgetSnapshot.load() { snapshot.save() }
     }
 
     func binding<Value>(_ keyPath: WritableKeyPath<AppSettings, Value>) -> Binding<Value> {

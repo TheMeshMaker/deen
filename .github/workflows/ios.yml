@@ -75,6 +75,26 @@ jobs:
           chmod +x ios/scripts/screenshots.sh
           ios/scripts/screenshots.sh "${{ steps.sim.outputs.udid }}" ios/DerivedData/Build/Products/Debug-iphonesimulator/Deen.app ios/screenshots
 
+      - name: Walkthrough video (a UI test drives the app; the Simulator is recorded)
+        continue-on-error: true
+        run: |
+          UDID="${{ steps.sim.outputs.udid }}"
+          xcrun simctl io "$UDID" recordVideo --codec h264 --force ios/walkthrough.mp4 &
+          REC=$!
+          sleep 3
+          xcodebuild test -project ios/Deen.xcodeproj -scheme Deen -destination "id=$UDID" \
+            -derivedDataPath ios/DerivedData -only-testing:DeenUITests CODE_SIGNING_ALLOWED=NO 2>&1 | tail -30 || true
+          kill -INT $REC
+          wait $REC || true
+          ls -la ios/walkthrough.mp4
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-walkthrough-video
+          path: ios/walkthrough.mp4
+          if-no-files-found: ignore
+
       - name: Package the Simulator build (to try it in a browser, e.g. on appetize.io)
         run: |
           cd ios/DerivedData/Build/Products/Debug-iphonesimulator

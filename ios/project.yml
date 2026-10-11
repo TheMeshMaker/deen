@@ -27,6 +27,7 @@ targets:
       - path: Deen
         excludes:
           - "Resources/AppIcon.svg"
+      - path: Shared
       - path: ../core/location/src/main/assets/cities.tsv
         buildPhase: resources
       - path: ../core/content/src/main/assets/quran/quran-uthmani.txt
@@ -56,6 +57,11 @@ targets:
     dependencies:
       - package: DeenKit
         product: DeenKit
+      - target: DeenWidget
+    entitlements:
+      path: Deen/Deen.entitlements
+      properties:
+        com.apple.security.application-groups: [group.io.github.themeshmaker.dunya]
     info:
       path: Deen/Info.plist
       properties:
@@ -82,3 +88,52 @@ targets:
         CODE_SIGN_STYLE: Automatic
     scheme:
       gatherCoverageData: false
+      testTargets:
+        - DeenUITests
+
+  # Home-screen and Lock Screen widget: the next prayer and today's times.
+  DeenWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widget
+      - path: Shared
+      - path: Deen/App/Strings.swift
+      - path: Deen/Design/Theme.swift
+      - path: Deen/Design/Art.swift
+      - path: Deen/Resources/Localizable.xcstrings
+    dependencies:
+      - package: DeenKit
+        product: DeenKit
+    entitlements:
+      path: Widget/DeenWidget.entitlements
+      properties:
+        com.apple.security.application-groups: [group.io.github.themeshmaker.dunya]
+    info:
+      path: Widget/Info.plist
+      properties:
+        CFBundleDisplayName: Deen
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.themeshmaker.dunya.widget
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_STYLE: Automatic
+
+  # Drives the app through every screen (recorded as a video by the workflow).
+  DeenUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: Deen
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.themeshmaker.dunya.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Deen

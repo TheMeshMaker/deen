@@ -1,7 +1,7 @@
 import Adhan
 import Foundation
 
-public struct HijriDate: Equatable, Sendable {
+public struct HijriDate: Hashable, Sendable {
     public let year: Int
     public let month: Int
     public let day: Int
