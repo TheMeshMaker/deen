@@ -206,6 +206,7 @@
       });
       const result = await response.json().catch(() => ({ ok: false, error: "No answer" }));
       if (!result.ok) toast(result.error || "That didn't work", true);
+      else if (result.note) toast(result.note);
       else toast(result.ms != null ? `Done in ${(result.ms / 1000).toFixed(1)} s` : "Done");
       return result;
     } catch (e) {

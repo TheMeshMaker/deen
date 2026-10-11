@@ -1,7 +1,7 @@
 name: iOS live session
 
 # A live, hands-on iPhone for trying Deen without a Mac: the iOS Simulator runs on GitHub's Mac, its screen is
-# streamed to a browser and every click, swipe and key press there is carried out in it (ios/live/).
+# streamed to a browser and every click, swipe and key press there is carried out in it with AXe (ios/live/).
 #
 # Start one with `python ios/live/start.py` (see ios/README.md). It pushes an `ios-live-*` tag whose message holds
 # a public key; the session link is uploaded encrypted with that key, so only whoever started it can open it.
@@ -46,9 +46,9 @@ jobs:
           sudo xcode-select -s "$XCODE"
           xcodebuild -version
 
-      - name: Generate the Xcode project
+      - name: Generate the Xcode project and install the tools
         run: |
-          brew install xcodegen cloudflared
+          brew install xcodegen cloudflared cameroncooke/axe/axe
           cd ios && xcodegen generate
 
       - name: Pick and start a simulator
@@ -71,27 +71,20 @@ jobs:
           xcrun simctl ui "$UDID" appearance light
           xcrun simctl location "$UDID" set 21.42250,39.82620 || true
 
-      - name: Build the app and the session driver
+      - name: Build the app
         run: |
           set -o pipefail
-          xcodebuild build-for-testing -project ios/Deen.xcodeproj -scheme Deen -configuration Debug \
+          xcodebuild build -project ios/Deen.xcodeproj -scheme Deen -configuration Debug \
             -destination "id=${{ steps.sim.outputs.udid }}" -derivedDataPath ios/DerivedData \
-            CODE_SIGNING_ALLOWED=NO | (grep -E "error:|BUILD|TEST BUILD" || true)
+            CODE_SIGNING_ALLOWED=NO | (grep -E "error:|BUILD" || true)
 
       - name: Start the session
         run: |
           set -euo pipefail
-          UDID="${{ steps.sim.outputs.udid }}"
-          python3 -m venv "$LIVE/venv"
-          "$LIVE/venv/bin/pip" install --quiet pillow
           TOKEN=$(openssl rand -hex 24)
-          nohup "$LIVE/venv/bin/python" ios/live/server.py --udid "$UDID" --app "$APP" --token "$TOKEN" \
+          nohup python3 ios/live/server.py --udid "${{ steps.sim.outputs.udid }}" --app "$APP" --token "$TOKEN" \
             --minutes "$MINUTES" --stop-file "$LIVE/stopped" > "$LIVE/server.log" 2>&1 &
           nohup cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8080 > "$LIVE/tunnel.log" 2>&1 &
-          TEST_RUNNER_DEEN_LIVE_PORT=8081 nohup xcodebuild test-without-building -project ios/Deen.xcodeproj \
-            -scheme Deen -destination "id=$UDID" -derivedDataPath ios/DerivedData \
-            -only-testing:DeenUITests/LiveSessionTests/testLiveSession > "$LIVE/xctest.log" 2>&1 &
-          echo $! > "$LIVE/xctest.pid"
 
           URL=""
           for _ in $(seq 1 60); do
@@ -102,11 +95,12 @@ jobs:
           [ -n "$URL" ] || { echo "The tunnel didn't start"; tail -20 "$LIVE/tunnel.log"; exit 1; }
           echo "Tunnel is up"
 
-          for _ in $(seq 1 120); do
+          for _ in $(seq 1 60); do
             [ "$(curl -s http://127.0.0.1:8080/health || true)" = "ready" ] && break
             sleep 3
           done
-          [ "$(curl -s http://127.0.0.1:8080/health || true)" = "ready" ] || { tail -40 "$LIVE/xctest.log"; exit 1; }
+          cat "$LIVE/server.log"
+          [ "$(curl -s http://127.0.0.1:8080/health || true)" = "ready" ] || { echo "No picture from the Simulator"; exit 1; }
           echo "The iPhone is ready"
 
           for _ in $(seq 1 60); do
@@ -127,20 +121,7 @@ jobs:
       - name: Session (ends when it's closed in the browser or the time is up)
         timeout-minutes: 125
         run: |
-          UDID="${{ steps.sim.outputs.udid }}"
-          RESTARTS=0
-          while [ ! -f "$LIVE/stopped" ]; do
-            if ! kill -0 "$(cat "$LIVE/xctest.pid")" 2>/dev/null && [ ! -f "$LIVE/stopped" ] && [ $RESTARTS -lt 5 ]; then
-              RESTARTS=$((RESTARTS + 1))
-              echo "Restarting the session driver ($RESTARTS)"
-              tail -15 "$LIVE/xctest.log" || true
-              TEST_RUNNER_DEEN_LIVE_PORT=8081 nohup xcodebuild test-without-building -project ios/Deen.xcodeproj \
-                -scheme Deen -destination "id=$UDID" -derivedDataPath ios/DerivedData \
-                -only-testing:DeenUITests/LiveSessionTests/testLiveSession >> "$LIVE/xctest.log" 2>&1 &
-              echo $! > "$LIVE/xctest.pid"
-            fi
-            sleep 5
-          done
+          while [ ! -f "$LIVE/stopped" ] && pgrep -f ios/live/server.py > /dev/null; do sleep 5; done
           echo "Session closed"
 
       - name: Logs
@@ -148,5 +129,5 @@ jobs:
         run: |
           pkill -f cloudflared || true
           pkill -f ios/live/server.py || true
-          echo "== server"; tail -60 "$LIVE/server.log" 2>/dev/null || true
-          echo "== UI test"; grep -E "Test Case|error|failed|passed|skipped" "$LIVE/xctest.log" 2>/dev/null | tail -40 || true
+          pkill -f "axe stream-video" || true
+          echo "== server"; tail -80 "$LIVE/server.log" 2>/dev/null || true

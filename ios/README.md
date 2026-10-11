@@ -41,7 +41,8 @@ no donate button (sharing, starring and reporting problems stay).
 
 - **Use it live, from Windows or Linux:** `python ios/live/start.py` starts the iOS Simulator with the latest
   `ios` branch on GitHub's Mac (`.github/workflows/ios-live.yml`) and opens it in your browser: click to tap,
-  drag or scroll to swipe, hold for a long press, type into text fields. It takes about ten minutes to start and
+  drag or scroll to swipe, hold for a long press, type into text fields ([AXe](https://github.com/cameroncooke/AXe)
+  streams the screen and carries the input; text in other alphabets goes to the phone's clipboard to paste). It takes about ten minutes to start and
   lasts an hour (`--minutes`, up to 120). The link is sent back encrypted for your computer only (a key pair
   kept in `~/.deen-live`). Sound plays on the Mac, so it isn't heard. Needs git, a signed-in GitHub CLI and
   openssl (Git for Windows includes it).
