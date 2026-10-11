@@ -79,6 +79,7 @@ jobs:
         continue-on-error: true
         run: |
           UDID="${{ steps.sim.outputs.udid }}"
+          xcrun simctl ui "$UDID" appearance light
           xcrun simctl io "$UDID" recordVideo --codec h264 --force ios/walkthrough.mp4 &
           REC=$!
           sleep 3

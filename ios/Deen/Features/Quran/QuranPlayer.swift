@@ -243,6 +243,7 @@ struct PlayerBar: View {
                     }
                     .buttonStyle(.glassProminent)
                     .accessibilityLabel(L(playingHere && player.isPlaying ? "feature_quran_pause" : "feature_quran_play"))
+                    .accessibilityIdentifier("playButton")
                     Button { player.next() } label: { Image(systemName: "forward.fill") }
                         .accessibilityLabel(L("feature_quran_next_verse"))
                 }

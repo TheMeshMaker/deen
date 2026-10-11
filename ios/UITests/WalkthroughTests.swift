@@ -31,7 +31,12 @@ final class WalkthroughTests: XCTestCase {
             pause(1)
             app.switches.firstMatch.tapIfHittable()
             app.buttons["Player mode"].tapIfHittable()
-            pause(8)
+            pause(2)
+            // Recite: the verse being recited is tinted and its current word lit in green.
+            element("playButton").tapIfHittable()
+            pause(14)
+            element("playButton").tapIfHittable()
+            pause(1)
         }
         app.swipeUp()
         pause(2)

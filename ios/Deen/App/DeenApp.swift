@@ -67,6 +67,7 @@ enum AppTab: String, Hashable {
 /// The tab bar: Liquid Glass, shrinking away as the page scrolls.
 struct MainTabs: View {
     @State private var tab: AppTab
+    @Environment(AppModel.self) private var model
 
     init(initial: AppTab) {
         switch initial {
@@ -102,6 +103,7 @@ struct MainTabs: View {
                 MoreView(openSettings: openSettings, openTool: openTool)
             }
         }
-        .tabBarMinimizeBehavior(.onScrollDown)
+        // (Kept full size in screenshot/test mode, so the walkthrough can always reach every tab.)
+        .tabBarMinimizeBehavior(model.demo == nil ? .onScrollDown : .never)
     }
 }
