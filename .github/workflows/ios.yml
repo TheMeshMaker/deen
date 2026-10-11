@@ -84,7 +84,7 @@ jobs:
           REC=$!
           sleep 3
           xcodebuild test -project ios/Deen.xcodeproj -scheme Deen -destination "id=$UDID" \
-            -derivedDataPath ios/DerivedData -only-testing:DeenUITests CODE_SIGNING_ALLOWED=NO 2>&1 | tail -30 || true
+            -derivedDataPath ios/DerivedData -only-testing:DeenUITests/WalkthroughTests CODE_SIGNING_ALLOWED=NO 2>&1 | tail -30 || true
           kill -INT $REC
           wait $REC || true
           ls -la ios/walkthrough.mp4

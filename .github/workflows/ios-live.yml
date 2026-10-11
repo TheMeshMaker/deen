@@ -1,0 +1,152 @@
+name: iOS live session
+
+# A live, hands-on iPhone for trying Deen without a Mac: the iOS Simulator runs on GitHub's Mac, its screen is
+# streamed to a browser and every click, swipe and key press there is carried out in it (ios/live/).
+#
+# Start one with `python ios/live/start.py` (see ios/README.md). It pushes an `ios-live-*` tag whose message holds
+# a public key; the session link is uploaded encrypted with that key, so only whoever started it can open it.
+on:
+  push:
+    tags: ["ios-live-*"]
+
+concurrency:
+  group: ios-live
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  session:
+    runs-on: macos-26
+    timeout-minutes: 150
+    env:
+      APP: ios/DerivedData/Build/Products/Debug-iphonesimulator/Deen.app
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Read the request (the tag's message)
+        run: |
+          LIVE="$RUNNER_TEMP/deen-live"
+          echo "LIVE=$LIVE" >> "$GITHUB_ENV"
+          mkdir -p "$LIVE/out"
+          git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
+          git tag -l --format='%(contents)' "$GITHUB_REF_NAME" > "$LIVE/request.txt"
+          sed -n '/-----BEGIN PUBLIC KEY-----/,/-----END PUBLIC KEY-----/p' "$LIVE/request.txt" > "$LIVE/viewer.pem"
+          openssl pkey -pubin -in "$LIVE/viewer.pem" -noout
+          MINUTES=$(sed -n 's/^minutes: *\([0-9][0-9]*\).*/\1/p' "$LIVE/request.txt" | head -1)
+          MINUTES=${MINUTES:-60}
+          if [ "$MINUTES" -gt 120 ]; then MINUTES=120; fi
+          echo "MINUTES=$MINUTES" >> "$GITHUB_ENV"
+          echo "Session of $MINUTES minutes"
+
+      - name: Use the newest released Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | grep -v -i beta | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Generate the Xcode project
+        run: |
+          brew install xcodegen cloudflared
+          cd ios && xcodegen generate
+
+      - name: Pick and start a simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          data = json.load(sys.stdin)["devices"]
+          runtimes = sorted((r for r in data if "iOS" in r), key=lambda r: [int(x) for x in r.split("iOS-")[-1].split("-")])
+          for runtime in reversed(runtimes):
+              phones = [d for d in data[runtime] if d["name"].startswith("iPhone")]
+              pro = [d for d in phones if d["name"].endswith(" Pro")]
+              if phones:
+                  print((pro or phones)[0]["udid"]); break
+          ')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl list devices | grep "$UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl ui "$UDID" appearance light
+          xcrun simctl location "$UDID" set 21.42250,39.82620 || true
+
+      - name: Build the app and the session driver
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing -project ios/Deen.xcodeproj -scheme Deen -configuration Debug \
+            -destination "id=${{ steps.sim.outputs.udid }}" -derivedDataPath ios/DerivedData \
+            CODE_SIGNING_ALLOWED=NO | (grep -E "error:|BUILD|TEST BUILD" || true)
+
+      - name: Start the session
+        run: |
+          set -euo pipefail
+          UDID="${{ steps.sim.outputs.udid }}"
+          python3 -m venv "$LIVE/venv"
+          "$LIVE/venv/bin/pip" install --quiet pillow
+          TOKEN=$(openssl rand -hex 24)
+          nohup "$LIVE/venv/bin/python" ios/live/server.py --udid "$UDID" --app "$APP" --token "$TOKEN" \
+            --minutes "$MINUTES" --stop-file "$LIVE/stopped" > "$LIVE/server.log" 2>&1 &
+          nohup cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8080 > "$LIVE/tunnel.log" 2>&1 &
+          TEST_RUNNER_DEEN_LIVE_PORT=8081 nohup xcodebuild test-without-building -project ios/Deen.xcodeproj \
+            -scheme Deen -destination "id=$UDID" -derivedDataPath ios/DerivedData \
+            -only-testing:DeenUITests/LiveSessionTests/testLiveSession > "$LIVE/xctest.log" 2>&1 &
+          echo $! > "$LIVE/xctest.pid"
+
+          URL=""
+          for _ in $(seq 1 60); do
+            URL=$(grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' "$LIVE/tunnel.log" | head -1 || true)
+            [ -n "$URL" ] && break
+            sleep 2
+          done
+          [ -n "$URL" ] || { echo "The tunnel didn't start"; tail -20 "$LIVE/tunnel.log"; exit 1; }
+          echo "Tunnel is up"
+
+          for _ in $(seq 1 120); do
+            [ "$(curl -s http://127.0.0.1:8080/health || true)" = "ready" ] && break
+            sleep 3
+          done
+          [ "$(curl -s http://127.0.0.1:8080/health || true)" = "ready" ] || { tail -40 "$LIVE/xctest.log"; exit 1; }
+          echo "The iPhone is ready"
+
+          for _ in $(seq 1 60); do
+            curl -sf "$URL/health" > /dev/null && break
+            sleep 2
+          done
+          printf '%s/?k=%s' "$URL" "$TOKEN" \
+            | openssl pkeyutl -encrypt -pubin -inkey "$LIVE/viewer.pem" -pkeyopt rsa_padding_mode:oaep \
+            | base64 > "$LIVE/out/session.txt"
+          echo "The link is ready (uploaded encrypted)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live-session
+          path: ${{ env.LIVE }}/out/session.txt
+          retention-days: 1
+
+      - name: Session (ends when it's closed in the browser or the time is up)
+        timeout-minutes: 125
+        run: |
+          UDID="${{ steps.sim.outputs.udid }}"
+          RESTARTS=0
+          while [ ! -f "$LIVE/stopped" ]; do
+            if ! kill -0 "$(cat "$LIVE/xctest.pid")" 2>/dev/null && [ ! -f "$LIVE/stopped" ] && [ $RESTARTS -lt 5 ]; then
+              RESTARTS=$((RESTARTS + 1))
+              echo "Restarting the session driver ($RESTARTS)"
+              tail -15 "$LIVE/xctest.log" || true
+              TEST_RUNNER_DEEN_LIVE_PORT=8081 nohup xcodebuild test-without-building -project ios/Deen.xcodeproj \
+                -scheme Deen -destination "id=$UDID" -derivedDataPath ios/DerivedData \
+                -only-testing:DeenUITests/LiveSessionTests/testLiveSession >> "$LIVE/xctest.log" 2>&1 &
+              echo $! > "$LIVE/xctest.pid"
+            fi
+            sleep 5
+          done
+          echo "Session closed"
+
+      - name: Logs
+        if: always()
+        run: |
+          pkill -f cloudflared || true
+          pkill -f ios/live/server.py || true
+          echo "== server"; tail -60 "$LIVE/server.log" 2>/dev/null || true
+          echo "== UI test"; grep -E "Test Case|error|failed|passed|skipped" "$LIVE/xctest.log" 2>/dev/null | tail -40 || true

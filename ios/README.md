@@ -39,11 +39,19 @@ no donate button (sharing, starring and reporting problems stay).
 
 ## Trying it without a Mac
 
+- **Use it live, from Windows or Linux:** `python ios/live/start.py` starts the iOS Simulator with the latest
+  `ios` branch on GitHub's Mac (`.github/workflows/ios-live.yml`) and opens it in your browser: click to tap,
+  drag or scroll to swipe, hold for a long press, type into text fields. It takes about ten minutes to start and
+  lasts an hour (`--minutes`, up to 120). The link is sent back encrypted for your computer only (a key pair
+  kept in `~/.deen-live`). Sound plays on the Mac, so it isn't heard. Needs git, a signed-in GitHub CLI and
+  openssl (Git for Windows includes it).
 - **Watch it:** every build records a walkthrough video of the real app in the Simulator (a UI test taps
   through every screen): the `ios-walkthrough-video` artifact of the iOS workflow run.
-- **Use it in a browser:** upload the `ios-simulator-app` artifact (a zipped Simulator build) to
+- **Use it in a browser elsewhere:** upload the `ios-simulator-app` artifact (a zipped Simulator build) to
   [Appetize.io](https://appetize.io) with your own account.
 - **On an iPhone:** needs a Mac with Xcode (free Apple ID, 7 days at a time) or the Apple Developer Program.
+  [xtool](https://github.com/xtool-org/xtool) can build and install from Windows (WSL) or Linux instead of a
+  Mac, but still needs the iPhone plugged in; there is no emulator that runs current iOS apps on Windows.
 
 ## Building without a Mac
 
