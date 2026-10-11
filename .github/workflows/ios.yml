@@ -68,8 +68,7 @@ jobs:
           set -o pipefail
           xcodebuild -project ios/Deen.xcodeproj -scheme Deen -configuration Debug \
             -destination "id=${{ steps.sim.outputs.udid }}" -derivedDataPath ios/DerivedData \
-            CODE_SIGNING_ALLOWED=NO build | tee ios/build.log | grep -E "error:|warning: .*Deen/|BUILD" || true
-          test -d ios/DerivedData/Build/Products/Debug-iphonesimulator/Deen.app
+            CODE_SIGNING_ALLOWED=NO build | tee ios/build.log | (grep -E "error:|warning: .*/ios/|BUILD" || true)
 
       - name: Screenshots
         run: |

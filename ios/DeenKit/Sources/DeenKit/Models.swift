@@ -101,6 +101,18 @@ public struct City: Hashable, Identifiable, Sendable {
     public let population: Int
     public let timeZoneID: String
 
+    public init(id: Int, name: String, arabicName: String?, countryCode: String, region: String,
+                coordinates: Coordinates, population: Int, timeZoneID: String) {
+        self.id = id
+        self.name = name
+        self.arabicName = arabicName
+        self.countryCode = countryCode
+        self.region = region
+        self.coordinates = coordinates
+        self.population = population
+        self.timeZoneID = timeZoneID
+    }
+
     public var asLocation: SavedLocation {
         SavedLocation(name: name, arabicName: arabicName, region: region, countryCode: countryCode,
                       coordinates: coordinates, timeZoneID: timeZoneID)
