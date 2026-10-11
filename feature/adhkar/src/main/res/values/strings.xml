@@ -8,7 +8,8 @@
     <string name="feature_adhkar_reset">Start again</string>
     <string name="feature_adhkar_reset_body">Clear today\'s counts for these adhkar?</string>
     <string name="feature_adhkar_all_done">All done. May Allah accept it from you.</string>
-    <string name="feature_adhkar_virtue">Virtue</string>
+    <string name="feature_adhkar_reward">Reward</string>
+    <string name="feature_adhkar_sunnah">From the Sunnah</string>
     <string name="feature_adhkar_source">Source</string>
     <string name="feature_adhkar_less">Less</string>
     <string name="feature_adhkar_count_label">Said %1$s of %2$s times</string>

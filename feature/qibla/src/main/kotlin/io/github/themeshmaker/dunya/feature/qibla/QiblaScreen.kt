@@ -115,7 +115,8 @@ internal fun QiblaScreenRoute(onBack: () -> Unit, viewModel: QiblaViewModel = hi
     DeenScaffold(
         title = stringResource(R.string.feature_qibla_title),
         onBack = onBack,
-        backLabel = stringResource(UiR.string.core_ui_back)
+        backLabel = stringResource(UiR.string.core_ui_back),
+        largeTitle = false
     ) { padding ->
         val look = DeenTheme.look
         Column(

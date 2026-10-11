@@ -16,6 +16,8 @@ import io.github.themeshmaker.dunya.core.model.HadithEntry
 import io.github.themeshmaker.dunya.core.model.JuzStart
 import io.github.themeshmaker.dunya.core.model.ProphetFact
 import io.github.themeshmaker.dunya.core.model.Surah
+import io.github.themeshmaker.dunya.core.model.TafsirEntry
+import io.github.themeshmaker.dunya.core.model.TafsirSource
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +41,10 @@ internal class AssetContentRepository @Inject constructor(@ApplicationContext co
     private var nawawi: List<Hadith>? = null
     private var facts: List<ProphetFact>? = null
     private var hadithIndex: HadithIndex? = null
+
+    private val tafsirStore = TafsirStore(context)
+    private var jalalayn: Map<Int, Map<Int, String>>? = null
+    private var pickthall: Map<Int, Map<Int, String>>? = null
 
     /** The last book opened, so paging back and forth in a reader doesn't re-read it. */
     private var lastBook: Pair<String, List<HadithEntry>>? = null
@@ -90,6 +96,26 @@ internal class AssetContentRepository @Inject constructor(@ApplicationContext co
             }
             results
         }
+    }
+
+    override suspend fun tafsir(source: TafsirSource, surah: Int): List<TafsirEntry>? {
+        val ayahCount = meta().surahs.getOrNull(surah - 1)?.ayahCount ?: return null
+        val texts = if (source.bundled) {
+            cached({
+                jalalayn
+            }, { jalalayn = it }) { assets.open("tafsir/jalalayn.tsv").bufferedReader().useLines { parseVerseTsv(it) } }[surah]
+        } else {
+            tafsirStore.remote(source, surah)
+        } ?: return null
+        return tafsirEntries(texts, ayahCount)
+    }
+
+    override suspend fun meaning(surah: Int): List<String> {
+        val ayahCount = meta().surahs.getOrNull(surah - 1)?.ayahCount ?: return emptyList()
+        val texts = cached({
+            pickthall
+        }, { pickthall = it }) { assets.open("quran/pickthall.tsv").bufferedReader().useLines { parseVerseTsv(it) } }[surah]
+        return (1..ayahCount).map { texts?.get(it).orEmpty() }
     }
 
     private suspend fun meta(): QuranMeta = cached({ quranMeta }, { quranMeta = it }) { parseQuranMeta(read("quran/quran-meta.json")) }

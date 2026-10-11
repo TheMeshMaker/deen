@@ -5,6 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.themeshmaker.dunya.core.audio.QuranAudioController
+import io.github.themeshmaker.dunya.core.audio.QuranAudioState
+import io.github.themeshmaker.dunya.core.audio.WordTimings
+import io.github.themeshmaker.dunya.core.audio.wordAt
 import io.github.themeshmaker.dunya.core.domain.ActivityRepository
 import io.github.themeshmaker.dunya.core.domain.ContentRepository
 import io.github.themeshmaker.dunya.core.domain.UserDataRepository
@@ -12,8 +16,12 @@ import io.github.themeshmaker.dunya.core.model.Ayah
 import io.github.themeshmaker.dunya.core.model.JuzStart
 import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
+import io.github.themeshmaker.dunya.core.model.Reciter
 import io.github.themeshmaker.dunya.core.model.Surah
+import io.github.themeshmaker.dunya.core.model.TafsirEntry
+import io.github.themeshmaker.dunya.core.model.TafsirSource
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +30,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -94,17 +104,51 @@ data class ReaderUiState(
     val loaded: Boolean get() = surah != null && ayahs.isNotEmpty()
 }
 
-@OptIn(FlowPreview::class)
+/** The word being recited: verse [ayah] (0 = the opening Bismillah), [word] counted without pause marks. */
+data class Highlight(val ayah: Int, val word: Int?)
+
+/** Tafsir shown in the verse sheet and the surah tafsir screen. */
+data class TafsirState(
+    val source: TafsirSource = TafsirSource.JALALAYN,
+    val entries: List<TafsirEntry>? = null,
+    val meaning: List<String> = emptyList(),
+    val loading: Boolean = false,
+    /** The chosen tafsir isn't on the phone yet and couldn't be downloaded. */
+    val unavailable: Boolean = false
+)
+
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class QuranReaderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val content: ContentRepository,
     private val activity: ActivityRepository,
-    userData: UserDataRepository
+    private val userData: UserDataRepository,
+    private val audio: QuranAudioController,
+    private val timings: WordTimings
 ) : ViewModel() {
     private val route = savedStateHandle.toRoute<QuranReaderRoute>()
     private val loaded = MutableStateFlow<Triple<Surah, List<Ayah>, Map<Int, Int>>?>(null)
     private val visibleAyah = MutableStateFlow<Int?>(null)
+
+    /** Player mode: the bar with play / pause and the green word that follows the recitation. */
+    val playerMode = MutableStateFlow(false)
+
+    val audioState: StateFlow<QuranAudioState> = audio.state
+
+    /** Which word to light up, recomputed as the recitation moves (only for this surah). */
+    val highlight: StateFlow<Highlight?> = audio.state
+        .mapLatest { state ->
+            val ayah = state.ayah
+            if (state.surah != route.surah || ayah == null) return@mapLatest null
+            val verse = if (ayah == 0) timings.forVerse(state.reciter, 1, 1) else timings.forVerse(state.reciter, route.surah, ayah)
+            Highlight(ayah, verse.wordAt(state.positionMs))
+        }
+        .distinctUntilChanged()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    private val _tafsir = MutableStateFlow(TafsirState())
+    val tafsir: StateFlow<TafsirState> = _tafsir
 
     init {
         viewModelScope.launch {
@@ -136,7 +180,95 @@ class QuranReaderViewModel @Inject constructor(
         viewModelScope.launch { activity.toggleBookmark(QuranPosition(route.surah, ayah)) }
     }
 
+    /** Recites this surah from [ayah] to its end in the chosen voice, and turns player mode on. */
+    fun playFrom(ayah: Int, title: String, arabicUi: Boolean) {
+        val state = uiState.value
+        val surah = state.surah ?: return
+        val reciter = Reciter.byId(state.reading.reciterId)
+        playerMode.value = true
+        audio.play(surah.number, ayah, surah.ayahCount, reciter, title, reciter.name(arabicUi))
+    }
+
+    fun togglePlay() = audio.toggle()
+
+    fun next() = audio.next()
+
+    fun previous() = audio.previous()
+
+    fun closePlayer() {
+        audio.stop()
+        playerMode.value = false
+    }
+
+    fun setReciter(reciter: Reciter) {
+        viewModelScope.launch {
+            val reading = userData.userData.first().reading
+            userData.setReadingSettings(reading.copy(reciterId = reciter.id))
+        }
+        // Switching voice mid-surah carries on from the same verse.
+        val state = audio.state.value
+        val ayah = state.ayah
+        if (state.surah == route.surah && ayah != null && state.playing) {
+            val surah = uiState.value.surah ?: return
+            audio.play(surah.number, ayah.coerceAtLeast(1), surah.ayahCount, reciter, surah.arabicName, reciter.name(true))
+        }
+    }
+
+    /** Loads the tafsir of this surah from [source] (or the user's preferred one). */
+    fun loadTafsir(source: TafsirSource? = null) {
+        viewModelScope.launch {
+            val chosen = source ?: TafsirSource.byId(userData.userData.first().reading.tafsirId)
+            if (_tafsir.value.source == chosen && _tafsir.value.entries != null) return@launch
+            _tafsir.value = _tafsir.value.copy(source = chosen, loading = true, unavailable = false)
+            val meaning = _tafsir.value.meaning.ifEmpty { content.meaning(route.surah) }
+            val entries = content.tafsir(chosen, route.surah)
+            _tafsir.value = TafsirState(chosen, entries, meaning, loading = false, unavailable = entries == null)
+            if (source != null) {
+                val reading = userData.userData.first().reading
+                userData.setReadingSettings(reading.copy(tafsirId = chosen.id))
+            }
+        }
+    }
+
     private companion object {
         const val SAVE_DELAY_MS = 600L
+    }
+}
+
+/** The tafsir of a whole surah, verse by verse (Quran tab → a surah's tafsir button, or the reader's menu). */
+@HiltViewModel
+class SurahTafsirViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val content: ContentRepository,
+    private val userData: UserDataRepository
+) : ViewModel() {
+    private val route = savedStateHandle.toRoute<QuranTafsirRoute>()
+    val startAyah: Int = route.ayah
+
+    private val _surah = MutableStateFlow<Pair<Surah, List<Ayah>>?>(null)
+    val surah: StateFlow<Pair<Surah, List<Ayah>>?> = _surah
+
+    private val _tafsir = MutableStateFlow(TafsirState(loading = true))
+    val tafsir: StateFlow<TafsirState> = _tafsir
+
+    init {
+        viewModelScope.launch {
+            val surah = content.surahs().firstOrNull { it.number == route.surah } ?: return@launch
+            _surah.value = surah to content.ayahs(surah.number)
+            load(TafsirSource.byId(userData.userData.first().reading.tafsirId), remember = false)
+        }
+    }
+
+    fun select(source: TafsirSource) = viewModelScope.launch { load(source, remember = true) }
+
+    private suspend fun load(source: TafsirSource, remember: Boolean) {
+        _tafsir.value = _tafsir.value.copy(source = source, loading = true, unavailable = false)
+        val meaning = _tafsir.value.meaning.ifEmpty { content.meaning(route.surah) }
+        val entries = content.tafsir(source, route.surah)
+        _tafsir.value = TafsirState(source, entries, meaning, loading = false, unavailable = entries == null)
+        if (remember) {
+            val reading = userData.userData.first().reading
+            userData.setReadingSettings(reading.copy(tafsirId = source.id))
+        }
     }
 }

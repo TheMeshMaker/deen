@@ -81,6 +81,7 @@ internal fun TasbihScreenRoute(onBack: () -> Unit, viewModel: TasbihViewModel = 
         title = stringResource(R.string.feature_tasbih_title),
         onBack = onBack,
         backLabel = stringResource(UiR.string.core_ui_back),
+        largeTitle = false,
         actions = {
             IconButton(onClick = viewModel::reset) {
                 Icon(painterResource(DeenIcons.Reset), contentDescription = stringResource(R.string.feature_tasbih_reset))

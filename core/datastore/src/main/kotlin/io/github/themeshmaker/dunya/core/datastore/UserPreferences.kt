@@ -22,7 +22,13 @@ data class UserPreferences(
 )
 
 @Serializable
-data class ReadingPreferences(val arabicScale: Float = 1f, val showTranslation: Boolean = true, val haptics: Boolean = true)
+data class ReadingPreferences(
+    val arabicScale: Float = 1f,
+    val showTranslation: Boolean = true,
+    val haptics: Boolean = true,
+    val reciterId: String = "Alafasy_128kbps",
+    val tafsirId: String = "jalalayn"
+)
 
 @Serializable
 data class LocationPreferences(

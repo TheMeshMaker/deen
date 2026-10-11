@@ -73,6 +73,7 @@ android {
 
 dependencies {
     implementation(projects.core.alarm)
+    implementation(projects.core.audio)
     implementation(projects.core.content)
     implementation(projects.core.data)
     implementation(projects.core.designsystem)

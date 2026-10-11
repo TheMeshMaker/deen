@@ -31,7 +31,9 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
             reading = ReadingSettings(
                 arabicScale = prefs.reading.arabicScale.coerceIn(ReadingSettings.SCALE_RANGE),
                 showTranslation = prefs.reading.showTranslation,
-                haptics = prefs.reading.haptics
+                haptics = prefs.reading.haptics,
+                reciterId = prefs.reading.reciterId,
+                tafsirId = prefs.reading.tafsirId
             )
         )
     }
@@ -76,7 +78,15 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
 
     suspend fun setReadingSettings(settings: ReadingSettings) {
         dataStore.updateData {
-            it.copy(reading = ReadingPreferences(settings.arabicScale, settings.showTranslation, settings.haptics))
+            it.copy(
+                reading = ReadingPreferences(
+                    settings.arabicScale,
+                    settings.showTranslation,
+                    settings.haptics,
+                    settings.reciterId,
+                    settings.tafsirId
+                )
+            )
         }
     }
 

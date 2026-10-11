@@ -95,6 +95,10 @@
      "text": "أَصْبَحْنَا وَأَصْبَحَ الْملْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْملْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
      "count": 1,
      "translation": "We have entered the morning, and the whole kingdom belongs to Allah. Praise be to Allah. There is no god but Allah alone, without partner; His is the dominion and His is the praise, and He has power over all things. My Lord, I ask You for the good of this day and the good of what follows it, and I seek refuge in You from the evil of this day and the evil of what follows it. My Lord, I seek refuge in You from laziness and the misery of old age. My Lord, I seek refuge in You from punishment in the Fire and punishment in the grave.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله إذا أمسى، ويقول مثله إذا أصبح.",
+      "en": "The Prophet ﷺ said this every evening, and the same every morning."
+     },
      "reference": {
       "ar": "مسلم (2723)",
       "en": "Muslim 2723"
@@ -105,6 +109,10 @@
      "text": "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ",
      "count": 1,
      "translation": "O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and to You is the resurrection.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يعلّمه أصحابه ليقولوه في الصباح والمساء.",
+      "en": "The Prophet ﷺ taught it to his Companions to say morning and evening."
+     },
      "reference": {
       "ar": "الترمذي (3391)",
       "en": "At-Tirmidhi 3391"
@@ -157,6 +165,10 @@
      "text": "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ",
      "count": 3,
      "translation": "O Allah, grant me well-being in my body. O Allah, grant me well-being in my hearing. O Allah, grant me well-being in my sight. There is no god but You. O Allah, I seek refuge in You from disbelief and poverty, and I seek refuge in You from the punishment of the grave. There is no god but You.",
+     "sunnah": {
+      "ar": "كان أبو بكرة رضي الله عنه يكرره ثلاثًا صباحًا ومساءً ويقول: سمعت رسول الله ﷺ يدعو بهن، فأحب أن أستنّ بسنته.",
+      "en": "Abu Bakrah repeated it three times morning and evening, saying: I heard the Messenger of Allah ﷺ supplicate with these words, and I love to follow his Sunnah."
+     },
      "reference": {
       "ar": "أبو داود (5090)، وأحمد (20430)",
       "en": "Abu Dawud 5090, Ahmad 20430"
@@ -181,6 +193,10 @@
      "text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ: فِي دِينِي وَدُنْيَايَ وَأَهْلِي، وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَينِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
      "count": 1,
      "translation": "O Allah, I ask You for pardon and well-being in this world and the Hereafter. O Allah, I ask You for pardon and well-being in my religion, my worldly life, my family and my wealth. O Allah, cover my faults and calm my fears. O Allah, guard me from in front of me and behind me, from my right and my left, and from above me, and I seek refuge in Your greatness from being taken unawares from beneath me.",
+     "sunnah": {
+      "ar": "لم يكن النبي ﷺ يدع هذه الدعوات حين يمسي وحين يصبح.",
+      "en": "The Prophet ﷺ never left these supplications, evening or morning."
+     },
      "reference": {
       "ar": "أبو داود (5074)، وابن ماجه (3871)",
       "en": "Abu Dawud 5074, Ibn Majah 3871"
@@ -191,6 +207,10 @@
      "text": "اللَّهُمَّ عَالِمَ الغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطانِ وَشَرَكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءاً، أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ",
      "count": 1,
      "translation": "O Allah, Knower of the unseen and the seen, Originator of the heavens and the earth, Lord and Sovereign of everything: I bear witness that there is no god but You. I seek refuge in You from the evil of my own soul, from the evil of Satan and his snares, and from bringing harm upon myself or causing it to reach any Muslim.",
+     "sunnah": {
+      "ar": "علّمه النبي ﷺ أبا بكر الصديق لما سأله ما يقول إذا أصبح وإذا أمسى، وقال: قله أيضًا إذا أخذت مضجعك.",
+      "en": "The Prophet ﷺ taught it to Abu Bakr when he asked what to say morning and evening, and told him to say it at bedtime too."
+     },
      "reference": {
       "ar": "الترمذي (3392)، وأبو داود (5067)",
       "en": "At-Tirmidhi 3392, Abu Dawud 5067"
@@ -229,6 +249,10 @@
      "text": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغيثُ أَصْلِحْ لِي شَأْنِيَ كُلَّهُ وَلاَ تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
      "count": 1,
      "translation": "O Ever-Living, O Sustainer of all, by Your mercy I seek help: set right all my affairs, and do not leave me to myself even for the blink of an eye.",
+     "sunnah": {
+      "ar": "أوصى به النبي ﷺ ابنته فاطمة أن تقوله إذا أصبحت وإذا أمست.",
+      "en": "The Prophet ﷺ advised his daughter Fatimah to say it every morning and evening."
+     },
      "reference": {
       "ar": "الحاكم (1/545)، وانظر صحيح الترغيب (1/273)",
       "en": "Al-Hakim 1/545; see Sahih at-Targhib 1/273"
@@ -239,6 +263,10 @@
      "text": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ رَبِّ الْعَالَمِينَ، اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذَا الْيَوْمِ: فَتْحَهُ، وَنَصْرَهُ، وَنورَهُ، وَبَرَكَتَهُ، وَهُدَاهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهِ وَشَرِّ مَا بَعْدَهُ",
      "count": 1,
      "translation": "We have entered the morning, and the whole kingdom belongs to Allah, Lord of the worlds. O Allah, I ask You for the good of this day: its openings, its victory, its light, its blessing and its guidance. And I seek refuge in You from the evil of what is in it and the evil of what comes after it.",
+     "sunnah": {
+      "ar": "أمر النبي ﷺ أن يقوله المسلم إذا أصبح، ومثله إذا أمسى.",
+      "en": "The Prophet ﷺ told us to say it in the morning, and the same in the evening."
+     },
      "reference": {
       "ar": "أبو داود (5084)",
       "en": "Abu Dawud 5084"
@@ -249,6 +277,10 @@
      "text": "أَصْبَحْنا عَلَى فِطْرَةِ الْإِسْلاَمِ، وَعَلَى كَلِمَةِ الْإِخْلاَصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ، حَنِيفاً مُسْلِماً وَمَا كَانَ مِنَ الْمُشرِكِينَ",
      "count": 1,
      "translation": "We have entered the morning upon the natural way of Islam, upon the word of sincere devotion, upon the religion of our Prophet Muhammad ﷺ, and upon the way of our father Ibrahim, who turned to Allah alone in submission and was not one of those who associate partners with Him.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله إذا أصبح وإذا أمسى.",
+      "en": "The Prophet ﷺ said it every morning and evening."
+     },
      "reference": {
       "ar": "أحمد (15360)، وابن السني (34)",
       "en": "Ahmad 15360, Ibn as-Sunni 34"
@@ -259,6 +291,10 @@
      "text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْماً نَافِعاً، وَرِزْقاً طَيِّباً، وَعَمَلاً مُتَقَبَّلاً",
      "count": 1,
      "translation": "O Allah, I ask You for beneficial knowledge, good provision and deeds that are accepted.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله بعد صلاة الصبح حين يسلّم.",
+      "en": "The Prophet ﷺ said it after the Fajr prayer, as soon as he gave the salam."
+     },
      "reference": {
       "ar": "ابن ماجه (925)، وابن السني (54)",
       "en": "Ibn Majah 925, Ibn as-Sunni 54"
@@ -297,6 +333,10 @@
      "text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
      "count": 3,
      "translation": "Glory be to Allah and praise be to Him, as many times as the number of His creation, as much as pleases Him, as much as the weight of His Throne and as much as the ink of His words.",
+     "virtue": {
+      "ar": "قال النبي ﷺ لجويرية: لقد قلتُ بعدكِ أربع كلمات ثلاث مرات، لو وُزنت بما قلتِ منذ اليوم لوزنتهن.",
+      "en": "Said three times, these four phrases outweigh all the dhikr made since dawn."
+     },
      "reference": {
       "ar": "مسلم (2726)",
       "en": "Muslim 2726"
@@ -321,6 +361,10 @@
      "text": "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
      "count": 100,
      "translation": "I seek Allah's forgiveness and turn to Him in repentance.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يستغفر الله ويتوب إليه في اليوم مائة مرة.",
+      "en": "The Prophet ﷺ asked Allah's forgiveness and turned to Him in repentance a hundred times a day."
+     },
      "reference": {
       "ar": "البخاري (6307)، ومسلم (2702)",
       "en": "Al-Bukhari 6307, Muslim 2702"
@@ -456,6 +500,10 @@
      "text": "أمسينا وأمسى الملك للَّه، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رب أسألك خير ما في هذه الليلة، وخير ما بعدها، وأعوذ بك من شر ما في هذه الليلة، وشر ما بعدها، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
      "count": 1,
      "translation": "We have entered the evening, and the whole kingdom belongs to Allah. Praise be to Allah. There is no god but Allah alone, without partner; His is the dominion and His is the praise, and He has power over all things. My Lord, I ask You for the good of this night and the good of what follows it, and I seek refuge in You from the evil of this night and the evil of what follows it. My Lord, I seek refuge in You from laziness and the misery of old age. My Lord, I seek refuge in You from punishment in the Fire and punishment in the grave.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله إذا أمسى، ويقول مثله إذا أصبح.",
+      "en": "The Prophet ﷺ said this every evening, and the same every morning."
+     },
      "reference": {
       "ar": "مسلم (2723)",
       "en": "Muslim 2723"
@@ -466,6 +514,10 @@
      "text": "اللَّهمَّ بِكَ أمسَينا وبِكَ أصبَحنا وبِكَ نَحيا وبِكَ نموتُ، وإليكَ المصيرُ",
      "count": 1,
      "translation": "O Allah, by You we enter the evening and by You we enter the morning, by You we live and by You we die, and to You is the final return.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يعلّمه أصحابه ليقولوه في الصباح والمساء.",
+      "en": "The Prophet ﷺ taught it to his Companions to say morning and evening."
+     },
      "reference": {
       "ar": "الترمذي (3391)",
       "en": "At-Tirmidhi 3391"
@@ -518,6 +570,10 @@
      "text": "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ",
      "count": 3,
      "translation": "O Allah, grant me well-being in my body. O Allah, grant me well-being in my hearing. O Allah, grant me well-being in my sight. There is no god but You. O Allah, I seek refuge in You from disbelief and poverty, and I seek refuge in You from the punishment of the grave. There is no god but You.",
+     "sunnah": {
+      "ar": "كان أبو بكرة رضي الله عنه يكرره ثلاثًا صباحًا ومساءً ويقول: سمعت رسول الله ﷺ يدعو بهن، فأحب أن أستنّ بسنته.",
+      "en": "Abu Bakrah repeated it three times morning and evening, saying: I heard the Messenger of Allah ﷺ supplicate with these words, and I love to follow his Sunnah."
+     },
      "reference": {
       "ar": "أبو داود (5090)، وأحمد (20430)",
       "en": "Abu Dawud 5090, Ahmad 20430"
@@ -542,6 +598,10 @@
      "text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ: فِي دِينِي وَدُنْيَايَ وَأَهْلِي، وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَينِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
      "count": 1,
      "translation": "O Allah, I ask You for pardon and well-being in this world and the Hereafter. O Allah, I ask You for pardon and well-being in my religion, my worldly life, my family and my wealth. O Allah, cover my faults and calm my fears. O Allah, guard me from in front of me and behind me, from my right and my left, and from above me, and I seek refuge in Your greatness from being taken unawares from beneath me.",
+     "sunnah": {
+      "ar": "لم يكن النبي ﷺ يدع هذه الدعوات حين يمسي وحين يصبح.",
+      "en": "The Prophet ﷺ never left these supplications, evening or morning."
+     },
      "reference": {
       "ar": "أبو داود (5074)، وابن ماجه (3871)",
       "en": "Abu Dawud 5074, Ibn Majah 3871"
@@ -552,6 +612,10 @@
      "text": "اللَّهُمَّ عَالِمَ الغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطانِ وَشَرَكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءاً، أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ",
      "count": 1,
      "translation": "O Allah, Knower of the unseen and the seen, Originator of the heavens and the earth, Lord and Sovereign of everything: I bear witness that there is no god but You. I seek refuge in You from the evil of my own soul, from the evil of Satan and his snares, and from bringing harm upon myself or causing it to reach any Muslim.",
+     "sunnah": {
+      "ar": "علّمه النبي ﷺ أبا بكر الصديق لما سأله ما يقول إذا أصبح وإذا أمسى، وقال: قله أيضًا إذا أخذت مضجعك.",
+      "en": "The Prophet ﷺ taught it to Abu Bakr when he asked what to say morning and evening, and told him to say it at bedtime too."
+     },
      "reference": {
       "ar": "الترمذي (3392)، وأبو داود (5067)",
       "en": "At-Tirmidhi 3392, Abu Dawud 5067"
@@ -590,6 +654,10 @@
      "text": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغيثُ أَصْلِحْ لِي شَأْنِيَ كُلَّهُ وَلاَ تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
      "count": 1,
      "translation": "O Ever-Living, O Sustainer of all, by Your mercy I seek help: set right all my affairs, and do not leave me to myself even for the blink of an eye.",
+     "sunnah": {
+      "ar": "أوصى به النبي ﷺ ابنته فاطمة أن تقوله إذا أصبحت وإذا أمست.",
+      "en": "The Prophet ﷺ advised his daughter Fatimah to say it every morning and evening."
+     },
      "reference": {
       "ar": "الحاكم (1/545)، وانظر صحيح الترغيب (1/273)",
       "en": "Al-Hakim 1/545; see Sahih at-Targhib 1/273"
@@ -600,6 +668,10 @@
      "text": "أَمْسَيْنا وَأَمْسَى الْمُلْكُ للهِ رَبِّ الْعَالَمَيْنِ، اللَّهُمَّ إِنَّي أسْأَلُكَ خَيْرَ هَذَه اللَّيْلَةِ فَتْحَهَا ونَصْرَهَا، ونُوْرَهَا وبَرَكَتهَا، وَهُدَاهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فيهِا وَشَرَّ مَا بَعْدَهَا",
      "count": 1,
      "translation": "We have entered the evening, and the whole kingdom belongs to Allah, Lord of the worlds. O Allah, I ask You for the good of this night: its openings, its victory, its light, its blessing and its guidance. And I seek refuge in You from the evil of what is in it and the evil of what comes after it.",
+     "sunnah": {
+      "ar": "أمر النبي ﷺ أن يقوله المسلم إذا أصبح، ومثله إذا أمسى.",
+      "en": "The Prophet ﷺ told us to say it in the morning, and the same in the evening."
+     },
      "reference": {
       "ar": "أبو داود (5084)",
       "en": "Abu Dawud 5084"
@@ -610,6 +682,10 @@
      "text": "أمسينا على فطرة الإسلام، وَعَلَى كَلِمَةِ الْإِخْلاَصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ، حَنِيفاً مُسْلِماً وَمَا كَانَ مِنَ الْمُشرِكِينَ",
      "count": 1,
      "translation": "We have entered the evening upon the natural way of Islam, upon the word of sincere devotion, upon the religion of our Prophet Muhammad ﷺ, and upon the way of our father Ibrahim, who turned to Allah alone in submission and was not one of those who associate partners with Him.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله إذا أصبح وإذا أمسى.",
+      "en": "The Prophet ﷺ said it every morning and evening."
+     },
      "reference": {
       "ar": "أحمد (15360)، وابن السني (34)",
       "en": "Ahmad 15360, Ibn as-Sunni 34"
@@ -689,6 +765,10 @@
       "en": "Right after the salam"
      },
      "translation": "I seek Allah's forgiveness (three times). O Allah, You are Peace and from You comes peace. Blessed are You, Owner of majesty and honour.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله إذا انصرف من صلاته.",
+      "en": "The Prophet ﷺ said this as soon as he finished his prayer."
+     },
      "reference": {
       "ar": "مسلم (591)",
       "en": "Muslim 591"
@@ -699,6 +779,10 @@
      "text": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ",
      "count": 1,
      "translation": "There is no god but Allah alone, without partner. His is the dominion and His is the praise, and He has power over all things. O Allah, none can withhold what You give, none can give what You withhold, and no one's wealth or standing avails him against You.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله في دبر كل صلاة مكتوبة.",
+      "en": "The Prophet ﷺ said it after every obligatory prayer."
+     },
      "reference": {
       "ar": "البخاري (844)، ومسلم (593)",
       "en": "Al-Bukhari 844, Muslim 593"
@@ -709,6 +793,10 @@
      "text": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ، لَا إِلَهَ إِلَّا اللَّهُ، وَلَا نَعْبُدُ إِلَّا إِيَّاهُ، لَهُ النِّعْمَةُ وَلَهُ الْفَضْلُ وَلَهُ الثَّنَاءُ الْحَسَنُ، لَا إِلَهَ إِلَّا اللَّهُ مُخْلِصِينَ لَهُ الدِّينَ وَلَوْ كَرِهَ الْكَافِرُونَ",
      "count": 1,
      "translation": "There is no god but Allah alone, without partner. His is the dominion and His is the praise, and He has power over all things. There is no power and no strength except through Allah. There is no god but Allah, and we worship none but Him. His are all blessings, all grace and all fine praise. There is no god but Allah; we devote our religion purely to Him, even if the disbelievers dislike it.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يهلّل به في دبر كل صلاة حين يسلّم.",
+      "en": "The Prophet ﷺ said it after every prayer, once he gave the salam."
+     },
      "reference": {
       "ar": "مسلم (594)",
       "en": "Muslim 594"
@@ -719,6 +807,10 @@
      "text": "سُبْحَانَ اللَّهِ",
      "count": 33,
      "translation": "Glory be to Allah.",
+     "virtue": {
+      "ar": "مع التسبيح والتحميد والتكبير وتمام المئة: غُفرت خطاياه وإن كانت مثل زبد البحر.",
+      "en": "With the other two and the words that complete the hundred, his sins are forgiven even if they are like the foam of the sea."
+     },
      "reference": {
       "ar": "مسلم (597)",
       "en": "Muslim 597"
@@ -729,6 +821,10 @@
      "text": "الْحَمْدُ لِلَّهِ",
      "count": 33,
      "translation": "Praise be to Allah.",
+     "virtue": {
+      "ar": "مع التسبيح والتحميد والتكبير وتمام المئة: غُفرت خطاياه وإن كانت مثل زبد البحر.",
+      "en": "With the other two and the words that complete the hundred, his sins are forgiven even if they are like the foam of the sea."
+     },
      "reference": {
       "ar": "مسلم (597)",
       "en": "Muslim 597"
@@ -739,6 +835,10 @@
      "text": "اللَّهُ أَكْبَرُ",
      "count": 33,
      "translation": "Allah is the Greatest.",
+     "virtue": {
+      "ar": "مع التسبيح والتحميد والتكبير وتمام المئة: غُفرت خطاياه وإن كانت مثل زبد البحر.",
+      "en": "With the other two and the words that complete the hundred, his sins are forgiven even if they are like the foam of the sea."
+     },
      "reference": {
       "ar": "مسلم (597)",
       "en": "Muslim 597"
@@ -803,6 +903,10 @@
       "en": "After every prayer; three times after Fajr and Maghrib"
      },
      "translation": "Surahs al-Ikhlas, al-Falaq and an-Nas.",
+     "sunnah": {
+      "ar": "أمر النبي ﷺ عقبة بن عامر أن يقرأ بالمعوذات دبر كل صلاة.",
+      "en": "The Prophet ﷺ told 'Uqbah ibn 'Amir to recite them after every prayer."
+     },
      "reference": {
       "ar": "أبو داود (1523)، والترمذي (2903)",
       "en": "Abu Dawud 1523, at-Tirmidhi 2903"
@@ -813,6 +917,10 @@
      "text": "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
      "count": 1,
      "translation": "O Allah, help me to remember You, to thank You and to worship You well.",
+     "sunnah": {
+      "ar": "أخذ النبي ﷺ بيد معاذ وقال: والله إني لأحبك، ثم أوصاه ألا يدعه في دبر كل صلاة.",
+      "en": "The Prophet ﷺ took Mu'adh's hand, told him he loved him, and advised him never to leave it after any prayer."
+     },
      "reference": {
       "ar": "أبو داود (1522)، والنسائي (1303)",
       "en": "Abu Dawud 1522, an-Nasa'i 1303"
@@ -852,6 +960,10 @@
       "en": "Cup your hands, blow lightly into them and recite, then wipe over as much of your body as you can, starting with your head and face. Three times."
      },
      "translation": "Surahs al-Ikhlas, al-Falaq and an-Nas.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يفعله كل ليلة إذا أوى إلى فراشه.",
+      "en": "The Prophet ﷺ did this every night when he went to bed."
+     },
      "reference": {
       "ar": "البخاري (5017)",
       "en": "Al-Bukhari 5017"
@@ -902,6 +1014,10 @@
      "text": "بِاسْمِكَ رَبِّ وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ، إِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ",
      "count": 1,
      "translation": "In Your name, my Lord, I lay down my side, and by You I raise it. If You take my soul, have mercy on it, and if You send it back, protect it as You protect Your righteous servants.",
+     "sunnah": {
+      "ar": "علّمه النبي ﷺ لمن أوى إلى فراشه.",
+      "en": "The Prophet ﷺ taught it for when you lie down to sleep."
+     },
      "reference": {
       "ar": "البخاري (6320)، ومسلم (2714)",
       "en": "Al-Bukhari 6320, Muslim 2714"
@@ -916,6 +1032,10 @@
       "en": "With your right hand under your cheek"
      },
      "translation": "O Allah, protect me from Your punishment on the day You resurrect Your servants.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله ثلاثًا إذا أراد أن ينام، ويده اليمنى تحت خده.",
+      "en": "The Prophet ﷺ said it three times when he lay down to sleep, his right hand under his cheek."
+     },
      "reference": {
       "ar": "أبو داود (5045)، والترمذي (3398)",
       "en": "Abu Dawud 5045, at-Tirmidhi 3398"
@@ -926,6 +1046,10 @@
      "text": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
      "count": 1,
      "translation": "In Your name, O Allah, I die and I live.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله إذا أخذ مضجعه من الليل.",
+      "en": "The Prophet ﷺ said it when he lay down at night."
+     },
      "reference": {
       "ar": "البخاري (6324)",
       "en": "Al-Bukhari 6324"
@@ -936,6 +1060,10 @@
      "text": "سُبْحَانَ اللَّهِ",
      "count": 33,
      "translation": "Glory be to Allah.",
+     "virtue": {
+      "ar": "قال ﷺ لعلي وفاطمة: هو خير لكما من خادم",
+      "en": "The Prophet ﷺ told Ali and Fatimah this is better for them than a servant."
+     },
      "reference": {
       "ar": "البخاري (3705)، ومسلم (2727)",
       "en": "Al-Bukhari 3705, Muslim 2727"
@@ -946,6 +1074,10 @@
      "text": "الْحَمْدُ لِلَّهِ",
      "count": 33,
      "translation": "Praise be to Allah.",
+     "virtue": {
+      "ar": "قال ﷺ لعلي وفاطمة: هو خير لكما من خادم",
+      "en": "The Prophet ﷺ told Ali and Fatimah this is better for them than a servant."
+     },
      "reference": {
       "ar": "البخاري (3705)، ومسلم (2727)",
       "en": "Al-Bukhari 3705, Muslim 2727"
@@ -984,6 +1116,10 @@
      "text": "اللَّهُمَّ رَبَّ السَّمَوَاتِ وَرَبَّ الْأَرْضِ وَرَبَّ الْعَرْشِ الْعَظِيمِ، رَبَّنَا وَرَبَّ كُلِّ شَيْءٍ، فَالِقَ الْحَبِّ وَالنَّوَى، وَمُنْزِلَ التَّوْرَاةِ وَالْإِنْجِيلِ وَالْفُرْقَانِ، أَعُوذُ بِكَ مِنْ شَرِّ كُلِّ شَيْءٍ أَنْتَ آخِذٌ بِنَاصِيَتِهِ، اللَّهُمَّ أَنْتَ الْأَوَّلُ فَلَيْسَ قَبْلَكَ شَيْءٌ، وَأَنْتَ الْآخِرُ فَلَيْسَ بَعْدَكَ شَيْءٌ، وَأَنْتَ الظَّاهِرُ فَلَيْسَ فَوْقَكَ شَيْءٌ، وَأَنْتَ الْبَاطِنُ فَلَيْسَ دُونَكَ شَيْءٌ، اقْضِ عَنَّا الدَّيْنَ، وَأَغْنِنَا مِنَ الْفَقْرِ",
      "count": 1,
      "translation": "O Allah, Lord of the heavens, Lord of the earth and Lord of the Mighty Throne, our Lord and Lord of all things, who splits the grain and the date-stone, who sent down the Torah, the Injil and the Criterion: I seek refuge in You from the evil of everything whose forelock You hold. O Allah, You are the First, there is nothing before You; You are the Last, there is nothing after You; You are the Manifest, there is nothing above You; You are the Hidden, there is nothing beyond You. Settle our debts for us and free us from poverty.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يأمر أصحابه أن يقولوه إذا أخذوا مضاجعهم.",
+      "en": "The Prophet ﷺ told his Companions to say it when they lay down to sleep."
+     },
      "reference": {
       "ar": "مسلم (2713)",
       "en": "Muslim 2713"
@@ -994,6 +1130,10 @@
      "text": "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا، وَكَفَانَا، وَآوَانَا، فَكَمْ مِمَّنْ لَا كَافِيَ لَهُ وَلَا مُئْوِيَ",
      "count": 1,
      "translation": "Praise be to Allah who fed us, gave us drink, sufficed us and gave us shelter. How many there are with no one to suffice them and no one to shelter them.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله إذا أوى إلى فراشه.",
+      "en": "The Prophet ﷺ said it when he went to bed."
+     },
      "reference": {
       "ar": "مسلم (2715)",
       "en": "Muslim 2715"
@@ -1013,6 +1153,10 @@
      "text": "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
      "count": 1,
      "translation": "Praise be to Allah who gave us life after He had caused us to die, and to Him is the resurrection.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله إذا استيقظ من نومه.",
+      "en": "The Prophet ﷺ said it when he woke up."
+     },
      "reference": {
       "ar": "البخاري (6312)",
       "en": "Al-Bukhari 6312"
@@ -1037,6 +1181,10 @@
      "text": "الْحَمْدُ لِلَّهِ الَّذِي عَافَانِي فِي جَسَدِي، وَرَدَّ عَلَيَّ رُوحِي، وَأَذِنَ لِي بِذِكْرِهِ",
      "count": 1,
      "translation": "Praise be to Allah who gave health to my body, returned my soul to me and allowed me to remember Him.",
+     "sunnah": {
+      "ar": "أمر به النبي ﷺ من استيقظ من نومه.",
+      "en": "The Prophet ﷺ told us to say it on waking."
+     },
      "reference": {
       "ar": "الترمذي (3401)",
       "en": "At-Tirmidhi 3401"
@@ -1060,6 +1208,10 @@
       "en": "Repeat what the muezzin says, except at “Hayya ʿala-s-salah” and “Hayya ʿala-l-falah”, where you say:"
      },
      "translation": "There is no power and no strength except through Allah.",
+     "virtue": {
+      "ar": "من أجاب المؤذن هكذا من قلبه دخل الجنة.",
+      "en": "Whoever answers the adhan like this, sincerely from the heart, enters Paradise."
+     },
      "reference": {
       "ar": "البخاري (611)، ومسلم (385)",
       "en": "Al-Bukhari 611, Muslim 385"
@@ -1092,6 +1244,10 @@
       "en": "When the adhan ends"
      },
      "translation": "O Allah, send blessings and peace upon our Prophet Muhammad.",
+     "virtue": {
+      "ar": "من صلّى على النبي ﷺ صلاة صلّى الله عليه بها عشرًا.",
+      "en": "Whoever sends one blessing on the Prophet ﷺ, Allah sends ten blessings on him."
+     },
      "reference": {
       "ar": "مسلم (384)",
       "en": "Muslim 384"
@@ -1129,6 +1285,10 @@
       "en": "On the way to the mosque"
      },
      "translation": "O Allah, place light in my heart, light in my sight and light in my hearing; light on my right and light on my left; light above me and light below me; light in front of me and light behind me; and grant me light.",
+     "sunnah": {
+      "ar": "كان النبي ﷺ يقوله وهو خارج إلى الصلاة.",
+      "en": "The Prophet ﷺ said it as he went out to the prayer."
+     },
      "reference": {
       "ar": "البخاري (6316)، ومسلم (763)",
       "en": "Al-Bukhari 6316, Muslim 763"
@@ -1161,6 +1321,10 @@
       "en": "When entering, right foot first"
      },
      "translation": "O Allah, open for me the gates of Your mercy.",
+     "sunnah": {
+      "ar": "علّمه النبي ﷺ لدخول المسجد والخروج منه.",
+      "en": "The Prophet ﷺ taught it for entering and leaving the mosque."
+     },
      "reference": {
       "ar": "مسلم (713)",
       "en": "Muslim 713"
@@ -1175,6 +1339,10 @@
       "en": "When leaving, left foot first"
      },
      "translation": "O Allah, I ask You of Your bounty.",
+     "sunnah": {
+      "ar": "علّمه النبي ﷺ لدخول المسجد والخروج منه.",
+      "en": "The Prophet ﷺ taught it for entering and leaving the mosque."
+     },
      "reference": {
       "ar": "مسلم (713)",
       "en": "Muslim 713"
@@ -1198,6 +1366,10 @@
       "en": "Before wudu"
      },
      "translation": "In the name of Allah.",
+     "sunnah": {
+      "ar": "قال النبي ﷺ: لا وضوء لمن لم يذكر اسم الله عليه.",
+      "en": "The Prophet ﷺ said: there is no wudu for one who does not mention Allah's name over it."
+     },
      "reference": {
       "ar": "أبو داود (101)، والترمذي (25)",
       "en": "Abu Dawud 101, at-Tirmidhi 25"
@@ -1230,6 +1402,10 @@
       "en": "After wudu"
      },
      "translation": "O Allah, make me among those who repent often and among those who purify themselves.",
+     "virtue": {
+      "ar": "من قالها مع الشهادتين بعد الوضوء فُتحت له أبواب الجنة الثمانية، يدخل من أيها شاء.",
+      "en": "Said with the testimony after wudu, the eight gates of Paradise are opened for him, to enter by whichever he wishes."
+     },
      "reference": {
       "ar": "الترمذي (55)",
       "en": "At-Tirmidhi 55"
@@ -1244,6 +1420,10 @@
       "en": "After wudu"
      },
      "translation": "Glory be to You, O Allah, and praise be to You. I bear witness that there is no god but You. I seek Your forgiveness and turn to You in repentance.",
+     "virtue": {
+      "ar": "كُتبت في رَقّ ثم طُبع عليها بطابع فلم يُكسر إلى يوم القيامة.",
+      "en": "It is written on a parchment and sealed, and the seal is not broken until the Day of Resurrection."
+     },
      "reference": {
       "ar": "النسائي في عمل اليوم والليلة (81)",
       "en": "An-Nasa'i, 'Amal al-Yawm wal-Laylah 81"
@@ -1277,6 +1457,10 @@
      "text": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ أَنْ أَضِلَّ أَوْ أُضَلَّ، أَوْ أَزِلَّ أَوْ أُزَلَّ، أَوْ أَظْلِمَ أَوْ أُظْلَمَ، أَوْ أَجْهَلَ أَوْ يُجْهَلَ عَلَيَّ",
      "count": 1,
      "translation": "O Allah, I seek refuge in You from going astray or being led astray, from slipping or being made to slip, from wronging or being wronged, and from acting foolishly or being treated foolishly.",
+     "sunnah": {
+      "ar": "ما خرج النبي ﷺ من بيت أم سلمة قط إلا رفع طرفه إلى السماء وقاله.",
+      "en": "The Prophet ﷺ never left Umm Salamah's house without raising his eyes to the sky and saying it."
+     },
      "reference": {
       "ar": "أبو داود (5094)، والترمذي (3427)",
       "en": "Abu Dawud 5094, at-Tirmidhi 3427"

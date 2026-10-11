@@ -136,4 +136,24 @@ object DeenIcons {
     @DrawableRes val Bed = R.drawable.deen_ic_bed
 
     @DrawableRes val AlarmOn = R.drawable.deen_ic_alarm_on
+
+    /** Mirrors automatically in right-to-left layouts. */
+    @DrawableRes val SkipPrevious = R.drawable.deen_ic_skip_previous
+
+    /** Mirrors automatically in right-to-left layouts. */
+    @DrawableRes val SkipNext = R.drawable.deen_ic_skip_next
+
+    @DrawableRes val MoreVert = R.drawable.deen_ic_more_vert
+
+    @DrawableRes val Tafsir = R.drawable.deen_ic_tafsir
+
+    @DrawableRes val Player = R.drawable.deen_ic_player
+
+    @DrawableRes val Reciter = R.drawable.deen_ic_reciter
+
+    @DrawableRes val Copy = R.drawable.deen_ic_copy
+
+    @DrawableRes val Share = R.drawable.deen_ic_share
+
+    @DrawableRes val Reward = R.drawable.deen_ic_reward
 }

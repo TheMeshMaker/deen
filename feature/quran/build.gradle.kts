@@ -5,3 +5,7 @@ plugins {
 android {
     namespace = "io.github.themeshmaker.dunya.feature.quran"
 }
+
+dependencies {
+    implementation(projects.core.audio)
+}

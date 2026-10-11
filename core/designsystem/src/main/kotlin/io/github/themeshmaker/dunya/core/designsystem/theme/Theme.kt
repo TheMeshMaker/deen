@@ -16,6 +16,8 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -69,7 +71,11 @@ data class DeenLook(
     val cardShape: Shape,
     val cardBorder: BorderStroke?,
     val cardElevation: Dp,
+    /** Colour of the card's soft shadow (Sleek tints it with the theme instead of plain grey). */
+    val shadowColor: Color,
     val heroShape: Shape,
+    /** Bottom sheets (verse options, tafsir). */
+    val sheetShape: Shape,
     /** Horizontal page padding and the gap between cards. */
     val gutter: Dp,
     val gap: Dp,
@@ -87,20 +93,30 @@ private fun lookFor(uiStyle: UiStyle, colors: ColorScheme, dark: Boolean, reduce
         cardShape = RoundedCornerShape(20.dp),
         cardBorder = null,
         cardElevation = 0.dp,
+        shadowColor = Color.Black,
         heroShape = RoundedCornerShape(28.dp),
+        sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         gutter = 16.dp,
         gap = 12.dp
     )
 
-    // Sleek: white cards floating on a faintly tinted page (light), hairline-edged dark cards (dark).
+    // Sleek: white cards floating on a faintly tinted page under a wide, soft, theme-tinted shadow
+    // (light); hairline-edged dark cards (dark). Continuous "squircle" corners throughout.
     UiStyle.SLEEK -> DeenLook(
         uiStyle = uiStyle,
         page = if (dark) colors.background else colors.surfaceContainerLow,
         card = if (dark) colors.surfaceContainer else Color.White,
-        cardShape = RoundedCornerShape(28.dp),
-        cardBorder = BorderStroke(1.dp, colors.outlineVariant.copy(alpha = if (dark) 0.45f else 0.35f)),
-        cardElevation = if (dark) 0.dp else 1.dp,
-        heroShape = RoundedCornerShape(bottomStart = 36.dp, bottomEnd = 36.dp),
+        cardShape = SquircleShape(30.dp),
+        // In the dark, a glass edge: lit along the top, fading into a hairline below.
+        cardBorder = if (dark) {
+            BorderStroke(1.dp, Brush.verticalGradient(listOf(Color.White.copy(alpha = 0.14f), colors.outlineVariant.copy(alpha = 0.30f))))
+        } else {
+            BorderStroke(0.5.dp, colors.outlineVariant.copy(alpha = 0.30f))
+        },
+        cardElevation = if (dark) 0.dp else 14.dp,
+        shadowColor = lerp(colors.primary, Color.Black, 0.55f).copy(alpha = 0.55f),
+        heroShape = SquircleShape(0.dp, 0.dp, 44.dp, 44.dp),
+        sheetShape = SquircleShape(34.dp, 34.dp, 0.dp, 0.dp),
         gutter = 20.dp,
         gap = 14.dp,
         motion = !reducedMotion
@@ -121,6 +137,12 @@ object DeenTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalDeenLook.current
+
+    /** The green that marks the word being recited (the same in every colour theme, by request). */
+    val recitation: Color
+        @Composable
+        @ReadOnlyComposable
+        get() = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) Color(0xFF34D399) else Color(0xFF0B9A65)
 }
 
 private fun ThemeStyle.lightScheme(): ColorScheme = when (this) {

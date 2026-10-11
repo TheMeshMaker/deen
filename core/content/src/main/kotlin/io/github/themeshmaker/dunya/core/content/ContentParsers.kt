@@ -122,6 +122,7 @@ private data class DhikrDto(
     val instruction: TextDto? = null,
     val translation: String,
     val virtue: TextDto? = null,
+    val sunnah: TextDto? = null,
     val reference: TextDto
 )
 
@@ -140,6 +141,7 @@ internal fun parseAdhkar(text: String): List<AdhkarCategory> =
                     instruction = item.instruction?.toModel(),
                     translation = item.translation,
                     virtue = item.virtue?.toModel(),
+                    sunnah = item.sunnah?.toModel(),
                     reference = item.reference.toModel()
                 )
             }

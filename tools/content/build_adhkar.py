@@ -299,6 +299,88 @@ CURATED = [
     ]),
 ]
 
+# ---------------------------------------------------------------- rewards
+# Every dhikr shows what is promised for it. Where the hadith states a reward it is a "virtue"; where it only
+# reports that the Prophet ﷺ said or taught it, that is shown as "sunnah" instead, never an invented reward.
+# Keyed by the English reference; checked against the cited hadith (find.py) before adding.
+def V(ar, en):
+    return ("virtue", L(ar, en))
+
+
+def S(ar, en):
+    return ("sunnah", L(ar, en))
+
+
+NOTES = {
+    "Muslim 2723": S("كان النبي ﷺ يقوله إذا أمسى، ويقول مثله إذا أصبح.",
+                     "The Prophet ﷺ said this every evening, and the same every morning."),
+    "At-Tirmidhi 3391": S("كان النبي ﷺ يعلّمه أصحابه ليقولوه في الصباح والمساء.",
+                          "The Prophet ﷺ taught it to his Companions to say morning and evening."),
+    "Abu Dawud 5090, Ahmad 20430": S("كان أبو بكرة رضي الله عنه يكرره ثلاثًا صباحًا ومساءً ويقول: سمعت رسول الله ﷺ يدعو بهن، فأحب أن أستنّ بسنته.",
+                                     "Abu Bakrah repeated it three times morning and evening, saying: I heard the Messenger of Allah ﷺ supplicate with these words, and I love to follow his Sunnah."),
+    "Abu Dawud 5074, Ibn Majah 3871": S("لم يكن النبي ﷺ يدع هذه الدعوات حين يمسي وحين يصبح.",
+                                        "The Prophet ﷺ never left these supplications, evening or morning."),
+    "At-Tirmidhi 3392, Abu Dawud 5067": S("علّمه النبي ﷺ أبا بكر الصديق لما سأله ما يقول إذا أصبح وإذا أمسى، وقال: قله أيضًا إذا أخذت مضجعك.",
+                                          "The Prophet ﷺ taught it to Abu Bakr when he asked what to say morning and evening, and told him to say it at bedtime too."),
+    "Al-Hakim 1/545; see Sahih at-Targhib 1/273": S("أوصى به النبي ﷺ ابنته فاطمة أن تقوله إذا أصبحت وإذا أمست.",
+                                                    "The Prophet ﷺ advised his daughter Fatimah to say it every morning and evening."),
+    "Abu Dawud 5084": S("أمر النبي ﷺ أن يقوله المسلم إذا أصبح، ومثله إذا أمسى.",
+                        "The Prophet ﷺ told us to say it in the morning, and the same in the evening."),
+    "Ahmad 15360, Ibn as-Sunni 34": S("كان النبي ﷺ يقوله إذا أصبح وإذا أمسى.",
+                                      "The Prophet ﷺ said it every morning and evening."),
+    "Ibn Majah 925, Ibn as-Sunni 54": S("كان النبي ﷺ يقوله بعد صلاة الصبح حين يسلّم.",
+                                        "The Prophet ﷺ said it after the Fajr prayer, as soon as he gave the salam."),
+    "Muslim 2726": V("قال النبي ﷺ لجويرية: لقد قلتُ بعدكِ أربع كلمات ثلاث مرات، لو وُزنت بما قلتِ منذ اليوم لوزنتهن.",
+                     "Said three times, these four phrases outweigh all the dhikr made since dawn."),
+    "Al-Bukhari 6307, Muslim 2702": S("كان النبي ﷺ يستغفر الله ويتوب إليه في اليوم مائة مرة.",
+                                      "The Prophet ﷺ asked Allah's forgiveness and turned to Him in repentance a hundred times a day."),
+    "Muslim 591": S("كان النبي ﷺ يقوله إذا انصرف من صلاته.",
+                    "The Prophet ﷺ said this as soon as he finished his prayer."),
+    "Al-Bukhari 844, Muslim 593": S("كان النبي ﷺ يقوله في دبر كل صلاة مكتوبة.",
+                                    "The Prophet ﷺ said it after every obligatory prayer."),
+    "Muslim 594": S("كان النبي ﷺ يهلّل به في دبر كل صلاة حين يسلّم.",
+                    "The Prophet ﷺ said it after every prayer, once he gave the salam."),
+    "Muslim 597": V("مع التسبيح والتحميد والتكبير وتمام المئة: غُفرت خطاياه وإن كانت مثل زبد البحر.",
+                    "With the other two and the words that complete the hundred, his sins are forgiven even if they are like the foam of the sea."),
+    "Abu Dawud 1523, at-Tirmidhi 2903": S("أمر النبي ﷺ عقبة بن عامر أن يقرأ بالمعوذات دبر كل صلاة.",
+                                          "The Prophet ﷺ told 'Uqbah ibn 'Amir to recite them after every prayer."),
+    "Abu Dawud 1522, an-Nasa'i 1303": S("أخذ النبي ﷺ بيد معاذ وقال: والله إني لأحبك، ثم أوصاه ألا يدعه في دبر كل صلاة.",
+                                        "The Prophet ﷺ took Mu'adh's hand, told him he loved him, and advised him never to leave it after any prayer."),
+    "Al-Bukhari 5017": S("كان النبي ﷺ يفعله كل ليلة إذا أوى إلى فراشه.",
+                         "The Prophet ﷺ did this every night when he went to bed."),
+    "Al-Bukhari 6320, Muslim 2714": S("علّمه النبي ﷺ لمن أوى إلى فراشه.",
+                                      "The Prophet ﷺ taught it for when you lie down to sleep."),
+    "Abu Dawud 5045, at-Tirmidhi 3398": S("كان النبي ﷺ يقوله ثلاثًا إذا أراد أن ينام، ويده اليمنى تحت خده.",
+                                          "The Prophet ﷺ said it three times when he lay down to sleep, his right hand under his cheek."),
+    "Al-Bukhari 6324": S("كان النبي ﷺ يقوله إذا أخذ مضجعه من الليل.",
+                         "The Prophet ﷺ said it when he lay down at night."),
+    "Muslim 2713": S("كان النبي ﷺ يأمر أصحابه أن يقولوه إذا أخذوا مضاجعهم.",
+                     "The Prophet ﷺ told his Companions to say it when they lay down to sleep."),
+    "Muslim 2715": S("كان النبي ﷺ يقوله إذا أوى إلى فراشه.",
+                     "The Prophet ﷺ said it when he went to bed."),
+    "Al-Bukhari 6312": S("كان النبي ﷺ يقوله إذا استيقظ من نومه.",
+                         "The Prophet ﷺ said it when he woke up."),
+    "At-Tirmidhi 3401": S("أمر به النبي ﷺ من استيقظ من نومه.",
+                          "The Prophet ﷺ told us to say it on waking."),
+    "Al-Bukhari 611, Muslim 385": V("من أجاب المؤذن هكذا من قلبه دخل الجنة.",
+                                    "Whoever answers the adhan like this, sincerely from the heart, enters Paradise."),
+    "Muslim 384": V("من صلّى على النبي ﷺ صلاة صلّى الله عليه بها عشرًا.",
+                    "Whoever sends one blessing on the Prophet ﷺ, Allah sends ten blessings on him."),
+    "Al-Bukhari 6316, Muslim 763": S("كان النبي ﷺ يقوله وهو خارج إلى الصلاة.",
+                                     "The Prophet ﷺ said it as he went out to the prayer."),
+    "Muslim 713": S("علّمه النبي ﷺ لدخول المسجد والخروج منه.",
+                    "The Prophet ﷺ taught it for entering and leaving the mosque."),
+    "Abu Dawud 101, at-Tirmidhi 25": S("قال النبي ﷺ: لا وضوء لمن لم يذكر اسم الله عليه.",
+                                       "The Prophet ﷺ said: there is no wudu for one who does not mention Allah's name over it."),
+    "At-Tirmidhi 55": V("من قالها مع الشهادتين بعد الوضوء فُتحت له أبواب الجنة الثمانية، يدخل من أيها شاء.",
+                        "Said with the testimony after wudu, the eight gates of Paradise are opened for him, to enter by whichever he wishes."),
+    "An-Nasa'i, 'Amal al-Yawm wal-Laylah 81": V("كُتبت في رَقّ ثم طُبع عليها بطابع فلم يُكسر إلى يوم القيامة.",
+                                                "It is written on a parchment and sealed, and the seal is not broken until the Day of Resurrection."),
+    "Abu Dawud 5094, at-Tirmidhi 3427": S("ما خرج النبي ﷺ من بيت أم سلمة قط إلا رفع طرفه إلى السماء وقاله.",
+                                          "The Prophet ﷺ never left Umm Salamah's house without raising his eyes to the sky and saying it."),
+}
+
+
 # ---------------------------------------------------------------- helpers
 TASHKEEL = re.compile(r"[ؐ-ًؚ-ٰٟۖ-ۭـ]")
 
@@ -397,10 +479,31 @@ for cid, title, items in CURATED:
         out.append(item)
     categories.append({"id": cid, "title": title, "items": out})
 
+# A reward for every dhikr: a stated virtue, else one shared by the same narration in this category (the three
+# tasbih of a hundred), else the Sunnah note above.
+missing = []
+for cat in categories:
+    for item in cat["items"]:
+        if "virtue" in item:
+            continue
+        note = NOTES.get(item["reference"]["en"])
+        if note and note[0] == "virtue":
+            item["virtue"] = note[1]
+            continue
+        shared = next((o["virtue"] for o in cat["items"] if "virtue" in o and o["reference"] == item["reference"]), None)
+        if shared:
+            item["virtue"] = shared
+        elif note:
+            item["sunnah"] = note[1]
+        else:
+            missing.append((cat["id"], item["reference"]["en"]))
+assert not missing, f"no reward or Sunnah note for: {missing}"
+
 for cat in categories:
     for i, item in enumerate(cat["items"], 1):
         item["id"] = i
-    cat["items"] = [{k: item[k] for k in ("id", "preface", "text", "quran", "count", "instruction", "translation", "virtue", "reference") if k in item} for item in cat["items"]]
+    keys = ("id", "preface", "text", "quran", "count", "instruction", "translation", "virtue", "sunnah", "reference")
+    cat["items"] = [{k: item[k] for k in keys if k in item} for item in cat["items"]]
 
 doc = {
     "version": 1,

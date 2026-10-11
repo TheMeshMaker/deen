@@ -51,13 +51,23 @@ import io.github.themeshmaker.dunya.core.ui.isArabicUi
 import io.github.themeshmaker.dunya.core.ui.localDigits
 
 @Composable
-internal fun QuranHomeScreenRoute(onOpen: (surah: Int, ayah: Int) -> Unit, viewModel: QuranHomeViewModel = hiltViewModel()) {
+internal fun QuranHomeScreenRoute(
+    onOpen: (surah: Int, ayah: Int) -> Unit,
+    onOpenTafsir: (Int) -> Unit,
+    viewModel: QuranHomeViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    QuranHomeScreen(state, onOpen, viewModel::setQuery, viewModel::setTab)
+    QuranHomeScreen(state, onOpen, onOpenTafsir, viewModel::setQuery, viewModel::setTab)
 }
 
 @Composable
-private fun QuranHomeScreen(state: QuranHomeUiState, onOpen: (Int, Int) -> Unit, onQuery: (String) -> Unit, onTab: (QuranTab) -> Unit) {
+private fun QuranHomeScreen(
+    state: QuranHomeUiState,
+    onOpen: (Int, Int) -> Unit,
+    onOpenTafsir: (Int) -> Unit,
+    onQuery: (String) -> Unit,
+    onTab: (QuranTab) -> Unit
+) {
     val look = DeenTheme.look
     val entrance = rememberEntrance()
     // Filtered rows glide into place (Sleek) instead of jumping.
@@ -120,7 +130,17 @@ private fun QuranHomeScreen(state: QuranHomeUiState, onOpen: (Int, Int) -> Unit,
             }
             when (state.tab) {
                 QuranTab.SURAHS -> itemsIndexed(state.filtered, key = { _, s -> "s${s.number}" }) { index, surah ->
-                    SurahRow(surah, onClick = { onOpen(surah.number, 1) }, modifier = placement().rise(entrance, index + 1))
+                    SurahRow(
+                        surah,
+                        onClick = {
+                            onOpen(surah.number, 1)
+                        },
+                        onTafsir = { onOpenTafsir(surah.number) },
+                        modifier = placement().rise(
+                            entrance,
+                            index + 1
+                        )
+                    )
                 }
 
                 QuranTab.JUZ -> itemsIndexed(state.juz, key = { _, j -> "j${j.juz}" }) { index, juz ->
@@ -227,7 +247,7 @@ private fun ContinueCard(surah: Surah, position: QuranPosition, onOpen: (Int, In
 internal fun surahTitle(surah: Surah): String = if (isArabicUi) surah.arabicName else surah.transliteration
 
 @Composable
-private fun SurahRow(surah: Surah, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun SurahRow(surah: Surah, onClick: () -> Unit, onTafsir: () -> Unit, modifier: Modifier = Modifier) {
     DeenCard(onClick = onClick, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp), modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             StarBadge(localDigits(surah.number))
@@ -260,6 +280,13 @@ private fun SurahRow(surah: Surah, onClick: () -> Unit, modifier: Modifier = Mod
             }
             if (!isArabicUi) {
                 Text(surah.arabicName, style = DeenTextStyles.arabicBody, color = MaterialTheme.colorScheme.primary)
+            }
+            IconButton(onClick = onTafsir) {
+                Icon(
+                    painterResource(DeenIcons.Tafsir),
+                    contentDescription = stringResource(R.string.feature_quran_tafsir),
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }

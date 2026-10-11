@@ -2,7 +2,12 @@ package io.github.themeshmaker.dunya.feature.today
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -58,9 +63,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -114,6 +121,8 @@ import java.time.DayOfWeek
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
+import kotlin.math.cos
+import kotlin.math.sin
 
 /** Everything Today can open. */
 class TodayActions(
@@ -387,22 +396,58 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
 
 private val PATTERN_CELL = 48.dp
 
+/**
+ * Time elapsed towards the next prayer. Sleek adds a soft light behind the countdown that slowly
+ * breathes, an arc that brightens towards its end, and a glowing tip where time has reached.
+ */
 @Composable
 private fun ProgressRing(progress: Float, color: Color) {
+    val look = DeenTheme.look
+    val breath = if (look.motion) {
+        val value by rememberInfiniteTransition(label = "halo").animateFloat(
+            initialValue = 0f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(tween(4_200, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+            label = "breath"
+        )
+        value
+    } else {
+        0.5f
+    }
     Canvas(Modifier.fillMaxSize()) {
         val stroke = 6.dp.toPx()
         val inset = stroke / 2
         val arcSize = Size(size.width - stroke, size.height - stroke)
+        val shown = progress.coerceIn(0f, 1f)
+        if (look.sleek) {
+            val halo = size.minDimension * (0.52f + 0.05f * breath)
+            drawCircle(
+                Brush.radialGradient(listOf(color.copy(alpha = 0.10f + 0.07f * breath), Color.Transparent), center, halo),
+                radius = halo
+            )
+        }
         drawArc(color.copy(alpha = 0.2f), 0f, 360f, false, Offset(inset, inset), arcSize, style = Stroke(stroke))
-        drawArc(
-            color,
-            -90f,
-            360f * progress.coerceIn(0f, 1f),
-            false,
-            Offset(inset, inset),
-            arcSize,
-            style = Stroke(stroke, cap = StrokeCap.Round)
-        )
+        if (!look.sleek) {
+            drawArc(color, -90f, 360f * shown, false, Offset(inset, inset), arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
+            return@Canvas
+        }
+        if (shown <= 0f) return@Canvas
+        rotate(-90f) {
+            drawArc(
+                Brush.sweepGradient(0f to color.copy(alpha = 0.35f), shown to color, 1f to color.copy(alpha = 0.35f), center = center),
+                0f,
+                360f * shown,
+                false,
+                Offset(inset, inset),
+                arcSize,
+                style = Stroke(stroke, cap = StrokeCap.Round)
+            )
+        }
+        val angle = Math.toRadians(360.0 * shown - 90.0)
+        val radius = (size.minDimension - stroke) / 2f
+        val tip = center + Offset((cos(angle) * radius).toFloat(), (sin(angle) * radius).toFloat())
+        drawCircle(color.copy(alpha = 0.18f + 0.12f * breath), radius = stroke * 1.9f, center = tip)
+        drawCircle(color, radius = stroke * 0.95f, center = tip)
     }
 }
 

@@ -59,7 +59,7 @@
     <string name="feature_settings_source_code">الشيفرة المصدرية</string>
     <string name="feature_settings_source_code_body">مرخّصة بـ GPL-3.0 على GitHub</string>
     <string name="feature_settings_privacy">الخصوصية</string>
-    <string name="feature_settings_privacy_body">بلا إعلانات ولا تتبّع ولا حساب، ويعمل كل شيء دون إنترنت.</string>
+    <string name="feature_settings_privacy_body">بلا إعلانات ولا تتبّع ولا حساب. يعمل كل شيء دون إنترنت ما عدا التلاوات والتفاسير المطوّلة، فتُنزَّل عند فتحها، ولا يُرسَل عنك شيء.</string>
     <string name="feature_settings_voice_length">%1$s:%2$s</string>
     <string name="feature_settings_voice_play">تشغيل</string>
     <string name="feature_settings_voice_stop">إيقاف</string>
@@ -80,6 +80,10 @@
     <string name="feature_settings_src_english_body">الترجمة الإنجليزية للأذكار والأربعين النووية ومعلومات السيرة كُتبت لدِين، وهي بانتظار مراجعة مختص.</string>
     <string name="feature_settings_src_adhan">تسجيلات الأذان</string>
     <string name="feature_settings_src_adhan_body">من ويكيميديا كومنز: «Beautiful adhan» (CC0)، و«Azan» من Andrewler (CC BY-SA 4.0)، و«The Adhan – Aaqib Azeez» من رفع Atcovi (CC BY-SA 4.0، مع ضبط مستوى الصوت).</string>
+    <string name="feature_settings_src_tafsir">التفسير والمعنى</string>
+    <string name="feature_settings_src_tafsir_body">تفسير الجلالين محفوظ في هاتفك، وتفاسير ابن كثير والبغوي والقرطبي تُنزَّل من مجموعة tafsir_api (MIT) أول مرة تفتح فيها السورة، وكلها نصوص تراثية. المعنى بالإنجليزية: بكثال (1930، ملك عام).</string>
+    <string name="feature_settings_src_recitation">التلاوات</string>
+    <string name="feature_settings_src_recitation_body">تُشغَّل التلاوات من موقع EveryAyah.com وتبقى في هاتفك بعد أول استماع. توقيت الكلمات للتظليل من مشروع quran-align لكولن فير (CC BY 4.0).</string>
     <string name="feature_settings_src_times">مواقيت الصلاة</string>
     <string name="feature_settings_src_times_body">تُحسب على هاتفك بمكتبة adhan-kotlin من Batoul Apps (MIT).</string>
     <string name="feature_settings_src_cities">المدن</string>

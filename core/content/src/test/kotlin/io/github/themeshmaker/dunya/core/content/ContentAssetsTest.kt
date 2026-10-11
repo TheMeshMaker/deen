@@ -45,6 +45,8 @@ class ContentAssetsTest {
             assertTrue("dhikr ${dhikr.id} has nothing to recite", dhikr.text != null || dhikr.isQuran)
             assertTrue(dhikr.translation.isNotBlank())
             assertTrue(dhikr.reference.ar!!.isNotBlank() && dhikr.reference.en!!.isNotBlank())
+            val reward = dhikr.virtue ?: dhikr.sunnah
+            assertTrue("dhikr ${dhikr.id} shows no reward", reward?.en?.isNotBlank() == true)
             dhikr.quran.forEach { range ->
                 val verses = quran.getValue(range.surah)
                 assertTrue("${range.surah}:${range.to}", range.from >= 1 && range.to <= verses.size && range.from <= range.to)
@@ -101,5 +103,30 @@ class ContentAssetsTest {
     fun arabicSearchIgnoresDiacriticsAndSpellingVariants() {
         assertEquals("انما الاعمال بالنيات", ArabicText.normalize("إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ"))
         assertTrue(ArabicText.normalize("صَلاَةٌ").contains(ArabicText.normalize("صلاة")))
+    }
+
+    @Test
+    fun jalalaynCoversEveryVerseAndGroupedVersesPointBack() {
+        val jalalayn = asset("tafsir/jalalayn.tsv").useLines { parseVerseTsv(it) }
+        assertEquals(114, jalalayn.size)
+        meta.surahs.forEach { surah ->
+            val entries = tafsirEntries(jalalayn.getValue(surah.number), surah.ayahCount)
+            assertEquals(surah.ayahCount, entries.size)
+            entries.forEach { e -> assertTrue("${surah.number}:${e.ayah}", e.text.isNotBlank()) }
+        }
+        val baqarah = tafsirEntries(jalalayn.getValue(2), 286)
+        assertEquals(81, baqarah[81].coveredBy)
+    }
+
+    @Test
+    fun pickthallHasEveryVerse() {
+        val meaning = asset("quran/pickthall.tsv").useLines { parseVerseTsv(it) }
+        assertEquals(6236, meaning.values.sumOf { it.size })
+        assertTrue(meaning.getValue(1).getValue(1).startsWith("In the name of Allah"))
+    }
+
+    @Test
+    fun htmlIsStrippedFromDownloadedTafsir() {
+        assertEquals("a\n\nb c", cleanHtml("<p>a</p><span>b</span>&nbsp;c"))
     }
 }

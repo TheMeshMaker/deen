@@ -26,6 +26,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
 include(":core:alarm")
+include(":core:audio")
 include(":core:content")
 include(":core:data")
 include(":core:datastore")

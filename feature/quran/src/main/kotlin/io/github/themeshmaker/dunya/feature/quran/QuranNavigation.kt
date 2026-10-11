@@ -11,7 +11,17 @@ data object QuranRoute
 @Serializable
 data class QuranReaderRoute(val surah: Int, val ayah: Int = 1)
 
-fun NavGraphBuilder.quranScreens(onOpen: (surah: Int, ayah: Int) -> Unit, onBack: () -> Unit, onOpenSurahInPlace: (Int) -> Unit) {
-    composable<QuranRoute> { QuranHomeScreenRoute(onOpen = onOpen) }
-    composable<QuranReaderRoute> { QuranReaderScreenRoute(onBack = onBack, onOpenSurah = onOpenSurahInPlace) }
+/** The tafsir of a whole surah, scrolled to [ayah]. */
+@Serializable
+data class QuranTafsirRoute(val surah: Int, val ayah: Int = 1)
+
+fun NavGraphBuilder.quranScreens(
+    onOpen: (surah: Int, ayah: Int) -> Unit,
+    onBack: () -> Unit,
+    onOpenSurahInPlace: (Int) -> Unit,
+    onOpenTafsir: (surah: Int, ayah: Int) -> Unit
+) {
+    composable<QuranRoute> { QuranHomeScreenRoute(onOpen = onOpen, onOpenTafsir = { onOpenTafsir(it, 1) }) }
+    composable<QuranReaderRoute> { QuranReaderScreenRoute(onBack = onBack, onOpenSurah = onOpenSurahInPlace, onOpenTafsir = onOpenTafsir) }
+    composable<QuranTafsirRoute> { SurahTafsirScreenRoute(onBack = onBack) }
 }

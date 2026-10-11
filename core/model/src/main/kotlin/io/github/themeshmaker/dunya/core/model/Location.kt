@@ -58,7 +58,11 @@ data class ReadingSettings(
     /** Show translations under Arabic adhkar and hadith. */
     val showTranslation: Boolean = true,
     /** Vibrate on each count in the tasbih and adhkar. */
-    val haptics: Boolean = true
+    val haptics: Boolean = true,
+    /** Quran recitation voice; see [Reciter]. */
+    val reciterId: String = Reciter.ALAFASY.id,
+    /** Tafsir shown first; see [TafsirSource]. */
+    val tafsirId: String = TafsirSource.JALALAYN.id
 ) {
     companion object {
         val SCALE_RANGE: ClosedFloatingPointRange<Float> = 0.8f..1.6f

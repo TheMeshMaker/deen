@@ -18,7 +18,7 @@
 | Distribution | Google Play + F-Droid + GitHub Releases, via two flavors: `play` and `foss` |
 | Monetisation | **No ads anywhere.** Play: Play Billing tips. FOSS: external donation links. |
 | Languages | Arabic (full RTL) + English |
-| Privacy | No analytics, no Firebase, no crash SDK. The FOSS build has **no INTERNET permission**. |
+| Privacy | No analytics, no Firebase, no crash SDK. `INTERNET` is used for exactly two things the user opens: Quran recitations (EveryAyah.com) and the longer tafsirs (jsDelivr). Nothing about the user is sent. |
 | Main test phone | A ColorOS 17 **CN** foldable on Android 17 (API 37) |
 
 ### Why the ad option was dropped
@@ -29,7 +29,7 @@ AdMob policy forbids asking users to view ads to "support us", including in rewa
 ## 1. Product principles
 
 1. **Reliability first.** An adhan that doesn't play is the worst bug this app can have. Everything in §9–10 serves that.
-2. **Offline and private.** Calculations, content and audio all live on the device. Location is coarse, used once, and stored only on the phone.
+2. **Offline and private.** Calculations, content and the adhan all live on the device. The only downloads are ones the user asks for (a recitation, a longer tafsir), and they are cached. Location is coarse, used once, and stored only on the phone.
 3. **Calm, respectful UI.** No gamification, no streak pressure, no dark patterns, no "rate us" nagging.
 4. **Honest sources.** Every hadith and dhikr shows its reference and grading. Release builds refuse content that a reviewer hasn't approved.
 5. **Free forever.** No paywalls, no locked features, no ads.
@@ -42,7 +42,7 @@ AdMob policy forbids asking users to view ads to "support us", including in rewa
 |---|---|---|
 | Prayer times | Offline calculation, all major methods, Hanafi/standard Asr, high-latitude rules, per-prayer minute offsets, Ramadan Isha +30 for Umm al-Qura. **Monthly timetable, paged by Gregorian or Hijri month** ✅ | Iqama times, timetable export |
 | Alerts | Per prayer: Adhan / Notification / Silent. Optional pre-adhan reminder. **Three bundled voices, a separate Fajr voice, your own audio file** ✅. **"Go to the masjid" reminder** (hidden option) ✅ | Jumu'ah / Al-Kahf reminder, auto-silent during prayer |
-| Quran | **Reader with all 114 surahs (Tanzil Uthmani text, Amiri Quran font), surah search, juz index, bookmarks, resumes where you stopped** ✅ | Translations, audio recitation, mushaf page view |
+| Quran | **Reader with all 114 surahs (Tanzil Uthmani text, Amiri Quran font), surah search, juz index, bookmarks, resumes where you stopped** ✅. **Tafsir per surah and per verse (al-Jalalayn offline; Ibn Kathir, al-Baghawi, al-Qurtubi on demand), recitation player with 7 reciters that lights up the recited word, long-press verse actions** ✅ | More translations, mushaf page view, downloading a whole surah ahead |
 | Adhkar | **Morning, evening, after prayer, before sleep, waking up, with the adhan, mosque, wudu, leaving home. Tap-to-count, haptics, daily progress** ✅ | Adhkar reminders |
 | Tasbih | **8 phrases, targets 33/99/100/∞, ring progress, haptics, today and all-time totals** ✅ | Volume-key counting |
 | Hadith | **Hadith of the day (an-Nawawi's Forty, Arabic + English), a daily fact about the Prophet ﷺ (61, sourced), the six books + Muwatta + Forty Qudsi in Arabic with gradings, browse by book, search, copy/share** ✅ | English for the full collections (needs a licensed translation), favourites |
@@ -121,7 +121,7 @@ one file per hadith book keeps memory low, and the files stay reviewable in git.
 | Location | Fused → platform → manual city | platform → manual city |
 | Tips | Play Billing consumables | External links (GitHub Sponsors, etc.) |
 | Exact alarms | `SCHEDULE_EXACT_ALARM` (user grants) | `SCHEDULE_EXACT_ALARM` + `USE_EXACT_ALARM` (auto-granted, no Play policy) |
-| INTERNET permission | Only if the billing library requires it (checked in the merged manifest) | **None** |
+| INTERNET permission | Recitations and tafsir downloads (plus billing) | Recitations and tafsir downloads only |
 | Proprietary code | Google Play services location + billing | **Zero.** CI fails the build if any `com.google.android.gms` or `billingclient` class shows up |
 
 Flavor-specific implementations are bound in `app/src/play/.../FlavorModule.kt` and `app/src/foss/.../FlavorModule.kt`. Everything else is shared.
@@ -543,12 +543,12 @@ Times in these wireframes are examples.
 | `USE_EXACT_ALARM` | foss | Auto-granted | Same, without asking |
 | `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | both | Reliability step | Survive Doze / OEM killers |
 | `RECEIVE_BOOT_COMPLETED` | both | — | Reschedule after reboot |
-| `FOREGROUND_SERVICE` + `_MEDIA_PLAYBACK` | both | — | Playing the adhan |
+| `FOREGROUND_SERVICE` + `_MEDIA_PLAYBACK` | both | — | Playing the adhan and Quran recitations |
 | `WAKE_LOCK`, `VIBRATE` | both | — | Playback, haptics |
-| `INTERNET` | play only, if billing requires it | — | Play Billing |
+| `INTERNET` | both | — | Streaming recitations, downloading the longer tafsirs (and Play Billing in `play`) |
 
 - **Not requested:** background location, storage, contacts, phone state, DND access (v1).
-- `PRIVACY.md` (also served on GitHub Pages) says plainly: *nothing leaves your device.*
+- `PRIVACY.md` (also served on GitHub Pages) says plainly: *nothing about you leaves your device*; the app only downloads the recitations and tafsirs you open.
 - The Play Data Safety form will declare "no data collected" (plus whatever Play Billing requires).
 
 ---
@@ -652,3 +652,11 @@ Asked for by the maintainer and built in this round:
 - **Masjid reminder is a hidden option**: About → tap the version seven times.
 - **Tabs:** Today · Quran · Hadith · Adhkar · More. Tasbih lives in Adhkar, Qibla and the timetable are quick actions on Today and in More.
 - **App icon:** a mihrab arch with a gold crescent on the Emerald gradient.
+- **Tafsir and recitation (2026-10-10, later the same day).** Every surah has a tafsir page; long-pressing a verse opens
+  play-from-here, tafsir, bookmark, copy and share. Player mode (reader ⋮ menu) recites the surah and lights up the
+  word being recited in green, from quran-align word timings. This adds `INTERNET` to both flavors, used only for
+  these two features (§17); F-Droid may list the recitation source as a non-free network service.
+- **Adhkar show their reward** on every card: the virtue stated in the hadith, or, where none is stated, how the
+  Prophet ﷺ said or taught it.
+- **Sleek, refined:** continuous (squircle) corners, large titles that fold into the bar on scroll, soft theme-tinted
+  shadows, a gradient pill in the floating bar, haptic ticks on tab and segment changes, a breathing glow on Today.

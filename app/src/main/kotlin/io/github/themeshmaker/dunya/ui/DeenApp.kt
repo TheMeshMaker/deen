@@ -49,6 +49,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -66,6 +68,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.themeshmaker.dunya.core.designsystem.component.pressScale
+import io.github.themeshmaker.dunya.core.designsystem.component.softShadow
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.model.DeenLinks
@@ -88,6 +91,7 @@ import io.github.themeshmaker.dunya.feature.onboarding.onboardingScreen
 import io.github.themeshmaker.dunya.feature.qibla.QiblaRoute
 import io.github.themeshmaker.dunya.feature.qibla.qiblaScreen
 import io.github.themeshmaker.dunya.feature.quran.QuranReaderRoute
+import io.github.themeshmaker.dunya.feature.quran.QuranTafsirRoute
 import io.github.themeshmaker.dunya.feature.quran.quranScreens
 import io.github.themeshmaker.dunya.feature.reliability.ReliabilityRoute
 import io.github.themeshmaker.dunya.feature.reliability.reliabilityScreen
@@ -249,23 +253,33 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
     }
 }
 
-/** Sleek: a rounded bar floating above the page, the selected tab as a filled pill. */
+/**
+ * Sleek: a rounded bar floating above the page on a wide soft shadow, the selected tab as a
+ * gradient pill. Changing tab gives a light haptic tick.
+ */
 @Composable
 private fun FloatingNavBar(current: NavDestination?, onSelect: (TopLevelDestination) -> Unit) {
     val look = DeenTheme.look
+    val haptics = LocalHapticFeedback.current
+    val soft = look.cardElevation > 0.dp
     Surface(
         shape = CircleShape,
         color = look.card,
         border = look.cardBorder,
-        shadowElevation = 6.dp,
+        shadowElevation = if (soft) 0.dp else 6.dp,
         modifier = Modifier
             .navigationBarsPadding()
-            .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 10.dp)
+            .padding(start = 18.dp, end = 18.dp, top = 6.dp, bottom = 10.dp)
+            .softShadow(look, CircleShape)
             .fillMaxWidth()
     ) {
         Row(Modifier.padding(6.dp), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
             TopLevelDestination.entries.forEach { destination ->
-                NavPill(destination, selected = current.isOn(destination), motion = look.motion, onClick = { onSelect(destination) })
+                val selected = current.isOn(destination)
+                NavPill(destination, selected = selected, motion = look.motion, onClick = {
+                    if (look.motion && !selected) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                    onSelect(destination)
+                })
             }
         }
     }
@@ -278,14 +292,11 @@ private fun FloatingNavBar(current: NavDestination?, onSelect: (TopLevelDestinat
 @Composable
 private fun RowScope.NavPill(destination: TopLevelDestination, selected: Boolean, motion: Boolean, onClick: () -> Unit) {
     val colors = MaterialTheme.colorScheme
+    val gradient = DeenTheme.gradient
     val weight by animateFloatAsState(if (selected) 2.6f else 1f, if (motion) DeenMotion.snappy() else snap(), label = "navWeight")
-    val fill by animateColorAsState(
-        if (selected) colors.primary else Color.Transparent,
-        if (motion) tween(260) else snap(),
-        label = "navFill"
-    )
+    val fill by animateFloatAsState(if (selected) 1f else 0f, if (motion) tween(260) else snap(), label = "navFill")
     val tint by animateColorAsState(
-        if (selected) colors.onPrimary else colors.onSurfaceVariant,
+        if (selected) gradient.content else colors.onSurfaceVariant,
         if (motion) tween(220) else snap(),
         label = "navTint"
     )
@@ -302,7 +313,7 @@ private fun RowScope.NavPill(destination: TopLevelDestination, selected: Boolean
             .weight(weight)
             .pressScale(interaction, enabled = motion, pressed = 0.92f)
             .clip(CircleShape)
-            .background(fill)
+            .background(gradient.brush, alpha = fill)
             .clickable(interactionSource = interaction, indication = null, role = Role.Tab, onClick = onClick)
             .semantics { this.selected = selected }
             .padding(vertical = 10.dp, horizontal = 8.dp),
@@ -328,7 +339,7 @@ private fun RowScope.NavPill(destination: TopLevelDestination, selected: Boolean
             Text(
                 stringResource(destination.label),
                 style = MaterialTheme.typography.labelLarge,
-                color = colors.onPrimary,
+                color = gradient.content,
                 maxLines = 1,
                 overflow = TextOverflow.Clip,
                 modifier = Modifier.padding(start = 6.dp)
@@ -376,7 +387,8 @@ private fun NavGraphBuilder.graph(navController: NavHostController) {
         // Next / previous surah replaces the reader instead of stacking readers.
         onOpenSurahInPlace = { surah ->
             navController.navigate(QuranReaderRoute(surah, 1)) { popUpTo<QuranReaderRoute> { inclusive = true } }
-        }
+        },
+        onOpenTafsir = { surah, ayah -> navController.navigate(QuranTafsirRoute(surah, ayah)) }
     )
     hadithScreens(
         onOpenNawawi = { navController.navigate(NawawiRoute(it)) },

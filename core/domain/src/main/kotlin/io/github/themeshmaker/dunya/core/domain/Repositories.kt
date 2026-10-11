@@ -16,6 +16,8 @@ import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
 import io.github.themeshmaker.dunya.core.model.Surah
+import io.github.themeshmaker.dunya.core.model.TafsirEntry
+import io.github.themeshmaker.dunya.core.model.TafsirSource
 import io.github.themeshmaker.dunya.core.model.TasbihState
 import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
@@ -88,6 +90,15 @@ interface ContentRepository {
 
     /** Hadith whose Arabic contains [query] (diacritics ignored), or whose number is [query]. */
     suspend fun searchHadith(collectionId: String, query: String, limit: Int = 200): List<HadithEntry>
+
+    /**
+     * The tafsir of every verse of [surah], or null when it isn't on the phone and can't be fetched
+     * (the longer tafsirs are downloaded once per surah).
+     */
+    suspend fun tafsir(source: TafsirSource, surah: Int): List<TafsirEntry>?
+
+    /** Pickthall's English meaning of every verse of [surah] (1930, public domain). */
+    suspend fun meaning(surah: Int): List<String>
 }
 
 sealed interface DeviceLocationResult {

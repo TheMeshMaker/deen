@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -38,18 +39,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -58,8 +67,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenLook
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+import io.github.themeshmaker.dunya.core.designsystem.theme.SquircleShape
 
 /** A card in the current style: tinted and flat (Classic) or white, rounder and hairline-edged (Sleek). */
 @Composable
@@ -75,11 +86,11 @@ fun DeenCard(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .pressScale(interaction, enabled = onClick != null && look.motion),
+            .pressScale(interaction, enabled = onClick != null && look.motion)
+            .softShadow(look),
         shape = look.cardShape,
         color = containerColor,
         border = look.cardBorder,
-        shadowElevation = look.cardElevation,
         onClick = onClick ?: {},
         enabled = onClick != null,
         interactionSource = interaction
@@ -91,44 +102,35 @@ fun DeenCard(
 /**
  * A pushed screen: top bar with back button, the style's page colour behind everything.
  * Top-level tabs use [DeenTabScaffold] instead.
+ *
+ * Sleek shows a large title that folds into the bar as the content scrolls (turn it off with
+ * [largeTitle] where space matters more, e.g. the Quran reader or the Qibla compass).
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeenScaffold(
     title: String,
     onBack: (() -> Unit)?,
     backLabel: String,
     modifier: Modifier = Modifier,
+    largeTitle: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     val look = DeenTheme.look
-    Scaffold(
+    DeenBarScaffold(
+        title = title,
+        large = look.sleek && largeTitle,
+        smallStyle = if (look.sleek) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleLarge,
+        navigationIcon = { if (onBack != null) BackButton(onBack, backLabel) },
         modifier = modifier,
-        containerColor = look.page,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        title,
-                        style = if (look.sleek) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                navigationIcon = { if (onBack != null) BackButton(onBack, backLabel) },
-                actions = actions,
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = look.page, scrolledContainerColor = look.page)
-            )
-        },
+        actions = actions,
         bottomBar = bottomBar,
         content = content
     )
 }
 
-/** A top-level tab: big title, no back button. */
-@OptIn(ExperimentalMaterial3Api::class)
+/** A top-level tab: big title, no back button (in Sleek, a large title that folds away on scroll). */
 @Composable
 fun DeenTabScaffold(
     title: String,
@@ -136,24 +138,84 @@ fun DeenTabScaffold(
     actions: @Composable RowScope.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
-    val look = DeenTheme.look
-    Scaffold(
+    DeenBarScaffold(
+        title = title,
+        large = DeenTheme.look.sleek,
+        smallStyle = MaterialTheme.typography.headlineSmall,
+        navigationIcon = {},
         modifier = modifier,
-        containerColor = look.page,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        title,
-                        style = if (look.sleek) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.headlineSmall
-                    )
-                },
-                actions = actions,
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = look.page, scrolledContainerColor = look.page)
-            )
-        },
+        actions = actions,
+        bottomBar = {},
         content = content
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DeenBarScaffold(
+    title: String,
+    large: Boolean,
+    smallStyle: TextStyle,
+    navigationIcon: @Composable () -> Unit,
+    modifier: Modifier,
+    actions: @Composable RowScope.() -> Unit,
+    bottomBar: @Composable () -> Unit,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    val look = DeenTheme.look
+    val colors = TopAppBarDefaults.topAppBarColors(containerColor = look.page, scrolledContainerColor = look.page)
+    if (!large) {
+        Scaffold(
+            modifier = modifier,
+            containerColor = look.page,
+            topBar = {
+                TopAppBar(
+                    title = { Text(title, style = smallStyle, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                    navigationIcon = navigationIcon,
+                    actions = actions,
+                    colors = colors
+                )
+            },
+            bottomBar = bottomBar,
+            content = content
+        )
+        return
+    }
+    // A large title: big at the top of the page, folding into the bar as the page scrolls, with a
+    // hairline under the bar once it has folded.
+    val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val hairline = MaterialTheme.colorScheme.outlineVariant
+    Scaffold(
+        modifier = modifier.nestedScroll(behavior.nestedScrollConnection),
+        containerColor = look.page,
+        topBar = {
+            LargeTopAppBar(
+                title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                navigationIcon = navigationIcon,
+                actions = actions,
+                colors = colors,
+                expandedHeight = 120.dp,
+                scrollBehavior = behavior,
+                modifier = Modifier.drawWithContent {
+                    drawContent()
+                    val shown = behavior.state.collapsedFraction
+                    if (shown > 0f) {
+                        val line = 0.5.dp.toPx()
+                        drawRect(hairline.copy(alpha = 0.6f * shown), Offset(0f, size.height - line), Size(size.width, line))
+                    }
+                }
+            )
+        },
+        bottomBar = bottomBar,
+        content = content
+    )
+}
+
+/** Sleek's wide, soft, theme-tinted shadow under a card (nothing in Classic or dark mode). */
+fun Modifier.softShadow(look: DeenLook, shape: Shape = look.cardShape): Modifier = if (look.cardElevation > 0.dp) {
+    shadow(look.cardElevation, shape, clip = false, ambientColor = look.shadowColor, spotColor = look.shadowColor)
+} else {
+    this
 }
 
 @Composable
@@ -166,7 +228,13 @@ private fun BackButton(onBack: () -> Unit, label: String) {
         } else {
             IconButtonDefaults.iconButtonColors()
         },
-        modifier = if (look.sleek) Modifier.padding(start = 8.dp) else Modifier
+        modifier = if (look.sleek) {
+            Modifier
+                .padding(start = 8.dp)
+                .softShadow(look, CircleShape)
+        } else {
+            Modifier
+        }
     ) {
         Icon(painterResource(DeenIcons.Back), contentDescription = label)
     }
@@ -212,9 +280,11 @@ fun StarBadge(text: String, modifier: Modifier = Modifier, size: Dp = 40.dp, col
 @Composable
 fun <T> PillChoice(options: List<T>, selected: T, label: @Composable (T) -> String, onSelect: (T) -> Unit, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
+    val haptics = LocalHapticFeedback.current
+    val motion = DeenTheme.look.motion
     val index = options.indexOf(selected).coerceAtLeast(0).toFloat()
     // The highlight glides from option to option (Sleek) or jumps there (Classic).
-    val position by animateFloatAsState(index, if (DeenTheme.look.motion) DeenMotion.snappy() else snap(), label = "pill")
+    val position by animateFloatAsState(index, if (motion) DeenMotion.snappy() else snap(), label = "pill")
     val gap = 4.dp
     Row(
         modifier
@@ -238,7 +308,10 @@ fun <T> PillChoice(options: List<T>, selected: T, label: @Composable (T) -> Stri
                 Modifier
                     .weight(1f)
                     .clip(CircleShape)
-                    .clickable(role = Role.RadioButton) { onSelect(option) }
+                    .clickable(role = Role.RadioButton) {
+                        if (motion && !isSelected) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                        onSelect(option)
+                    }
                     .semantics {
                         this.selected = isSelected
                         contentDescription = text
@@ -277,18 +350,20 @@ fun MenuRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         if (icon != null) {
+            val sleek = DeenTheme.look.sleek
+            val primary = MaterialTheme.colorScheme.primary
             Box(
                 Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)),
+                    .size(if (sleek) 34.dp else 40.dp)
+                    .clip(if (sleek) IconTileShape else CircleShape)
+                    .background(if (sleek) DeenTheme.gradient.brush else SolidColor(primary.copy(alpha = 0.10f))),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painterResource(icon),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(22.dp)
+                    tint = if (sleek) DeenTheme.gradient.content else primary,
+                    modifier = Modifier.size(if (sleek) 19.dp else 22.dp)
                 )
             }
         }
@@ -304,14 +379,11 @@ fun MenuRow(
 
 /** The themed gradient with the star pattern, in the style's hero shape. */
 @Composable
-fun GradientHero(
-    modifier: Modifier = Modifier,
-    shape: androidx.compose.ui.graphics.Shape = DeenTheme.look.heroShape,
-    content: @Composable BoxScope.() -> Unit
-) {
+fun GradientHero(modifier: Modifier = Modifier, shape: Shape = DeenTheme.look.heroShape, content: @Composable BoxScope.() -> Unit) {
     val gradient = DeenTheme.gradient
     Box(
         modifier
+            .softShadow(DeenTheme.look, shape)
             .clip(shape)
             .background(gradient.brush)
     ) {
@@ -319,6 +391,8 @@ fun GradientHero(
         content()
     }
 }
+
+private val IconTileShape = SquircleShape(10.dp)
 
 /** A thin rounded progress bar in the primary colour. */
 @Composable

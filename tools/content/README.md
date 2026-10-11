@@ -11,6 +11,7 @@ third-party packages). Keep the downloaded inputs in their own folder outside th
 | `hadith/nawawi40.json` | `build_hadith.py` | `ara-nawawi.json` from [fawazahmed0/hadith-api](https://github.com/fawazahmed0/hadith-api) (Unlicense) |
 | `hadith/collections.json`, `hadith/<id>/<book>.tsv` | `build_collections.py` | hadith-api `ara-{bukhari,muslim,abudawud,tirmidhi,nasai,ibnmajah,malik,qudsi}.min.json`; Arabic book titles only from [AhmedBaset/hadith-json](https://github.com/AhmedBaset/hadith-json) |
 | `prophet-facts.json` | `build_facts.py` | hadith-api Arabic collections (each fact's hadith is checked) |
+| `tafsir/jalalayn.tsv`, `quran/pickthall.tsv`, `audio/timings/<reciter>.tsv` | `build_quran_extras.py` | [spa5k/tafsir_api](https://github.com/spa5k/tafsir_api) `tafsir/ar-tafsir-al-jalalayn/1..114.json` (MIT); quran-api `eng-mohammedmarmadu.min.json`; the [quran-align](https://github.com/cpfair/quran-align) release data, one JSON per reciter (CC BY 4.0) |
 
 The English in `adhkar.json`, `hadith/nawawi40.json` and `prophet-facts.json` is written for Deen and lives in the
 scripts. Edit the script, re-run it, and commit both. Content changes need a reviewer before a release
@@ -22,4 +23,5 @@ python -I build_hadith.py <dl>/hadith/ara-nawawi.json ../../core/content/src/mai
 python -I build_facts.py <dl>/hadith ../../core/content/src/main/assets/prophet-facts.json
 python -I build_quran_meta.py <dl>/quran-data.xml <dl>/quran-uthmani.txt ../../core/content/src/main/assets/quran/quran-meta.json
 python -I build_collections.py <dl>/hadith <dl>/hadith-json ../../core/content/src/main/assets/hadith
+python -I build_quran_extras.py <dl>/jalalayn <dl>/pickthall.json <dl>/align ../../core/content/src/main/assets
 ```

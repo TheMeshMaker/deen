@@ -59,7 +59,7 @@
     <string name="feature_settings_source_code">Source code</string>
     <string name="feature_settings_source_code_body">GPL-3.0 on GitHub</string>
     <string name="feature_settings_privacy">Privacy</string>
-    <string name="feature_settings_privacy_body">No ads, no tracking, no account. Everything works offline.</string>
+    <string name="feature_settings_privacy_body">No ads, no tracking, no account. Everything works offline except Quran recitations and the longer tafsirs, which download when you open them. Nothing about you is sent.</string>
     <string name="feature_settings_voice_length">%1$s:%2$s</string>
     <string name="feature_settings_voice_play">Play</string>
     <string name="feature_settings_voice_stop">Stop</string>
@@ -80,6 +80,10 @@
     <string name="feature_settings_src_english_body">The English of the adhkar, an-Nawawi\'s Forty and the facts about the Prophet ﷺ was written for Deen and is awaiting review by a qualified reviewer.</string>
     <string name="feature_settings_src_adhan">Adhan recordings</string>
     <string name="feature_settings_src_adhan_body">Wikimedia Commons: “Beautiful adhan” (CC0), “Azan” by Andrewler (CC BY-SA 4.0), “The Adhan – Aaqib Azeez” uploaded by Atcovi (CC BY-SA 4.0, loudness adjusted).</string>
+    <string name="feature_settings_src_tafsir">Tafsir and meaning</string>
+    <string name="feature_settings_src_tafsir_body">Tafsir al-Jalalayn is on your phone. Ibn Kathir, al-Baghawi and al-Qurtubi download from the tafsir_api dataset (MIT) the first time you open a surah. All are classical texts. English meaning: M. Pickthall (1930, public domain).</string>
+    <string name="feature_settings_src_recitation">Recitations</string>
+    <string name="feature_settings_src_recitation_body">Recitations stream from EveryAyah.com and stay on your phone after the first play. Word timings for the highlighting: quran-align by Collin Fair (CC BY 4.0).</string>
     <string name="feature_settings_src_times">Prayer times</string>
     <string name="feature_settings_src_times_body">Calculated on your phone with adhan-kotlin by Batoul Apps (MIT).</string>
     <string name="feature_settings_src_cities">Cities</string>

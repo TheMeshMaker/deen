@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -349,16 +350,10 @@ private fun DhikrCard(item: DhikrView, scale: Float, showTranslation: Boolean, o
         if (showTranslation) {
             Text(dhikr.translation, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 8.dp))
         }
+        val reward = dhikr.virtue ?: dhikr.sunnah
+        if (reward != null) RewardNote(reward.text(), stated = dhikr.virtue != null, Modifier.padding(top = 12.dp))
         if (showDetails) {
             HorizontalDivider(Modifier.padding(vertical = 10.dp))
-            dhikr.virtue?.let {
-                Text(
-                    stringResource(R.string.feature_adhkar_virtue),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(it.text(), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 8.dp))
-            }
             Text(dhikr.reference.text(), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -367,6 +362,38 @@ private fun DhikrCard(item: DhikrView, scale: Float, showTranslation: Boolean, o
             }
             Spacer(Modifier.weight(1f))
             CountBubble(done = done, remaining = remaining, total = dhikr.count)
+        }
+    }
+}
+
+/** What saying it earns ([stated] in the hadith), or, when no reward is stated, how the Prophet ﷺ used it. */
+@Composable
+private fun RewardNote(text: String, stated: Boolean, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
+    val tint = if (stated) colors.primary else colors.onSurfaceVariant
+    Row(
+        modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(tint.copy(alpha = if (stated) 0.08f else 0.06f))
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Icon(
+            painterResource(if (stated) DeenIcons.Reward else DeenIcons.Hadith),
+            contentDescription = null,
+            tint = tint,
+            modifier = Modifier
+                .padding(top = 2.dp)
+                .size(18.dp)
+        )
+        Column {
+            Text(
+                stringResource(if (stated) R.string.feature_adhkar_reward else R.string.feature_adhkar_sunnah),
+                style = MaterialTheme.typography.labelLarge,
+                color = tint
+            )
+            Text(text, style = MaterialTheme.typography.bodyMedium, color = colors.onSurface)
         }
     }
 }

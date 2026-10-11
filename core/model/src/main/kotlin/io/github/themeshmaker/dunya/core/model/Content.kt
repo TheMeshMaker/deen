@@ -22,7 +22,10 @@ data class Dhikr(
     /** When or how to say it, e.g. "After wudu". */
     val instruction: LocalizedText?,
     val translation: String,
+    /** The reward promised for it in the hadith. */
     val virtue: LocalizedText?,
+    /** When no reward is stated: how the Prophet ﷺ said or taught it. */
+    val sunnah: LocalizedText? = null,
     val reference: LocalizedText
 ) {
     val isQuran: Boolean get() = quran.isNotEmpty()

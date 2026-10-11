@@ -31,6 +31,12 @@ private val sources = listOf(
         R.string.feature_settings_src_adhkar_body,
         "https://github.com/Seen-Arabic/Morning-And-Evening-Adhkar-DB"
     ),
+    Source(R.string.feature_settings_src_tafsir, R.string.feature_settings_src_tafsir_body, "https://github.com/spa5k/tafsir_api"),
+    Source(
+        R.string.feature_settings_src_recitation,
+        R.string.feature_settings_src_recitation_body,
+        "https://github.com/cpfair/quran-align"
+    ),
     Source(R.string.feature_settings_src_english, R.string.feature_settings_src_english_body, null),
     Source(R.string.feature_settings_src_adhan, R.string.feature_settings_src_adhan_body, "https://commons.wikimedia.org"),
     Source(R.string.feature_settings_src_times, R.string.feature_settings_src_times_body, "https://github.com/batoulapps/adhan-kotlin"),

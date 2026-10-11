@@ -30,7 +30,7 @@ and a Qibla compass.
 
 | Flavor | For | Contains |
 |---|---|---|
-| `foss` | F-Droid, GitHub Releases | Only free software. No internet permission. |
+| `foss` | F-Droid, GitHub Releases | Only free software. Internet is used only for Quran recitations and the longer tafsirs. |
 | `play` | Google Play | Adds Google location services and Play Billing (for optional tips) |
 
 ## Building
