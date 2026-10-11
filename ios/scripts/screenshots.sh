@@ -32,6 +32,8 @@ shot 03-today-andalus -DeenDemo today -DeenTheme andalus
 shot 04-more -DeenDemo more
 shot 04b-quran -DeenDemo quran
 shot 04c-reader -DeenDemo reader
+shot 04d-hadith -DeenDemo hadith
+shot 04e-adhkar -DeenDemo adhkar
 shot 05-settings -DeenDemo settings
 shot 06-today-arabic -DeenDemo today -AppleLanguages "(ar)" -AppleLocale ar_SA
 shot 07-welcome-urdu -DeenDemo onboarding -AppleLanguages "(ur)" -AppleLocale ur_PK

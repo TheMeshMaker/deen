@@ -280,7 +280,8 @@ private struct VerseView: View {
                 if bookmarked {
                     Image(systemName: "bookmark.fill").foregroundStyle(.tint).font(.footnote)
                 }
-                Text("\(ayah.text) \(endOfAyah(ayah.number))")
+                // A no-break space keeps the verse sign with the verse's last word.
+                Text("\(ayah.text)\u{00A0}\(endOfAyah(ayah.number))")
                     .font(.custom("AmiriQuran-Regular", size: 26))
                     .lineSpacing(14)
                     .multilineTextAlignment(.trailing)

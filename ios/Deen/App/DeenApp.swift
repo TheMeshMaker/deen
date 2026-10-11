@@ -61,7 +61,7 @@ private struct AlertInputs: Equatable {
 }
 
 enum AppTab: String, Hashable {
-    case today, quran, more, settings, reader
+    case today, quran, hadith, adhkar, more, settings, reader
 }
 
 /// The tab bar: Liquid Glass, shrinking away as the page scrolls.
@@ -88,6 +88,12 @@ struct MainTabs: View {
             }
             Tab(L("nav_quran"), systemImage: "book.closed.fill", value: AppTab.quran) {
                 QuranHomeView(openLastRead: openReader)
+            }
+            Tab(L("nav_hadith"), systemImage: "text.book.closed.fill", value: AppTab.hadith) {
+                HadithHomeView()
+            }
+            Tab(L("nav_adhkar"), systemImage: "hands.and.sparkles.fill", value: AppTab.adhkar) {
+                AdhkarHomeView()
             }
             Tab(L("nav_more"), systemImage: "square.grid.2x2.fill", value: AppTab.more) {
                 MoreView(openSettings: openSettings)

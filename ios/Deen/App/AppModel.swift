@@ -34,6 +34,10 @@ struct AppSettings: Codable, Equatable {
     var lastRead: QuranPosition?
     var bookmarks: [QuranPosition] = []
     var alerts = AlertSettings()
+    var tasbih = TasbihState()
+    /// Today's adhkar counts ("category/id" → times said); cleared on a new day.
+    var adhkarDay = ""
+    var adhkarCounts: [String: Int] = [:]
 
     var isSetUp: Bool { onboardingComplete && location != nil && prayer != nil }
 
@@ -51,6 +55,9 @@ struct AppSettings: Codable, Equatable {
         lastRead = try? c.decodeIfPresent(QuranPosition.self, forKey: .lastRead)
         bookmarks = (try? c.decodeIfPresent([QuranPosition].self, forKey: .bookmarks)) ?? []
         alerts = (try? c.decodeIfPresent(AlertSettings.self, forKey: .alerts)) ?? AlertSettings()
+        tasbih = (try? c.decodeIfPresent(TasbihState.self, forKey: .tasbih)) ?? TasbihState()
+        adhkarDay = (try? c.decodeIfPresent(String.self, forKey: .adhkarDay)) ?? ""
+        adhkarCounts = (try? c.decodeIfPresent([String: Int].self, forKey: .adhkarCounts)) ?? [:]
     }
 }
 
@@ -61,6 +68,8 @@ final class AppModel {
     private(set) var settings: AppSettings
     private(set) var cities: CityIndex?
     private(set) var quran: Quran?
+    private(set) var adhkar: [AdhkarCategory]?
+    private(set) var hadith: HadithLibrary?
     /// Screenshot mode (`-DeenDemo today|more|settings|onboarding`): fixed sample data, nothing saved.
     let demo: String?
 
@@ -114,6 +123,61 @@ final class AppModel {
               let text = Bundle.main.url(forResource: "quran-uthmani", withExtension: "txt"),
               let meta = Bundle.main.url(forResource: "quran-meta", withExtension: "json") else { return }
         quran = await Task.detached(priority: .userInitiated) { try? Quran.load(text: text, meta: meta) }.value
+    }
+
+    func loadAdhkar() async {
+        guard adhkar == nil, let url = Bundle.main.url(forResource: "adhkar", withExtension: "json") else { return }
+        adhkar = await Task.detached(priority: .userInitiated) { try? AdhkarLibrary.load(from: url) }.value
+    }
+
+    /// The hadith folder (collections, books, an-Nawawi's Forty) and the facts about the Prophet ﷺ.
+    func loadHadith() async {
+        guard hadith == nil, let folder = Bundle.main.resourceURL?.appendingPathComponent("hadith"),
+              let facts = Bundle.main.url(forResource: "prophet-facts", withExtension: "json") else { return }
+        hadith = await Task.detached(priority: .userInitiated) { try? HadithLibrary.load(hadithFolder: folder, facts: facts) }.value
+    }
+
+    // MARK: Adhkar counts
+
+    func adhkarCount(category: String, item: Int) -> Int {
+        settings.adhkarDay == todayKey ? settings.adhkarCounts["\(category)/\(item)"] ?? 0 : 0
+    }
+
+    func adhkarDone(in category: AdhkarCategory) -> Int {
+        category.items.filter { adhkarCount(category: category.id, item: $0.id) >= $0.count }.count
+    }
+
+    /// One more; returns true when this dhikr just reached its count.
+    @discardableResult
+    func countDhikr(category: String, item: Int, total: Int) -> Bool {
+        let key = "\(category)/\(item)"
+        var finished = false
+        update { s in
+            if s.adhkarDay != todayKey {
+                s.adhkarDay = todayKey
+                s.adhkarCounts = [:]
+            }
+            let next = min((s.adhkarCounts[key] ?? 0) + 1, total)
+            s.adhkarCounts[key] = next
+            finished = next == total
+        }
+        return finished
+    }
+
+    func resetAdhkar(category: String) {
+        update { s in s.adhkarCounts = s.adhkarCounts.filter { !$0.key.hasPrefix("\(category)/") } }
+    }
+
+    func countTasbih() {
+        update { s in
+            if s.tasbih.day != todayKey {
+                s.tasbih.day = todayKey
+                s.tasbih.todayTotal = 0
+            }
+            s.tasbih.count += 1
+            s.tasbih.todayTotal += 1
+            s.tasbih.allTime += 1
+        }
     }
 
     private static func demoSettings(screen: String, theme: String?) -> AppSettings {

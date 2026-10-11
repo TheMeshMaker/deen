@@ -75,6 +75,16 @@ jobs:
           chmod +x ios/scripts/screenshots.sh
           ios/scripts/screenshots.sh "${{ steps.sim.outputs.udid }}" ios/DerivedData/Build/Products/Debug-iphonesimulator/Deen.app ios/screenshots
 
+      - name: Package the Simulator build (to try it in a browser, e.g. on appetize.io)
+        run: |
+          cd ios/DerivedData/Build/Products/Debug-iphonesimulator
+          ditto -c -k --sequesterRsrc --keepParent Deen.app "$GITHUB_WORKSPACE/ios/Deen-simulator.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-app
+          path: ios/Deen-simulator.zip
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

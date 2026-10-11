@@ -33,6 +33,13 @@ targets:
         buildPhase: resources
       - path: ../core/content/src/main/assets/quran/quran-meta.json
         buildPhase: resources
+      - path: ../core/content/src/main/assets/adhkar.json
+        buildPhase: resources
+      - path: ../core/content/src/main/assets/prophet-facts.json
+        buildPhase: resources
+      - path: ../core/content/src/main/assets/hadith
+        type: folder
+        buildPhase: resources
       - path: ../core/designsystem/src/main/res/font/amiri_regular.ttf
         buildPhase: resources
       - path: ../core/designsystem/src/main/res/font/amiri_bold.ttf

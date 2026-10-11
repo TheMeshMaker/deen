@@ -173,3 +173,27 @@ private func method(_ name: String) -> CalculationMethod {
     #expect(!plan.contains { $0.prayer == .asr })
     #expect(AlertSettings(modes: [.sunrise: .adhan]).mode(for: .sunrise) == .notification)
 }
+
+@Test func adhkarAndHadithLoad() throws {
+    let assets = repoRoot.appendingPathComponent("core/content/src/main/assets")
+    let adhkar = try AdhkarLibrary.load(from: assets.appendingPathComponent("adhkar.json"))
+    #expect(adhkar.count >= 9)
+    #expect(adhkar.first?.id == "morning")
+    #expect(adhkar.flatMap(\.items).allSatisfy { $0.virtue != nil || $0.sunnah != nil })
+    #expect(adhkar.flatMap(\.items).allSatisfy { $0.text != nil || $0.isQuran })
+
+    let library = try HadithLibrary.load(hadithFolder: assets.appendingPathComponent("hadith"),
+                                         facts: assets.appendingPathComponent("prophet-facts.json"))
+    #expect(library.nawawi.count == 42)
+    #expect(library.facts.count > 50)
+    let bukhari = try #require(library.collections.first { $0.id == "bukhari" })
+    #expect(bukhari.count > 7000)
+    let book = try #require(bukhari.books.first)
+    let entries = library.hadiths(collection: "bukhari", book: book.book)
+    #expect(entries.count == book.count)
+    #expect(entries.first?.text.isEmpty == false)
+    // Same day, same hadith for everyone; consecutive days differ.
+    let a = DailyContent.pick(library.nawawi, year: 2026, month: 10, day: 11)
+    let b = DailyContent.pick(library.nawawi, year: 2026, month: 10, day: 12)
+    #expect(a != nil && a != b)
+}

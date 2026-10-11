@@ -47,6 +47,8 @@ struct TodayView: View {
                 }
             }
             .toolbarBackground(.hidden, for: .navigationBar)
+            // Toolbar buttons in the gradient's text colour, not the theme tint (green on green).
+            .tint(theme.gradient.content)
             // Light status bar and toolbar text over the dark gradient.
             .toolbarColorScheme(theme.gradient.hasDarkContent ? .light : .dark, for: .navigationBar)
         }
