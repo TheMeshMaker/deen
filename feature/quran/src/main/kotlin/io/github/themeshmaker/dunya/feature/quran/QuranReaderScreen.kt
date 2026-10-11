@@ -516,7 +516,7 @@ private fun AyahActionsSheet(
     onCopy: () -> Unit,
     onShare: () -> Unit
 ) {
-    ModalBottomSheet(onDismissRequest = onDismiss, containerColor = DeenTheme.look.card, shape = DeenTheme.look.sheetShape) {
+    ModalBottomSheet(onDismissRequest = onDismiss, containerColor = DeenTheme.look.sheetColor, shape = DeenTheme.look.sheetShape) {
         Column(Modifier.padding(start = 20.dp, end = 20.dp, bottom = 24.dp)) {
             Text(
                 stringResource(R.string.feature_quran_position, surahTitle(surah), localDigits(ayah.number)),
@@ -576,7 +576,7 @@ private fun TafsirSheet(
     onOpenFull: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    ModalBottomSheet(onDismissRequest = onDismiss, containerColor = DeenTheme.look.card, shape = DeenTheme.look.sheetShape) {
+    ModalBottomSheet(onDismissRequest = onDismiss, containerColor = DeenTheme.look.sheetColor, shape = DeenTheme.look.sheetShape) {
         Column(
             Modifier
                 .verticalScroll(rememberScrollState())

@@ -14,6 +14,16 @@
     <string name="feature_more_sources">Sources and licences</string>
     <string name="feature_more_sources_body">Where every text and recording comes from</string>
     <string name="feature_more_support">Support Deen</string>
-    <string name="feature_more_support_body">Donations are coming. Deen will always be free, without ads.</string>
+    <string name="feature_more_support_body">Deen is free, with no ads, and always will be. If it helps you, you can help it grow.</string>
     <string name="feature_more_footer">Free and open source. No ads, no tracking.</string>
+    <string name="feature_more_donate">Donate</string>
+    <string name="feature_more_donate_body">Through GitHub Sponsors. Any amount helps.</string>
+    <string name="feature_more_share">Share Deen</string>
+    <string name="feature_more_share_body">Tell a friend or your family</string>
+    <string name="feature_more_share_text">Deen: prayer times, adhan, Quran and adhkar. Free and without ads. %1$s</string>
+    <string name="feature_more_star">Star it on GitHub</string>
+    <string name="feature_more_star_body">Helps more people find it</string>
+    <string name="feature_more_report">Report a problem or an idea</string>
+    <string name="feature_more_report_body">Opens Deen\'s page on GitHub</string>
+    <string name="feature_more_dua">And please remember us in your du’a.</string>
 </resources>

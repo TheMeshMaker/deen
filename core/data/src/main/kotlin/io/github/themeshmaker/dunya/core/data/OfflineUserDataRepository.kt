@@ -4,6 +4,7 @@ import io.github.themeshmaker.dunya.core.datastore.DeenPreferencesDataSource
 import io.github.themeshmaker.dunya.core.domain.UserDataRepository
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalendarType
+import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
@@ -22,6 +23,8 @@ internal class OfflineUserDataRepository @Inject constructor(private val prefere
     override suspend fun setPrayerSettings(settings: PrayerSettings) = preferences.setPrayerSettings(settings)
 
     override suspend fun setThemeStyle(style: ThemeStyle) = preferences.setThemeStyle(style)
+
+    override suspend fun setCustomColors(colors: CustomColors) = preferences.setCustomColors(colors)
 
     override suspend fun setAlertSettings(settings: AlertSettings) = preferences.setAlertSettings(settings)
 

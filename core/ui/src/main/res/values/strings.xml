@@ -56,6 +56,10 @@
     <string name="core_ui_theme_emerald">Emerald</string>
     <string name="core_ui_theme_kiswah">Kiswah</string>
     <string name="core_ui_theme_desert">Desert</string>
+    <string name="core_ui_theme_andalus">Andalus</string>
+    <string name="core_ui_theme_rose">Taif Rose</string>
+    <string name="core_ui_theme_midnight">Midnight</string>
+    <string name="core_ui_theme_custom">Custom</string>
     <string name="core_ui_read_more">Read more</string>
     <string name="core_ui_share">Share</string>
     <string name="core_ui_copy">Copy</string>
@@ -64,4 +68,6 @@
     <string name="core_ui_clear">Clear</string>
     <string name="core_ui_daily_hadith">Hadith of the day</string>
     <string name="core_ui_daily_fact">About the Prophet ﷺ</string>
+    <string name="core_ui_language">Language</string>
+    <string name="core_ui_language_system">Phone\'s language</string>
 </resources>

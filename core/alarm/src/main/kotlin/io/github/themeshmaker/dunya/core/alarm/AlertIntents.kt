@@ -36,15 +36,19 @@ internal object AlertIntents {
         AlertKind.ADHAN, AlertKind.NOTIFICATION -> MAIN_BASE + prayer.ordinal
         AlertKind.REMINDER -> REMINDER_BASE + prayer.ordinal
         AlertKind.MASJID -> MASJID_BASE + prayer.ordinal
+        AlertKind.AFTER_ADHAN -> AFTER_BASE + prayer.ordinal
         AlertKind.TEST -> TEST_CODE
     }
 
     val allSlots: List<Pair<Prayer, AlertKind>> =
-        Prayer.entries.flatMap { listOf(it to AlertKind.ADHAN, it to AlertKind.REMINDER, it to AlertKind.MASJID) } +
+        Prayer.entries.flatMap {
+            listOf(it to AlertKind.ADHAN, it to AlertKind.REMINDER, it to AlertKind.MASJID, it to AlertKind.AFTER_ADHAN)
+        } +
             (Prayer.FAJR to AlertKind.TEST)
 
     private const val MAIN_BASE = 1000
     private const val REMINDER_BASE = 1100
     private const val MASJID_BASE = 1200
+    private const val AFTER_BASE = 1300
     private const val TEST_CODE = 1999
 }

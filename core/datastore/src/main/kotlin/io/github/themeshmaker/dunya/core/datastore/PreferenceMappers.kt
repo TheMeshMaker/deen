@@ -67,6 +67,9 @@ fun AlertPreferences.toModel() = AlertSettings(
         if (p != null && m != null) p to m else null
     },
     reminderMinutes = reminderMinutes.coerceIn(0, 60),
+    afterAdhanMinutes = afterAdhan.mapNotNull { (prayer, minutes) ->
+        enumOrNull<Prayer>(prayer)?.takeIf { it.isPrayer && minutes > 0 }?.let { it to minutes.coerceIn(1, 60) }
+    }.toMap(),
     respectSilentMode = respectSilentMode,
     useAlarmClock = useAlarmClock,
     voice = voice,
@@ -77,6 +80,7 @@ fun AlertPreferences.toModel() = AlertSettings(
 fun AlertSettings.toPreferences() = AlertPreferences(
     modes = modes.entries.associate { (prayer, mode) -> prayer.name to mode.name },
     reminderMinutes = reminderMinutes,
+    afterAdhan = afterAdhanMinutes.filterValues { it > 0 }.mapKeys { it.key.name },
     respectSilentMode = respectSilentMode,
     useAlarmClock = useAlarmClock,
     voice = voice,

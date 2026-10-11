@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Themed-icon layer (Android 13+): the arch and crescent in one colour. -->
+<!-- Themed-icon version of ic_launcher_foreground (one colour, chosen by the launcher). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -8,8 +8,11 @@
     <path
         android:fillColor="#FFFFFFFF"
         android:fillType="evenOdd"
-        android:pathData="M34.5,82 L34.5,56 A25.5,25.5 0 0,1 54,31.22 A25.5,25.5 0 0,1 73.5,56 L73.5,82 Z M40,82 L40,56 A19,19 0 0,1 54,37.67 A19,19 0 0,1 68,56 L68,82 Z" />
+        android:pathData="M65.86,25.36 L70.78,37.22 L82.64,42.14 L77.73,54 L82.64,65.86 L70.78,70.78 L65.86,82.64 L54,77.73 L42.14,82.64 L37.22,70.78 L25.36,65.86 L30.27,54 L25.36,42.14 L37.22,37.22 L42.14,25.36 L54,30.27 Z M65.16,27.06 L69.78,38.22 L80.94,42.84 L76.32,54 L80.94,65.16 L69.78,69.78 L65.16,80.94 L54,76.32 L42.84,80.94 L38.22,69.78 L27.06,65.16 L31.68,54 L27.06,42.84 L38.22,38.22 L42.84,27.06 L54,31.68 Z" />
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M52.72,48.59 A9.5,9.5 0 1,0 62.9,61.31 A8.17,8.17 0 0,1 52.72,48.59 Z" />
+        android:pathData="M42.22,45.93 A15.5,15.5 0 1,0 69.04,52.23 A13.9,13.9 0 1,1 42.22,45.93 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54.8,42.2 L58.4,46.4 L54.8,50.6 L51.2,46.4 Z" />
 </vector>

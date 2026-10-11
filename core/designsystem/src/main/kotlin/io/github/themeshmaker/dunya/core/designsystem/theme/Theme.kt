@@ -3,6 +3,7 @@ package io.github.themeshmaker.dunya.core.designsystem.theme
 import android.os.Build
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -12,15 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
 import io.github.themeshmaker.dunya.core.model.UiStyle
@@ -52,22 +57,70 @@ private val DesertGradient = DeenGradient(
     pattern = Color.White.copy(alpha = 0.12f)
 )
 
-fun ThemeStyle.gradient(): DeenGradient = when (this) {
+private val AndalusGradient = DeenGradient(
+    start = Color(0xFF0A2A66),
+    end = Color(0xFF2474C6),
+    content = Color.White,
+    pattern = Color.White.copy(alpha = 0.12f)
+)
+
+private val RoseGradient = DeenGradient(
+    start = Color(0xFF5B0E2D),
+    end = Color(0xFFC2456F),
+    content = Color.White,
+    pattern = Color.White.copy(alpha = 0.12f)
+)
+
+private val MidnightGradient = DeenGradient(
+    start = Color(0xFF070B24),
+    end = Color(0xFF2E2F7A),
+    content = Color(0xFFF3E7C4),
+    pattern = Color(0xFFE9D8A6).copy(alpha = 0.18f)
+)
+
+/** Seeds for the themes whose schemes are generated (see [seededScheme]). */
+private fun ThemeStyle.seed(custom: CustomColors): Color = when (this) {
+    ThemeStyle.ANDALUS -> Color(0xFF1D5FAF)
+    ThemeStyle.ROSE -> Color(0xFFB23A64)
+    ThemeStyle.MIDNIGHT -> Color(0xFF3F4AB8)
+    else -> moreColourful(Color(custom.start), Color(custom.end))
+}
+
+/** The custom gradient, with white or near-black content depending on how light the colours are. */
+fun CustomColors.gradient(): DeenGradient {
+    val a = Color(start)
+    val b = Color(end)
+    val light = (a.luminance() + b.luminance()) / 2f > 0.55f
+    val content = if (light) Color(0xFF15171A) else Color.White
+    return DeenGradient(start = a, end = b, content = content, pattern = content.copy(alpha = if (light) 0.10f else 0.12f))
+}
+
+fun ThemeStyle.gradient(custom: CustomColors = CustomColors()): DeenGradient = when (this) {
     ThemeStyle.EMERALD -> EmeraldGradient
     ThemeStyle.KISWAH -> KiswahGradient
     ThemeStyle.DESERT -> DesertGradient
+    ThemeStyle.ANDALUS -> AndalusGradient
+    ThemeStyle.ROSE -> RoseGradient
+    ThemeStyle.MIDNIGHT -> MidnightGradient
+    ThemeStyle.CUSTOM -> custom.gradient()
 }
 
 /**
  * The app style (UiStyle) turned into concrete values: every screen draws its cards, pages and
- * headers from here, so Classic and Sleek are the same screens in two looks.
+ * headers from here, so Classic, Sleek, Glass and Heritage are the same screens in four looks.
  */
 @Immutable
 data class DeenLook(
     val uiStyle: UiStyle,
-    /** Page background behind cards. */
+    /** Page background behind cards (always opaque; also used for sticky headers). */
     val page: Color,
+    /** Glass: a soft gradient drawn over the whole page instead of [page]. */
+    val pageBrush: Brush? = null,
     val card: Color,
+    /** Bottom sheets and other surfaces that must never be see-through. */
+    val sheetColor: Color = card,
+    /** Heritage: a second, inner rule inside each card's frame. */
+    val cardOrnament: Color? = null,
     val cardShape: Shape,
     val cardBorder: BorderStroke?,
     val cardElevation: Dp,
@@ -79,13 +132,23 @@ data class DeenLook(
     /** Horizontal page padding and the gap between cards. */
     val gutter: Dp,
     val gap: Dp,
-    /** Sleek's animations (screen transitions, rolling numbers, entrances); off in Classic and with reduced motion. */
+    /** Animations (screen transitions, rolling numbers, entrances); off in Classic and with reduced motion. */
     val motion: Boolean = false
 ) {
-    val sleek: Boolean get() = uiStyle == UiStyle.SLEEK
+    /** The immersive layout (full-bleed header, floating tab bar, large titles): Sleek and Glass. */
+    val sleek: Boolean get() = uiStyle.immersive
+    val glass: Boolean get() = uiStyle == UiStyle.GLASS
+    val heritage: Boolean get() = uiStyle == UiStyle.HERITAGE
 }
 
-private fun lookFor(uiStyle: UiStyle, colors: ColorScheme, dark: Boolean, reducedMotion: Boolean): DeenLook = when (uiStyle) {
+private fun lookFor(
+    uiStyle: UiStyle,
+    colors: ColorScheme,
+    gradient: DeenGradient,
+    dark: Boolean,
+    reducedMotion: Boolean,
+    pageHeight: Float
+): DeenLook = when (uiStyle) {
     UiStyle.CLASSIC -> DeenLook(
         uiStyle = uiStyle,
         page = colors.background,
@@ -121,6 +184,69 @@ private fun lookFor(uiStyle: UiStyle, colors: ColorScheme, dark: Boolean, reduce
         gap = 14.dp,
         motion = !reducedMotion
     )
+
+    // Glass: frosted, see-through cards over a soft wash of the theme's two colours, with a bright
+    // edge along the top of each card. Sleek's layout and motion.
+    UiStyle.GLASS -> {
+        val base = if (dark) colors.background else Color.White
+        val top = lerp(base, gradient.end, if (dark) 0.34f else 0.22f)
+        val middle = lerp(base, gradient.start, if (dark) 0.24f else 0.09f)
+        val bottom = lerp(base, gradient.end, if (dark) 0.18f else 0.15f)
+        DeenLook(
+            uiStyle = uiStyle,
+            page = middle,
+            pageBrush = Brush.verticalGradient(
+                0f to top,
+                0.55f to middle,
+                1f to bottom,
+                startY = 0f,
+                endY = pageHeight.coerceAtLeast(1f)
+            ),
+            card = if (dark) Color.White.copy(alpha = 0.07f) else Color.White.copy(alpha = 0.62f),
+            sheetColor = if (dark) colors.surfaceContainer else lerp(Color.White, gradient.end, 0.04f),
+            cardShape = SquircleShape(26.dp),
+            cardBorder = BorderStroke(
+                1.dp,
+                Brush.verticalGradient(
+                    if (dark) {
+                        listOf(Color.White.copy(alpha = 0.22f), Color.White.copy(alpha = 0.04f))
+                    } else {
+                        listOf(Color.White.copy(alpha = 0.95f), Color.White.copy(alpha = 0.30f))
+                    }
+                )
+            ),
+            cardElevation = 0.dp,
+            shadowColor = Color.Black,
+            heroShape = SquircleShape(0.dp, 0.dp, 40.dp, 40.dp),
+            sheetShape = SquircleShape(32.dp, 32.dp, 0.dp, 0.dp),
+            gutter = 18.dp,
+            gap = 12.dp,
+            motion = !reducedMotion
+        )
+    }
+
+    // Heritage: parchment pages and cards framed like a manuscript page (cut corners, a double
+    // rule in gold), with Amiri headings. Classic's layout.
+    UiStyle.HERITAGE -> {
+        val gold = lerp(colors.primary, Color(0xFFB08D3C), 0.55f)
+        val card = if (dark) Color(0xFF1D1912) else Color(0xFFFFFBF1)
+        DeenLook(
+            uiStyle = uiStyle,
+            page = if (dark) lerp(Color(0xFF14110B), colors.primary, 0.04f) else lerp(Color(0xFFF5EEDC), colors.primary, 0.03f),
+            card = card,
+            sheetColor = card,
+            cardOrnament = gold.copy(alpha = 0.45f),
+            cardShape = CutCornerShape(10.dp),
+            cardBorder = BorderStroke(1.dp, gold.copy(alpha = 0.70f)),
+            cardElevation = 0.dp,
+            shadowColor = Color.Black,
+            heroShape = CutCornerShape(18.dp),
+            sheetShape = CutCornerShape(topStart = 18.dp, topEnd = 18.dp),
+            gutter = 16.dp,
+            gap = 12.dp,
+            motion = !reducedMotion
+        )
+    }
 }
 
 private val LocalDeenGradient = staticCompositionLocalOf { EmeraldGradient }
@@ -145,16 +271,19 @@ object DeenTheme {
         get() = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) Color(0xFF34D399) else Color(0xFF0B9A65)
 }
 
-private fun ThemeStyle.lightScheme(): ColorScheme = when (this) {
+private fun ThemeStyle.lightScheme(custom: CustomColors): ColorScheme = when (this) {
     ThemeStyle.EMERALD -> emeraldLight
     ThemeStyle.KISWAH -> kiswahLight
     ThemeStyle.DESERT -> desertLight
+    else -> seededScheme(seed(custom), dark = false)
 }.withWhiteBackground()
 
-private fun ThemeStyle.darkScheme(): ColorScheme = when (this) {
+private fun ThemeStyle.darkScheme(custom: CustomColors): ColorScheme = when (this) {
     ThemeStyle.EMERALD -> emeraldDark
     ThemeStyle.KISWAH -> kiswahDark.copy(background = Color(0xFF0B0B0B), surface = Color(0xFF0B0B0B))
     ThemeStyle.DESERT -> desertDark
+    ThemeStyle.MIDNIGHT -> seededScheme(seed(custom), dark = true).copy(background = Color(0xFF070914), surface = Color(0xFF070914))
+    else -> seededScheme(seed(custom), dark = true)
 }
 
 /** Clean white pages; cards keep the theme's faint tint (surfaceContainerLow) so they still stand out. */
@@ -183,7 +312,8 @@ private fun ColorScheme.toOledBlack(): ColorScheme = copy(
 
 /**
  * @param style one of the (free) colour themes; Emerald green-and-white by default.
- * @param uiStyle the layout style (Classic or Sleek), independent of the colours.
+ * @param uiStyle the look (Classic, Sleek, Glass or Heritage), independent of the colours.
+ * @param customColors the two colours of [ThemeStyle.CUSTOM].
  * @param dynamicColor use the wallpaper's Material You colours instead (Android 12+). Off by
  *   default: Deen keeps its own look.
  */
@@ -192,6 +322,7 @@ fun DeenTheme(
     style: ThemeStyle = ThemeStyle.EMERALD,
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     uiStyle: UiStyle = UiStyle.CLASSIC,
+    customColors: CustomColors = CustomColors(),
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -204,18 +335,25 @@ fun DeenTheme(
     val base = when {
         useDynamic && dark -> dynamicDarkColorScheme(LocalContext.current)
         useDynamic -> dynamicLightColorScheme(LocalContext.current)
-        dark -> style.darkScheme()
-        else -> style.lightScheme()
+        dark -> remember(style, customColors) { style.darkScheme(customColors) }
+        else -> remember(style, customColors) { style.lightScheme(customColors) }
     }
     val colors = if (themeMode == ThemeMode.OLED_BLACK) base.toOledBlack() else base
+    val gradient = style.gradient(customColors)
+    val pageHeight = LocalWindowInfo.current.containerSize.height.toFloat()
+    val language = LocalConfiguration.current.locales[0].language
 
     CompositionLocalProvider(
-        LocalDeenGradient provides style.gradient(),
-        LocalDeenLook provides lookFor(uiStyle, colors, dark, rememberReducedMotion())
+        LocalDeenGradient provides gradient,
+        LocalDeenLook provides lookFor(uiStyle, colors, gradient, dark, rememberReducedMotion(), pageHeight)
     ) {
         MaterialTheme(
             colorScheme = colors,
-            typography = if (uiStyle == UiStyle.SLEEK) SleekTypography else DeenTypography,
+            typography = when (uiStyle) {
+                UiStyle.SLEEK, UiStyle.GLASS -> SleekTypography
+                UiStyle.HERITAGE -> HeritageTypography
+                UiStyle.CLASSIC -> DeenTypography
+            }.let { if (language in PhoneFontLanguages) it.withPhoneFont() else it },
             shapes = DeenShapes,
             content = content
         )

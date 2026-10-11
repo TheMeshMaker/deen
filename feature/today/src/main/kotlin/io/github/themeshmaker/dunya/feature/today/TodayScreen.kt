@@ -91,6 +91,7 @@ import io.github.themeshmaker.dunya.core.designsystem.component.Entrance
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
 import io.github.themeshmaker.dunya.core.designsystem.component.LightSystemBarIcons
 import io.github.themeshmaker.dunya.core.designsystem.component.RollingText
+import io.github.themeshmaker.dunya.core.designsystem.component.pageBackground
 import io.github.themeshmaker.dunya.core.designsystem.component.pressScale
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberDrawIn
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
@@ -168,7 +169,7 @@ internal fun ClassicToday(state: TodayUiState.Ready, extras: TodayExtras, action
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(look.page)
+            .pageBackground(look)
             .windowInsetsPadding(WindowInsets.screen)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = look.gutter, vertical = 8.dp),
@@ -285,7 +286,7 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
     Box(
         Modifier
             .fillMaxSize()
-            .background(look.page)
+            .pageBackground(look)
     ) {
         Column(Modifier.verticalScroll(scroll)) {
             Box(

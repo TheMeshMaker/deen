@@ -15,7 +15,7 @@ import javax.inject.Inject
 /**
  * Decides which alarms the system should hold right now: the *next* occurrence of every enabled
  * alert (docs/BLUEPRINT.md §9.3). After each alarm fires, the plan is recomputed, so at most
- * 6 alerts + 5 reminders + 5 masjid reminders are ever scheduled.
+ * 6 alerts + 5 reminders + 5 masjid reminders + 5 after-adhan reminders are ever scheduled.
  */
 class AlertPlanner @Inject constructor(private val calculator: PrayerTimeCalculator) {
 
@@ -43,6 +43,14 @@ class AlertPlanner @Inject constructor(private val calculator: PrayerTimeCalcula
                 }
                 // Independent of the prayer's own alert: someone may keep Isha silent but still walk to the masjid.
                 if (alerts.masjid.isOnFor(prayer)) addAhead(AlertKind.MASJID, alerts.masjid.minutesBefore)
+                // Also independent: a nudge to pray, whatever the adhan setting.
+                val after = alerts.afterAdhanFor(prayer)
+                if (after > 0) {
+                    val delay = Duration.ofMinutes(after.toLong())
+                    times.firstOrNull {
+                        it.plus(delay).isAfter(now)
+                    }?.let { at -> add(PlannedAlert(prayer, AlertKind.AFTER_ADHAN, at.plus(delay), at)) }
+                }
             }
         }.sortedBy { it.at }
     }

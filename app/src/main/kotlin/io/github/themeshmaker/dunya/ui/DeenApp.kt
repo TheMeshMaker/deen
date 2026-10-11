@@ -67,6 +67,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import io.github.themeshmaker.dunya.core.designsystem.component.pageBackground
 import io.github.themeshmaker.dunya.core.designsystem.component.pressScale
 import io.github.themeshmaker.dunya.core.designsystem.component.softShadow
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
@@ -182,7 +183,13 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
 
     if (floatingBar) {
         // A Surface, not just a background: it also sets the content colour for text on the page.
-        Surface(color = look.page, modifier = Modifier.fillMaxSize()) {
+        Surface(
+            color = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .fillMaxSize()
+                .pageBackground(look)
+        ) {
             Column {
                 host(Modifier.weight(1f))
                 // The bar slides away (and its space closes) when a reader opens, and back on the tabs.
@@ -228,7 +235,7 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
     )
     NavigationSuiteScaffold(
         navigationSuiteColors = NavigationSuiteDefaults.colors(
-            navigationBarContainerColor = MaterialTheme.colorScheme.surface,
+            navigationBarContainerColor = if (look.heritage) look.card else MaterialTheme.colorScheme.surface,
             navigationRailContainerColor = look.page
         ),
         layoutType = if (onTab) adaptive else NavigationSuiteType.None,

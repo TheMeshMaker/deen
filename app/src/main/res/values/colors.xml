@@ -3,6 +3,4 @@
     <!-- Window colors shown before Compose draws (match core:designsystem backgrounds). -->
     <color name="deen_window_background">#FFFFFFFF</color>
     <color name="deen_icon_background">#FF0A6C4E</color>
-    <color name="deen_icon_foreground">#FFFFFFFF</color>
-    <color name="deen_icon_accent">#FFE9C46A</color>
 </resources>

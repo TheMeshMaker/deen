@@ -48,6 +48,8 @@ class LocationViewModelTest {
         }
         override suspend fun setPrayerSettings(settings: PrayerSettings) = Unit
         override suspend fun setOnboardingComplete() = Unit
+        override suspend fun setCustomColors(colors: io.github.themeshmaker.dunya.core.model.CustomColors) = Unit
+
         override suspend fun setThemeStyle(style: ThemeStyle) = Unit
         override suspend fun setAlertSettings(settings: AlertSettings) = Unit
         override suspend fun setThemeMode(mode: ThemeMode) = Unit

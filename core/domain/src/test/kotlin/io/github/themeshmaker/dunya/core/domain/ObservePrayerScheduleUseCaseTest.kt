@@ -47,6 +47,8 @@ class ObservePrayerScheduleUseCaseTest {
         override suspend fun setLocation(location: SavedLocation) = state.update { it.copy(location = location) }
         override suspend fun setPrayerSettings(settings: PrayerSettings) = state.update { it.copy(prayerSettings = settings) }
         override suspend fun setOnboardingComplete() = state.update { it.copy(onboardingComplete = true) }
+        override suspend fun setCustomColors(colors: io.github.themeshmaker.dunya.core.model.CustomColors) = Unit
+
         override suspend fun setThemeStyle(style: ThemeStyle) = state.update { it.copy(themeStyle = style) }
         override suspend fun setAlertSettings(settings: AlertSettings) = state.update { it.copy(alertSettings = settings) }
         override suspend fun setThemeMode(mode: ThemeMode) = state.update { it.copy(themeMode = mode) }

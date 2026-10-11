@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_onboarding_welcome_title">Welcome to Deen</string>
-    <string name="feature_onboarding_welcome_body">Prayer times, adhkar and a daily hadith. Free, without ads, and it works offline.</string>
+    <string name="feature_onboarding_welcome_body">Your daily companion for prayer, the Quran and remembering Allah.</string>
     <string name="feature_onboarding_start">Get started</string>
     <string name="feature_onboarding_back">Back</string>
     <string name="feature_onboarding_finish">Done</string>
@@ -22,4 +22,10 @@
     <string name="feature_onboarding_method_suggested">Suggested</string>
     <string name="feature_onboarding_method_asr_title">ʿAsr time</string>
     <string name="feature_onboarding_method_asr_body">In the Ḥanafī school, ʿAsr begins later.</string>
+    <string name="feature_onboarding_greeting">As-salamu alaykum</string>
+    <string name="feature_onboarding_highlight_times">Prayer times and an adhan you can rely on</string>
+    <string name="feature_onboarding_highlight_quran">The Quran with tafsir and recitations</string>
+    <string name="feature_onboarding_highlight_adhkar">Adhkar, hadith and the Qibla</string>
+    <string name="feature_onboarding_promise">Free · No ads · No tracking</string>
+    <string name="feature_onboarding_step">Step %1$s of %2$s</string>
 </resources>

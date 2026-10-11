@@ -31,6 +31,7 @@ class AlertHandler @Inject constructor(
         val inputs = state.inputs()
         val zone = inputs?.location?.zoneId ?: ZoneId.systemDefault()
         val ahead = alert.kind == AlertKind.REMINDER || alert.kind == AlertKind.MASJID
+        val after = alert.kind == AlertKind.AFTER_ADHAN
         val late = alert.kind != AlertKind.TEST && Duration.between(alert.at, firedAt) > MAX_LATENESS
         val settings = inputs?.alertSettings
         try {
@@ -38,8 +39,11 @@ class AlertHandler @Inject constructor(
                 // A heads-up that arrives after the prayer has started is useless: drop it.
                 ahead && !firedAt.isBefore(alert.prayerAt) -> log(alert, firedAt, AlertOutcome.LATE)
 
+                // "Have you prayed?" long after the moment would only nag: drop it.
+                after && late -> log(alert, firedAt, AlertOutcome.LATE)
+
                 // An adhan 20 minutes late would mislead; say what the time was, quietly.
-                late && !ahead -> {
+                late && !ahead && !after -> {
                     notifications.showPrayerTime(alert, zone, silent = true)
                     log(alert, firedAt, AlertOutcome.LATE)
                 }
@@ -66,6 +70,11 @@ class AlertHandler @Inject constructor(
 
                 alert.kind == AlertKind.MASJID -> {
                     notifications.showMasjid(alert, zone)
+                    log(alert, firedAt, AlertOutcome.REMINDED)
+                }
+
+                after -> {
+                    notifications.showAfterAdhan(alert, zone)
                     log(alert, firedAt, AlertOutcome.REMINDED)
                 }
             }

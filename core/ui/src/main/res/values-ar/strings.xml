@@ -56,6 +56,10 @@
     <string name="core_ui_theme_emerald">زمرّد</string>
     <string name="core_ui_theme_kiswah">كسوة</string>
     <string name="core_ui_theme_desert">صحراء</string>
+    <string name="core_ui_theme_andalus">أندلس</string>
+    <string name="core_ui_theme_rose">ورد الطائف</string>
+    <string name="core_ui_theme_midnight">ليل</string>
+    <string name="core_ui_theme_custom">مخصّص</string>
     <string name="core_ui_read_more">اقرأ المزيد</string>
     <string name="core_ui_share">مشاركة</string>
     <string name="core_ui_copy">نسخ</string>
@@ -64,4 +68,6 @@
     <string name="core_ui_clear">مسح</string>
     <string name="core_ui_daily_hadith">حديث اليوم</string>
     <string name="core_ui_daily_fact">من سيرة النبي ﷺ</string>
+    <string name="core_ui_language">اللغة</string>
+    <string name="core_ui_language_system">لغة الهاتف</string>
 </resources>

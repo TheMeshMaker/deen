@@ -10,6 +10,7 @@ import io.github.themeshmaker.dunya.core.domain.UserDataRepository
 import io.github.themeshmaker.dunya.core.model.AdhanVoice
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.AppBuildInfo
+import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.MasjidReminder
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
@@ -66,6 +67,12 @@ class SettingsViewModel @Inject constructor(
     private fun customLabelIfPresent(fajr: Boolean): String? = if (voices.hasCustom(fajr)) "" else null
 
     fun setThemeStyle(style: ThemeStyle) = launch { userData.setThemeStyle(style) }
+
+    /** Saves the two colours and switches to the custom theme. */
+    fun setCustomColors(colors: CustomColors) = launch {
+        userData.setCustomColors(colors)
+        userData.setThemeStyle(ThemeStyle.CUSTOM)
+    }
 
     fun setThemeMode(mode: ThemeMode) = launch { userData.setThemeMode(mode) }
 

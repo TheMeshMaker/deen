@@ -6,6 +6,7 @@ import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.Ayah
 import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.City
+import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.Hadith
 import io.github.themeshmaker.dunya.core.model.HadithCollection
 import io.github.themeshmaker.dunya.core.model.HadithEntry
@@ -34,6 +35,8 @@ interface UserDataRepository {
     suspend fun setPrayerSettings(settings: PrayerSettings)
 
     suspend fun setThemeStyle(style: ThemeStyle)
+
+    suspend fun setCustomColors(colors: CustomColors)
 
     suspend fun setAlertSettings(settings: AlertSettings)
 

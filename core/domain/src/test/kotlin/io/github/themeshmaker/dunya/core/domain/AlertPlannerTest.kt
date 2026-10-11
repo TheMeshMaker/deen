@@ -92,6 +92,23 @@ class AlertPlannerTest {
     }
 
     @Test
+    fun afterAdhanRemindersFollowEachPrayerAndAreOffByDefault() {
+        val now = today[Prayer.DHUHR].minus(Duration.ofMinutes(30))
+        assertTrue(planner.plan(now, riyadh, settings, AlertSettings()).none { it.kind == AlertKind.AFTER_ADHAN })
+
+        val alerts = AlertSettings(afterAdhanMinutes = mapOf(Prayer.DHUHR to 15, Prayer.SUNRISE to 10))
+        val after = planner.plan(now, riyadh, settings, alerts).filter { it.kind == AlertKind.AFTER_ADHAN }
+        val dhuhr = after.single()
+        assertEquals(Prayer.DHUHR, dhuhr.prayer)
+        assertEquals(today[Prayer.DHUHR].plus(Duration.ofMinutes(15)), dhuhr.at)
+        assertEquals(today[Prayer.DHUHR], dhuhr.prayerAt)
+
+        // Ten minutes after the adhan, the reminder at +15 is still today's.
+        val later = planner.plan(today[Prayer.DHUHR].plus(Duration.ofMinutes(10)), riyadh, settings, alerts)
+        assertEquals(today[Prayer.DHUHR].plus(Duration.ofMinutes(15)), later.single { it.kind == AlertKind.AFTER_ADHAN }.at)
+    }
+
+    @Test
     fun masjidRemindersAreOffByDefault() {
         val plan = planner.plan(today[Prayer.FAJR].minusSeconds(3_600), riyadh, settings, AlertSettings())
         assertTrue(plan.none { it.kind == AlertKind.MASJID })

@@ -18,24 +18,59 @@ enum class ThemeStyle {
     KISWAH,
 
     /** Terracotta to warm sand. */
-    DESERT
+    DESERT,
+
+    /** Cobalt and white, after the tiles of al-Andalus. */
+    ANDALUS,
+
+    /** Deep rose, after the roses of Taif. */
+    ROSE,
+
+    /** Night indigo with moonlight gold. */
+    MIDNIGHT,
+
+    /** The user's own two gradient colours ([CustomColors]). */
+    CUSTOM
+}
+
+/** The custom theme's gradient, as ARGB colours; the more colourful one also seeds the colour scheme. */
+data class CustomColors(val start: Int = DEFAULT_START, val end: Int = DEFAULT_END) {
+    companion object {
+        val DEFAULT_START: Int = 0xFF1D2671.toInt()
+        val DEFAULT_END: Int = 0xFF2BB3A7.toInt()
+    }
 }
 
 /**
- * How the app is laid out, independent of its colours: the same screens in two looks.
+ * How the app looks, independent of its colours: the same screens in four looks.
  * Classic keeps compact cards and a standard bottom bar; Sleek uses an immersive header,
- * floating cards, roomier type and a floating navigation bar.
+ * floating cards, roomier type and a floating navigation bar; Glass is Sleek's layout with
+ * see-through cards over a soft gradient; Heritage is Classic's layout dressed as a manuscript.
  */
 enum class UiStyle {
     CLASSIC,
-    SLEEK
+    SLEEK,
+    GLASS,
+    HERITAGE;
+
+    /** Full-bleed header, floating tab bar and large titles (Sleek and Glass). */
+    val immersive: Boolean get() = this == SLEEK || this == GLASS
 }
 
-/** The app's language. SYSTEM follows the phone. */
-enum class AppLanguage(val tag: String?) {
-    SYSTEM(null),
-    ENGLISH("en"),
-    ARABIC("ar")
+/**
+ * The app's language. SYSTEM follows the phone. [nativeName] is how the language names itself,
+ * so people can find theirs whatever language the app is in. Arabic and English are written for
+ * Deen; the others are translations awaiting review by native speakers.
+ */
+enum class AppLanguage(val tag: String?, val nativeName: String?) {
+    SYSTEM(null, null),
+    ARABIC("ar", "العربية"),
+    ENGLISH("en", "English"),
+    URDU("ur", "اردو"),
+    INDONESIAN("id", "Bahasa Indonesia"),
+    TURKISH("tr", "Türkçe"),
+    BENGALI("bn", "বাংলা"),
+    FRENCH("fr", "Français")
 }
 
 /** Which calendar the monthly prayer timetable pages through. */

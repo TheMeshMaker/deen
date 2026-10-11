@@ -47,6 +47,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -87,9 +88,12 @@ fun DeenCard(
         modifier = modifier
             .fillMaxWidth()
             .pressScale(interaction, enabled = onClick != null && look.motion)
-            .softShadow(look),
+            .softShadow(look)
+            .innerRule(look),
         shape = look.cardShape,
         color = containerColor,
+        // Glass cards are see-through, so their text colour can't be derived from the fill.
+        contentColor = MaterialTheme.colorScheme.onSurface,
         border = look.cardBorder,
         onClick = onClick ?: {},
         enabled = onClick != null,
@@ -163,11 +167,13 @@ private fun DeenBarScaffold(
     content: @Composable (PaddingValues) -> Unit
 ) {
     val look = DeenTheme.look
-    val colors = TopAppBarDefaults.topAppBarColors(containerColor = look.page, scrolledContainerColor = look.page)
+    val bar = if (look.pageBrush != null) Color.Transparent else look.page
+    val colors = TopAppBarDefaults.topAppBarColors(containerColor = bar, scrolledContainerColor = bar)
     if (!large) {
         Scaffold(
-            modifier = modifier,
-            containerColor = look.page,
+            modifier = modifier.pageBackground(look),
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onBackground,
             topBar = {
                 TopAppBar(
                     title = { Text(title, style = smallStyle, maxLines = 1, overflow = TextOverflow.Ellipsis) },
@@ -186,8 +192,11 @@ private fun DeenBarScaffold(
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val hairline = MaterialTheme.colorScheme.outlineVariant
     Scaffold(
-        modifier = modifier.nestedScroll(behavior.nestedScrollConnection),
-        containerColor = look.page,
+        modifier = modifier
+            .pageBackground(look)
+            .nestedScroll(behavior.nestedScrollConnection),
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             LargeTopAppBar(
                 title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
@@ -209,6 +218,20 @@ private fun DeenBarScaffold(
         bottomBar = bottomBar,
         content = content
     )
+}
+
+/** The style's page: a plain colour, or Glass's soft gradient (drawn in window coordinates so screens line up). */
+fun Modifier.pageBackground(look: DeenLook): Modifier = look.pageBrush?.let { background(it) } ?: background(look.page)
+
+/** Heritage: a thin second rule just inside the card's frame, like a manuscript border. */
+fun Modifier.innerRule(look: DeenLook, shape: Shape = look.cardShape): Modifier {
+    val color = look.cardOrnament ?: return this
+    return drawWithContent {
+        drawContent()
+        val inset = 4.dp.toPx()
+        val outline = shape.createOutline(Size(size.width - inset * 2, size.height - inset * 2), layoutDirection, this)
+        translate(inset, inset) { drawOutline(outline, color, style = Stroke(0.75.dp.toPx())) }
+    }
 }
 
 /** Sleek's wide, soft, theme-tinted shadow under a card (nothing in Classic or dark mode). */

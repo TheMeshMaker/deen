@@ -75,7 +75,7 @@ class TodayViewModel @Inject constructor(
         TodayExtras(hadith, fact, a.lastRead, a.lastRead?.let { pos -> list.getOrNull(pos.surah - 1) })
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TodayExtras())
 
-    val uiStyleSleek: StateFlow<Boolean> = userData.userData.map { it.uiStyle == io.github.themeshmaker.dunya.core.model.UiStyle.SLEEK }
+    val uiStyleSleek: StateFlow<Boolean> = userData.userData.map { it.uiStyle.immersive }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     /** Ticks on each wall-clock second, only while the screen is visible (WhileSubscribed). */

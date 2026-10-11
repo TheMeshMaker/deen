@@ -14,6 +14,16 @@
     <string name="feature_more_sources">المصادر والتراخيص</string>
     <string name="feature_more_sources_body">مصدر كل نص وتسجيل</string>
     <string name="feature_more_support">ادعم دِين</string>
-    <string name="feature_more_support_body">التبرعات قريبًا، وسيبقى دِين مجانيًا دائمًا وبلا إعلانات.</string>
+    <string name="feature_more_support_body">دِين مجاني بلا إعلانات وسيبقى كذلك. إن نفعك فبإمكانك أن تعين على تطويره.</string>
     <string name="feature_more_footer">مجاني ومفتوح المصدر، بلا إعلانات ولا تتبّع.</string>
+    <string name="feature_more_donate">تبرّع</string>
+    <string name="feature_more_donate_body">عبر GitHub Sponsors، وأي مبلغ يعين.</string>
+    <string name="feature_more_share">شارك دِين</string>
+    <string name="feature_more_share_body">أخبر صديقًا أو أحدًا من أهلك</string>
+    <string name="feature_more_share_text">دِين: مواقيت الصلاة والأذان والقرآن والأذكار، مجانًا وبلا إعلانات. %1$s</string>
+    <string name="feature_more_star">ضع نجمة على GitHub</string>
+    <string name="feature_more_star_body">تساعد غيرك على الوصول إليه</string>
+    <string name="feature_more_report">أبلغ عن مشكلة أو اقترح فكرة</string>
+    <string name="feature_more_report_body">يفتح صفحة دِين على GitHub</string>
+    <string name="feature_more_dua">ولا تنسونا من صالح دعائكم.</string>
 </resources>

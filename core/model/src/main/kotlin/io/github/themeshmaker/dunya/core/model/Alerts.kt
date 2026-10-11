@@ -13,6 +13,8 @@ data class AlertSettings(
     val modes: Map<Prayer, AlertMode> = DEFAULT_MODES,
     /** A quiet heads-up this many minutes before each prayer that has an alert; 0 = off. */
     val reminderMinutes: Int = 0,
+    /** Optional "have you prayed?" reminder this many minutes after each prayer's adhan; missing or 0 = off. */
+    val afterAdhanMinutes: Map<Prayer, Int> = emptyMap(),
     /** When the phone is on silent/vibrate, vibrate instead of playing the adhan. */
     val respectSilentMode: Boolean = true,
     /** Use Android's alarm-clock alarms for prayer alerts (most reliable; shows an alarm icon). */
@@ -25,6 +27,10 @@ data class AlertSettings(
 ) {
     fun voiceFor(prayer: Prayer): String = if (prayer == Prayer.FAJR) fajrVoice ?: voice else voice
 
+    fun afterAdhanFor(prayer: Prayer): Int = if (prayer.isPrayer) afterAdhanMinutes[prayer] ?: 0 else 0
+
+    val afterAdhanOn: Boolean get() = Prayer.prayers.any { afterAdhanFor(it) > 0 }
+
     fun modeFor(prayer: Prayer): AlertMode {
         val mode = modes[prayer] ?: DEFAULT_MODES.getValue(prayer)
         return if (prayer == Prayer.SUNRISE && mode == AlertMode.ADHAN) AlertMode.NOTIFICATION else mode
@@ -33,6 +39,10 @@ data class AlertSettings(
     companion object {
         val DEFAULT_MODES: Map<Prayer, AlertMode> =
             Prayer.entries.associateWith { if (it == Prayer.SUNRISE) AlertMode.SILENT else AlertMode.ADHAN }
+
+        /** Choices for the after-adhan reminder (0 = off). */
+        val AFTER_ADHAN_CHOICES: List<Int> = listOf(0, 5, 10, 15, 20)
+        const val AFTER_ADHAN_DEFAULT = 10
     }
 }
 
@@ -70,6 +80,9 @@ enum class AlertKind {
 
     /** "Time to head to the masjid". */
     MASJID,
+
+    /** "Have you prayed Dhuhr?" some minutes after the adhan. */
+    AFTER_ADHAN,
 
     /** "Test adhan in 1 minute" from the reliability screen. */
     TEST

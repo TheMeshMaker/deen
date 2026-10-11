@@ -12,6 +12,8 @@ data class UserPreferences(
     val location: LocationPreferences? = null,
     val prayer: PrayerPreferences? = null,
     val themeStyle: String = "EMERALD",
+    val customStart: Int? = null,
+    val customEnd: Int? = null,
     val alerts: AlertPreferences? = null,
     val confirmedReliabilitySteps: Set<String> = emptySet(),
     val themeMode: String = "SYSTEM",
@@ -55,6 +57,7 @@ data class PrayerPreferences(
 data class AlertPreferences(
     val modes: Map<String, String> = emptyMap(),
     val reminderMinutes: Int = 0,
+    val afterAdhan: Map<String, Int> = emptyMap(),
     val respectSilentMode: Boolean = true,
     val useAlarmClock: Boolean = true,
     val voice: String = "default",

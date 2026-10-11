@@ -17,14 +17,19 @@ and a Qibla compass.
 - **Prayer times** calculated on the phone (Umm al-Qura, MWL, ISNA, Egypt, Karachi and more), with a live
   countdown and a monthly timetable by Gregorian or Hijri month
 - **Adhan alarms** built to survive battery savers, a checklist that works on every Android phone, three adhan
-  voices or your own recording (also a separate one for Fajr), reminders before the prayer
-- **Quran** (Tanzil Uthmani text): every surah, juz index, bookmarks, and it opens where you stopped
+  voices or your own recording (also a separate one for Fajr), reminders before the prayer and an optional
+  "have you prayed?" reminder 5–20 minutes after each adhan (set per prayer)
+- **Quran** (Tanzil Uthmani text): every surah, juz index, bookmarks, and it opens where you stopped; tafsir for
+  every verse; a recitation player (seven reciters) that lights up the word being recited
 - **Hadith**: a hadith of the day from an-Nawawi's Forty, a daily fact about the Prophet ﷺ, and the six books,
   the Muwatta and the Forty Qudsi in Arabic with gradings and search
 - **Adhkar** for morning, evening, after prayer, sleep, waking up, the adhan, the mosque, wudu and leaving
-  home, with tap-to-count; a **tasbih** with vibration
+  home, with tap-to-count and the reward of each from the hadith; a **tasbih** with vibration
 - **Qibla** compass, Hijri date, home-screen widget
-- **Your look**: three free colour themes, two styles (Classic and Sleek), light / dark / black, Arabic or English
+- **Your look**: six colour themes plus your own two-colour gradient, four styles (Classic, Sleek, Glass and
+  Heritage), light / dark / black
+- **Languages**: Arabic and English, plus Urdu, Indonesian, Turkish, Bengali and French (translations awaiting
+  review by native speakers; corrections welcome in [`tools/i18n`](tools/i18n/README.md))
 
 ## Builds
 

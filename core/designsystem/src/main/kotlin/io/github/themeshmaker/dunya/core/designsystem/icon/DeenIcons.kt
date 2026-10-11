@@ -88,6 +88,9 @@ object DeenIcons {
 
     @DrawableRes val Check = R.drawable.deen_ic_check
 
+    /** Deen's mark: the gold nun (ن) inside the eight-pointed star, as on the app icon. */
+    @DrawableRes val Mark = R.drawable.deen_mark
+
     @DrawableRes val Info = R.drawable.deen_ic_info
 
     @DrawableRes val Hadith = R.drawable.deen_ic_hadith

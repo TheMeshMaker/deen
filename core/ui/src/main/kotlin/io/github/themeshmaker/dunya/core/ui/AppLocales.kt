@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.LocaleManager
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.os.Build
 import android.os.LocaleList
@@ -22,12 +23,22 @@ object AppLocales {
     private const val KEY_TAG = "tag"
 
     fun current(context: Context): AppLanguage {
-        val tag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.getSystemService(LocaleManager::class.java).applicationLocales.takeIf { !it.isEmpty }?.get(0)?.language
+        val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.getSystemService(LocaleManager::class.java).applicationLocales.takeIf { !it.isEmpty }?.get(0)
         } else {
-            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_TAG, null)
-        }
-        return AppLanguage.entries.firstOrNull { it.tag != null && it.tag == tag } ?: AppLanguage.SYSTEM
+            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_TAG, null)?.let { Locale.forLanguageTag(it) }
+        } ?: return AppLanguage.SYSTEM
+        return AppLanguage.entries.firstOrNull { language ->
+            language.tag?.let { languageCode(Locale.forLanguageTag(it)) == languageCode(locale) } == true
+        } ?: AppLanguage.SYSTEM
+    }
+
+    /** Java still reports a few languages by their old codes (Indonesian "in", Hebrew "iw"). */
+    private fun languageCode(locale: Locale): String = when (val code = locale.language) {
+        "in" -> "id"
+        "iw" -> "he"
+        "ji" -> "yi"
+        else -> code
     }
 
     /** Applies [language]; on older Android the activity restarts to pick it up. */
@@ -61,4 +72,11 @@ object AppLocales {
         }
         return base.createConfigurationContext(config)
     }
+}
+
+/** The activity behind a (possibly wrapped) context, e.g. to change the app's language. */
+tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }

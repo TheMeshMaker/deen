@@ -7,6 +7,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import io.github.themeshmaker.dunya.core.designsystem.R
 
@@ -59,6 +60,54 @@ internal val SleekTypography: Typography = DeenTypography.run {
         titleLarge = titleLarge.copy(fontWeight = FontWeight.Medium)
     )
 }
+
+/**
+ * The Heritage style: headings and titles in Amiri, like a printed manuscript; body text stays in
+ * Readex Pro for legibility. Amiri's tall marks need more line height than Material's defaults.
+ */
+internal val HeritageTypography: Typography = DeenTypography.run {
+    fun TextStyle.amiri(weight: FontWeight = FontWeight.Bold) =
+        copy(fontFamily = AmiriFontFamily, fontWeight = weight, lineHeight = fontSize * 1.45f, letterSpacing = 0.sp)
+    copy(
+        displayLarge = displayLarge.amiri(FontWeight.Normal),
+        displayMedium = displayMedium.amiri(FontWeight.Normal),
+        displaySmall = displaySmall.amiri(FontWeight.Normal),
+        headlineLarge = headlineLarge.amiri(),
+        headlineMedium = headlineMedium.amiri(),
+        headlineSmall = headlineSmall.amiri(),
+        titleLarge = titleLarge.amiri(),
+        titleMedium = titleMedium.amiri()
+    )
+}
+
+/**
+ * Readex Pro has no Urdu-only letters (ٹ ڈ ڑ ے ھ…), and mixing two fonts inside a word breaks the
+ * joins between letters. For Urdu the whole interface uses the phone's own font (Android picks a
+ * Nastaliq or Naskh face for Urdu), with that font's natural line height for its tall letters.
+ */
+internal fun Typography.withPhoneFont(): Typography {
+    fun TextStyle.phone() = copy(fontFamily = FontFamily.Default, lineHeight = TextUnit.Unspecified)
+    return copy(
+        displayLarge = displayLarge.phone(),
+        displayMedium = displayMedium.phone(),
+        displaySmall = displaySmall.phone(),
+        headlineLarge = headlineLarge.phone(),
+        headlineMedium = headlineMedium.phone(),
+        headlineSmall = headlineSmall.phone(),
+        titleLarge = titleLarge.phone(),
+        titleMedium = titleMedium.phone(),
+        titleSmall = titleSmall.phone(),
+        bodyLarge = bodyLarge.phone(),
+        bodyMedium = bodyMedium.phone(),
+        bodySmall = bodySmall.phone(),
+        labelLarge = labelLarge.phone(),
+        labelMedium = labelMedium.phone(),
+        labelSmall = labelSmall.phone()
+    )
+}
+
+/** Languages whose letters Readex Pro lacks and that join across letters (see [withPhoneFont]). */
+internal val PhoneFontLanguages = setOf("ur")
 
 /** Amiri (SIL OFL 1.1), used for religious text: adhkar, hadith, the app name. */
 val AmiriFontFamily = FontFamily(

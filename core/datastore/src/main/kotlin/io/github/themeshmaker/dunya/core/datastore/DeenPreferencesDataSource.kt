@@ -3,6 +3,7 @@ package io.github.themeshmaker.dunya.core.datastore
 import androidx.datastore.core.DataStore
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalendarType
+import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
@@ -22,6 +23,10 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
             location = prefs.location?.toModel(),
             prayerSettings = prefs.prayer?.toModel(),
             themeStyle = enumOrNull<ThemeStyle>(prefs.themeStyle) ?: ThemeStyle.EMERALD,
+            customColors = CustomColors(
+                start = prefs.customStart ?: CustomColors.DEFAULT_START,
+                end = prefs.customEnd ?: CustomColors.DEFAULT_END
+            ),
             alertSettings = prefs.alerts?.toModel() ?: AlertSettings(),
             confirmedReliabilitySteps = prefs.confirmedReliabilitySteps,
             themeMode = enumOrNull<ThemeMode>(prefs.themeMode) ?: ThemeMode.SYSTEM,
@@ -48,6 +53,10 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
 
     suspend fun setThemeStyle(style: ThemeStyle) {
         dataStore.updateData { it.copy(themeStyle = style.name) }
+    }
+
+    suspend fun setCustomColors(colors: CustomColors) {
+        dataStore.updateData { it.copy(customStart = colors.start, customEnd = colors.end) }
     }
 
     suspend fun setAlertSettings(settings: AlertSettings) {

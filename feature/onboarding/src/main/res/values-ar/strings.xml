@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_onboarding_welcome_title">أهلًا بك في دِين</string>
-    <string name="feature_onboarding_welcome_body">مواقيت الصلاة والأذكار وحديث كل يوم. مجاني، بلا إعلانات، ويعمل دون إنترنت.</string>
+    <string name="feature_onboarding_welcome_body">رفيقك اليومي للصلاة والقرآن وذكر الله.</string>
     <string name="feature_onboarding_start">ابدأ</string>
     <string name="feature_onboarding_back">رجوع</string>
     <string name="feature_onboarding_finish">تم</string>
@@ -22,4 +22,10 @@
     <string name="feature_onboarding_method_suggested">مقترحة</string>
     <string name="feature_onboarding_method_asr_title">وقت العصر</string>
     <string name="feature_onboarding_method_asr_body">يبدأ وقت العصر متأخرًا في المذهب الحنفي.</string>
+    <string name="feature_onboarding_greeting">السلام عليكم ورحمة الله</string>
+    <string name="feature_onboarding_highlight_times">مواقيت دقيقة وأذان تعتمد عليه</string>
+    <string name="feature_onboarding_highlight_quran">القرآن الكريم مع التفسير والتلاوات</string>
+    <string name="feature_onboarding_highlight_adhkar">الأذكار والحديث واتجاه القبلة</string>
+    <string name="feature_onboarding_promise">مجاني · بلا إعلانات · بلا تتبّع</string>
+    <string name="feature_onboarding_step">الخطوة %1$s من %2$s</string>
 </resources>
