@@ -36,6 +36,10 @@ full collections are Arabic only until an English translation with a clear licen
 | "Aaqib Azeez" (1:27) | `core/alarm/src/main/res/raw/adhan_aaqib.ogg` | ["The Adhan - Muslim Call to Prayer - Aaqib Azeez.mp3"](https://commons.wikimedia.org/wiki/File:The_Adhan_-_Muslim_Call_to_Prayer_-_Aaqib_Azeez.mp3) by Atcovi, Wikimedia Commons. Changed: loudness normalised (−9 LUFS) and converted to Ogg Vorbis. | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); the changed file is under the same licence |
 | Your own recording | copied into the app's device-protected storage | Picked by the user | The user's own |
 
+For the iPhone app, `tools/audio/build_ios_sounds.py` converts these recordings to AAC (`ios/Deen/Resources/Sounds/adhan_*.m4a`)
+and cuts a 30-second alarm clip of each with a short fade-out (`adhan_*_alarm.caf`, the longest sound iOS allows for an
+alarm): changed versions under each recording's own licence.
+
 None of the bundled recordings includes the Fajr phrase "as-salātu khayrun mina-n-nawm"; Settings lets the user
 pick a separate recording for Fajr.
 

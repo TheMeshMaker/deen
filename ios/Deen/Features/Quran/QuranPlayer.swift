@@ -157,7 +157,7 @@ final class QuranPlayer {
 
     // MARK: Cache
 
-    static func cacheFile(reciter: Reciter, surah: Int, ayah: Int) -> URL {
+    nonisolated static func cacheFile(reciter: Reciter, surah: Int, ayah: Int) -> URL {
         let base = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         return base.appendingPathComponent("quran-audio/\(reciter.rawValue)/\(String(format: "%03d%03d", surah, ayah)).mp3")
     }

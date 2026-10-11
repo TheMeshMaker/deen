@@ -15,9 +15,9 @@ The iPhone version of Deen, written in SwiftUI for **iOS 26 and newer** so it us
 | Stage | What | State |
 |---|---|---|
 | 1 | Project, Liquid Glass design, themes (incl. your own colours), languages, welcome, location, method, Today | ✅ |
-| 2 | Adhan with AlarmKit, reminders (before, after, masjid), Quran reader | next |
-| 3 | Adhkar with rewards, tasbih, hadith | |
-| 4 | Tafsir and the recitation player, Qibla, home-screen widget, monthly timetable | |
+| 2 | Adhan with AlarmKit (and a "Full adhan" button), reminders before and after the adhan, Quran reader | ✅ |
+| 3 | Adhkar with rewards, tasbih, hadith (daily hadith and fact, an-Nawawi's Forty, the full collections) | ✅ |
+| 4 | Tafsir, recitation player with the recited word in green, Qibla, monthly timetable, home-screen widget | ✅ |
 
 ## Requirements
 
@@ -28,12 +28,22 @@ The iPhone version of Deen, written in SwiftUI for **iOS 26 and newer** so it us
 | An iPhone on **iOS 26+** | Trying it on a phone | The Simulator works too. |
 | From April 2027 | App Store uploads | Must be built with the iOS 27 SDK (Xcode 27). |
 
-**The adhan on iPhone.** iOS does not let apps run an alarm service the way Android does. Deen will use
-AlarmKit (iOS 26), which rings through silent mode with a full-screen Stop button, but alarm sounds are
-limited to about 30 seconds, so the full adhan plays when the alarm is opened.
+**The adhan on iPhone.** iOS does not let apps run an alarm service the way Android does. Deen uses
+AlarmKit (iOS 26), which rings through silent mode and Focus with a full-screen Stop button, but alarm
+sounds are limited to about 30 seconds: the alarm plays the adhan's first 30 seconds, and its "Full adhan"
+button opens Deen and plays the whole recording. Six days of alarms are scheduled at a time and refreshed
+whenever the app runs and in the background.
 
 **Donations.** The App Store allows tips to the developer only through in-app purchase, so the iOS app has
 no donate button (sharing, starring and reporting problems stay).
+
+## Trying it without a Mac
+
+- **Watch it:** every build records a walkthrough video of the real app in the Simulator (a UI test taps
+  through every screen): the `ios-walkthrough-video` artifact of the iOS workflow run.
+- **Use it in a browser:** upload the `ios-simulator-app` artifact (a zipped Simulator build) to
+  [Appetize.io](https://appetize.io) with your own account.
+- **On an iPhone:** needs a Mac with Xcode (free Apple ID, 7 days at a time) or the Apple Developer Program.
 
 ## Building without a Mac
 
