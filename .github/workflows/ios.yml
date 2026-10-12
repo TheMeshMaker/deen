@@ -119,3 +119,53 @@ jobs:
           name: ios-build-log
           path: ios/build.log
           if-no-files-found: ignore
+
+  # An iPhone build for installing with your own Apple ID from Windows or Linux (e.g. Sideloadly or xtool; see
+  # ios/README.md). Unsigned apart from an ad-hoc signature that carries the entitlements (the app group).
+  iphone:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Use the newest released Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | grep -v -i beta | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Generate the Xcode project
+        run: |
+          brew install xcodegen
+          cd ios && xcodegen generate
+
+      - name: Build for iPhone
+        run: |
+          set -o pipefail
+          xcodebuild build -project ios/Deen.xcodeproj -scheme Deen -configuration Release \
+            -destination "generic/platform=iOS" -derivedDataPath ios/DerivedData \
+            CODE_SIGNING_ALLOWED=NO | tee ios/iphone-build.log | (grep -E "error:|BUILD" || true)
+
+      - name: Package Deen.ipa
+        run: |
+          APP=ios/DerivedData/Build/Products/Release-iphoneos/Deen.app
+          find "$APP" \( -name "*.framework" -o -name "*.dylib" \) | while read -r f; do codesign -f -s - "$f"; done
+          codesign -f -s - --entitlements ios/Widget/DeenWidget.entitlements "$APP/PlugIns/DeenWidget.appex"
+          codesign -f -s - --entitlements ios/Deen/Deen.entitlements "$APP"
+          codesign -d --entitlements - "$APP"
+          mkdir -p ios/ipa/Payload
+          cp -R "$APP" ios/ipa/Payload/
+          (cd ios/ipa && zip -qry ../Deen-iphone.ipa Payload)
+          ls -la ios/Deen-iphone.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-iphone-ipa
+          path: ios/Deen-iphone.ipa
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-iphone-build-log
+          path: ios/iphone-build.log
+          if-no-files-found: ignore

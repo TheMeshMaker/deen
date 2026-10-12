@@ -50,9 +50,11 @@ no donate button (sharing, starring and reporting problems stay).
   through every screen): the `ios-walkthrough-video` artifact of the iOS workflow run.
 - **Use it in a browser elsewhere:** upload the `ios-simulator-app` artifact (a zipped Simulator build) to
   [Appetize.io](https://appetize.io) with your own account.
-- **On an iPhone:** needs a Mac with Xcode (free Apple ID, 7 days at a time) or the Apple Developer Program.
-  [xtool](https://github.com/xtool-org/xtool) can build and install from Windows (WSL) or Linux instead of a
-  Mac, but still needs the iPhone plugged in; there is no emulator that runs current iOS apps on Windows.
+- **On an iPhone, from Windows:** every build also makes `Deen-iphone.ipa` (the `ios-iphone-ipa` artifact).
+  Install it with your own Apple ID using [Sideloadly](https://sideloadly.io) (Windows needs Apple's iTunes and
+  iCloud from apple.com, not the Microsoft Store versions) or [xtool](https://github.com/xtool-org/xtool) (WSL).
+  With a free Apple ID the install lasts 7 days; turn on Settings → Privacy & Security → Developer Mode on the
+  iPhone. There is no emulator that runs current iOS apps on Windows.
 
 ## Building without a Mac
 
