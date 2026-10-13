@@ -49,4 +49,31 @@
         <item quantity="one">%1$s ayet</item>
         <item quantity="other">%1$s ayet</item>
     </plurals>
+    <string name="feature_quran_khatmah">Hatim</string>
+    <string name="feature_quran_khatmah_invite">Kur\'an\'ı hatmetmeyi planlayın</string>
+    <string name="feature_quran_khatmah_complete">Tamamlandı. Allah kabul etsin.</string>
+    <string name="feature_quran_khatmah_done_today">Bugünün bölümü tamam</string>
+    <string name="feature_quran_khatmah_today">Bugün: %1$s–%2$s. sayfalar</string>
+    <string name="feature_quran_khatmah_status">%2$s günün %1$s. günü · %4$s sayfanın %3$s\'i</string>
+    <plurals name="feature_quran_khatmah_behind">
+        <item quantity="one">%1$s sayfa geride</item>
+        <item quantity="other">%1$s sayfa geride</item>
+    </plurals>
+    <string name="feature_quran_khatmah_new">Yeni hatim</string>
+    <string name="feature_quran_khatmah_end">Planı bitir</string>
+    <string name="feature_quran_khatmah_read">Bugünün bölümünü oku</string>
+    <string name="feature_quran_khatmah_title">Hatim planı</string>
+    <string name="feature_quran_khatmah_body">Kur\'an\'ı kaç günde bitireceğinizi seçin. Deen, Medine Mushafı\'nın 604 sayfasını günlük bölümlere ayırır ve okudukça ilerlemenizi takip eder.</string>
+    <string name="feature_quran_khatmah_days">Bitirme süresi</string>
+    <plurals name="feature_quran_khatmah_days_choice">
+        <item quantity="one">%1$s gün</item>
+        <item quantity="other">%1$s gün</item>
+    </plurals>
+    <plurals name="feature_quran_khatmah_per_day">
+        <item quantity="one">Günde yaklaşık %1$s sayfa</item>
+        <item quantity="other">Günde yaklaşık %1$s sayfa</item>
+    </plurals>
+    <string name="feature_quran_khatmah_from_start">Fatiha\'dan</string>
+    <string name="feature_quran_khatmah_from_here">Kaldığım yerden</string>
+    <string name="feature_quran_khatmah_start">Başla</string>
 </resources>

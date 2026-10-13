@@ -67,4 +67,27 @@
     <string name="core_ui_daily_fact">নবী ﷺ সম্পর্কে</string>
     <string name="core_ui_language">ভাষা</string>
     <string name="core_ui_language_system">ফোনের ভাষা</string>
+    <string name="core_ui_event_new_year">হিজরি নববর্ষ</string>
+    <string name="core_ui_event_ashura">আশুরার দিন</string>
+    <string name="core_ui_event_ramadan">রমজান</string>
+    <string name="core_ui_event_last_ten">শেষ দশ রাত</string>
+    <string name="core_ui_event_eid_fitr">ঈদুল ফিতর</string>
+    <string name="core_ui_event_arafah">আরাফার দিন</string>
+    <string name="core_ui_event_eid_adha">ঈদুল আযহা</string>
+    <string name="core_ui_event_white_days">আইয়ামে বীয</string>
+    <string name="core_ui_event_new_year_detail">১ মুহাররম, হিজরি বছরের প্রথম দিন।</string>
+    <string name="core_ui_event_ashura_detail">এর আগের দিনসহ রোজা রাখা মুস্তাহাব।</string>
+    <string name="core_ui_event_ramadan_detail">রোজার মাস, যে মাসে কুরআন নাজিল হয়েছে।</string>
+    <string name="core_ui_event_last_ten_detail">বিজোড় রাতগুলোতে লাইলাতুল কদর তালাশ করুন।</string>
+    <string name="core_ui_event_eid_fitr_detail">রমজান শেষের ঈদ, ঈদের নামাজসহ।</string>
+    <string name="core_ui_event_arafah_detail">যারা হজে নেই তাদের জন্য রোজা রাখা মুস্তাহাব।</string>
+    <string name="core_ui_event_eid_adha_detail">কুরবানির ঈদ, ঈদের নামাজসহ।</string>
+    <string name="core_ui_event_white_days_detail">হিজরি মাসের ১৩ থেকে ১৫ তারিখ: রোজা রাখার মুস্তাহাব দিন।</string>
+    <string name="core_ui_event_now">এখন</string>
+    <string name="core_ui_event_today">আজ</string>
+    <string name="core_ui_event_tomorrow">আগামীকাল</string>
+    <plurals name="core_ui_event_in_days">
+        <item quantity="one">%d দিন পর</item>
+        <item quantity="other">%d দিন পর</item>
+    </plurals>
 </resources>

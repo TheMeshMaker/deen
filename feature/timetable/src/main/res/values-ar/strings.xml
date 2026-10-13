@@ -14,4 +14,17 @@
     <string name="feature_timetable_short_asr">العصر</string>
     <string name="feature_timetable_short_maghrib">المغرب</string>
     <string name="feature_timetable_short_isha">العشاء</string>
+    <string name="feature_timetable_islamic_calendar">التقويم الهجري</string>
+    <string name="feature_timetable_sunnah_fasts">صيام السنة</string>
+    <string name="feature_timetable_sunnah_fasts_body">الإثنين والخميس، والأيام البيض (١٣–١٥) من كل شهر هجري.</string>
+    <string name="feature_timetable_calendar_note">التواريخ وفق تقويم أم القرى مع تعديلك للتاريخ الهجري، وقد تختلف رؤية الهلال المحلية بيوم.</string>
+    <string name="feature_timetable_next_day">القادم</string>
+    <plurals name="feature_timetable_days_to_go">
+        <item quantity="zero">%1$s يوم متبقٍ</item>
+        <item quantity="one">يوم واحد متبقٍ</item>
+        <item quantity="two">يومان متبقيان</item>
+        <item quantity="few">%1$s أيام متبقية</item>
+        <item quantity="many">%1$s يومًا متبقيًا</item>
+        <item quantity="other">%1$s يوم متبقٍ</item>
+    </plurals>
 </resources>

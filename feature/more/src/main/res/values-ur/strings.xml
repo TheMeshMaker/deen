@@ -27,4 +27,8 @@
     <string name="feature_more_report">کوئی مسئلہ یا تجویز بتائیں</string>
     <string name="feature_more_report_body">GitHub پر دین کا صفحہ کھولتا ہے</string>
     <string name="feature_more_dua">اور براہِ کرم ہمیں اپنی دعاؤں میں یاد رکھیں۔</string>
+    <string name="feature_more_tracker">نماز ٹریکر</string>
+    <string name="feature_more_tracker_body">نمازوں پر نشان لگائیں اور تسلسل دیکھیں</string>
+    <string name="feature_more_calendar">اسلامی کیلنڈر</string>
+    <string name="feature_more_calendar_body">رمضان، عیدیں، عرفہ اور ایامِ بیض</string>
 </resources>

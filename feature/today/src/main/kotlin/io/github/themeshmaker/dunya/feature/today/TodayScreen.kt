@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,7 +41,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -65,10 +68,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -90,7 +97,10 @@ import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.Entrance
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
 import io.github.themeshmaker.dunya.core.designsystem.component.LightSystemBarIcons
+import io.github.themeshmaker.dunya.core.designsystem.component.LocalFloatingBarInset
 import io.github.themeshmaker.dunya.core.designsystem.component.RollingText
+import io.github.themeshmaker.dunya.core.designsystem.component.ThinProgress
+import io.github.themeshmaker.dunya.core.designsystem.component.liquidGlass
 import io.github.themeshmaker.dunya.core.designsystem.component.pageBackground
 import io.github.themeshmaker.dunya.core.designsystem.component.pressScale
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberDrawIn
@@ -100,28 +110,38 @@ import io.github.themeshmaker.dunya.core.designsystem.component.rise
 import io.github.themeshmaker.dunya.core.designsystem.component.screen
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeenOnGradient
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+import io.github.themeshmaker.dunya.core.domain.KhatmahProgress
 import io.github.themeshmaker.dunya.core.domain.PrayerSchedule
+import io.github.themeshmaker.dunya.core.domain.PrayerTracker
 import io.github.themeshmaker.dunya.core.model.AlertMode
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.Prayer
+import io.github.themeshmaker.dunya.core.prayer.IslamicEvents
 import io.github.themeshmaker.dunya.core.prayer.NextPrayer
+import io.github.themeshmaker.dunya.core.prayer.NightTimes
+import io.github.themeshmaker.dunya.core.prayer.UpcomingEvent
 import io.github.themeshmaker.dunya.core.ui.DailyFactCard
 import io.github.themeshmaker.dunya.core.ui.DailyHadithCard
 import io.github.themeshmaker.dunya.core.ui.currentLocale
 import io.github.themeshmaker.dunya.core.ui.displayName
+import io.github.themeshmaker.dunya.core.ui.eventWhen
 import io.github.themeshmaker.dunya.core.ui.hijriDateText
 import io.github.themeshmaker.dunya.core.ui.isArabicUi
 import io.github.themeshmaker.dunya.core.ui.labelRes
 import io.github.themeshmaker.dunya.core.ui.localDigits
 import io.github.themeshmaker.dunya.core.ui.rememberDateFormatter
+import io.github.themeshmaker.dunya.core.ui.rememberShortDateFormatter
 import io.github.themeshmaker.dunya.core.ui.rememberTimeFormatter
 import io.github.themeshmaker.dunya.core.ui.shortLabelRes
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.TextStyle
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -136,8 +156,13 @@ class TodayActions(
     val onOpenSettings: () -> Unit,
     val onOpenQuran: (surah: Int, ayah: Int) -> Unit,
     val onOpenHadith: (number: Int) -> Unit,
-    val onOpenFacts: () -> Unit
+    val onOpenFacts: () -> Unit,
+    val onOpenTracker: () -> Unit,
+    val onOpenCalendar: () -> Unit
 )
+
+/** What the prayer rows can change: the alert mode, and whether the prayer was prayed. */
+internal class PrayerRowActions(val onCycleAlert: (Prayer) -> Unit, val onTogglePrayed: (Prayer, Boolean) -> Unit)
 
 @Composable
 internal fun TodayRoute(actions: TodayActions, viewModel: TodayViewModel = hiltViewModel()) {
@@ -150,10 +175,17 @@ internal fun TodayRoute(actions: TodayActions, viewModel: TodayViewModel = hiltV
     when (val s = state) {
         TodayUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
 
-        is TodayUiState.Ready -> if (DeenTheme.look.sleek) {
-            SleekToday(s, extras, actions, viewModel::cycleAlert)
-        } else {
-            ClassicToday(s, extras, actions, viewModel::cycleAlert)
+        is TodayUiState.Ready -> {
+            val rows = PrayerRowActions(
+                onCycleAlert = viewModel::cycleAlert,
+                onTogglePrayed = { prayer, prayed -> viewModel.setPrayed(s.schedule.date, prayer, prayed) }
+            )
+            val look = DeenTheme.look
+            when {
+                look.liquid -> LiquidToday(s, extras, actions, rows)
+                look.sleek -> SleekToday(s, extras, actions, rows)
+                else -> ClassicToday(s, extras, actions, rows)
+            }
         }
     }
 }
@@ -161,7 +193,7 @@ internal fun TodayRoute(actions: TodayActions, viewModel: TodayViewModel = hiltV
 // ---------------------------------------------------------------------------------------------- Classic
 
 @Composable
-internal fun ClassicToday(state: TodayUiState.Ready, extras: TodayExtras, actions: TodayActions, onCycleAlert: (Prayer) -> Unit) {
+internal fun ClassicToday(state: TodayUiState.Ready, extras: TodayExtras, actions: TodayActions, rows: PrayerRowActions) {
     val schedule = state.schedule
     val zone = schedule.location.zoneId
     val isFriday = schedule.date.dayOfWeek == DayOfWeek.FRIDAY
@@ -185,9 +217,9 @@ internal fun ClassicToday(state: TodayUiState.Ready, extras: TodayExtras, action
         NextPrayerCard(state.next, state.now, zone, isFriday)
         QuickActions(actions)
         DeenCard(contentPadding = PaddingValues(vertical = 8.dp)) {
-            PrayerList(schedule, state.next, state.now, isFriday, state.alerts, onCycleAlert)
+            PrayerList(state, extras.prayed[schedule.date].orEmpty(), isFriday, rows)
         }
-        BelowTheTimes(schedule, extras, actions)
+        BelowTheTimes(state, extras, actions)
     }
 }
 
@@ -271,14 +303,11 @@ private fun NextPrayerCard(next: NextPrayer, now: Instant, zone: ZoneId, isFrida
  * and the prayer list floats up over the bottom of the header.
  */
 @Composable
-internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions: TodayActions, onCycleAlert: (Prayer) -> Unit) {
+internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions: TodayActions, rows: PrayerRowActions) {
     val schedule = state.schedule
-    val zone = schedule.location.zoneId
     val isFriday = schedule.date.dayOfWeek == DayOfWeek.FRIDAY
     val look = DeenTheme.look
     val gradient = DeenTheme.gradient
-    val timeFormatter = rememberTimeFormatter()
-    val name = stringResource(state.next.prayer.labelRes(isFriday && state.next.prayer == Prayer.DHUHR))
     val scroll = rememberScrollState()
     val entrance = rememberEntrance()
     val drift = rememberPatternDrift(PATTERN_CELL)
@@ -333,41 +362,8 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
                                 )
                             }
                         }
-                        Text(
-                            "${rememberDateFormatter().format(schedule.date)} · ${hijriDateText(schedule.hijriDate)}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = gradient.content.copy(alpha = 0.8f),
-                            textAlign = TextAlign.Center
-                        )
-                        Box(
-                            Modifier
-                                .padding(top = 20.dp)
-                                .widthIn(max = 260.dp)
-                                .fillMaxWidth(0.68f)
-                                .aspectRatio(1f),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            val drawIn = rememberDrawIn()
-                            val progress by animateFloatAsState(state.next.progress(state.now), DeenMotion.gentle(), label = "ring")
-                            ProgressRing(progress * drawIn, gradient.content)
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                // When the next prayer changes, the old name lifts away and the new one rises in.
-                                AnimatedContent(
-                                    targetState = name,
-                                    transitionSpec = {
-                                        (fadeIn(tween(300)) + slideInVertically(DeenMotion.snappy()) { it / 2 }) togetherWith
-                                            (fadeOut(tween(200)) + slideOutVertically(DeenMotion.snappy()) { -it / 2 })
-                                    },
-                                    label = "nextPrayer"
-                                ) { shown -> Text(shown, style = MaterialTheme.typography.headlineMedium) }
-                                Countdown(Duration.between(state.now, state.next.at).coerceAtLeast(Duration.ZERO), name, 34f)
-                                Text(
-                                    stringResource(R.string.feature_today_at, timeFormatter.format(state.next.at.atZone(zone))),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = gradient.content.copy(alpha = 0.85f)
-                                )
-                            }
-                        }
+                        DateLine(schedule)
+                        RingCountdown(state, isFriday, Modifier.padding(top = 20.dp))
                     }
                 }
             }
@@ -378,11 +374,11 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
                 verticalArrangement = Arrangement.spacedBy(look.gap)
             ) {
                 DeenCard(contentPadding = PaddingValues(vertical = 10.dp), modifier = Modifier.rise(entrance, 0, distance = 40.dp)) {
-                    PrayerList(schedule, state.next, state.now, isFriday, state.alerts, onCycleAlert)
+                    PrayerList(state, extras.prayed[schedule.date].orEmpty(), isFriday, rows)
                 }
                 if (state.alarmSetupNeeded) Box(Modifier.rise(entrance, 1)) { SetupBanner(actions.onOpenReliability) }
                 Box(Modifier.rise(entrance, 2)) { QuickActions(actions) }
-                BelowTheTimes(schedule, extras, actions, entrance, firstIndex = 3)
+                BelowTheTimes(state, extras, actions, entrance, firstIndex = 3)
             }
         }
         // Keeps the (white) status-bar icons readable once the header scrolls away.
@@ -396,6 +392,135 @@ internal fun SleekToday(state: TodayUiState.Ready, extras: TodayExtras, actions:
 }
 
 private val PATTERN_CELL = 48.dp
+
+// ---------------------------------------------------------------------------------------------- Liquid
+
+/**
+ * Liquid, like Today on iOS: the theme's full gradient (the app's backdrop) behind everything, the
+ * countdown ring on it, and the times, actions and cards as panes of dark glass that bend it.
+ */
+@Composable
+internal fun LiquidToday(state: TodayUiState.Ready, extras: TodayExtras, actions: TodayActions, rows: PrayerRowActions) {
+    val schedule = state.schedule
+    val isFriday = schedule.date.dayOfWeek == DayOfWeek.FRIDAY
+    val gradient = DeenTheme.gradient
+    val entrance = rememberEntrance()
+    LightSystemBarIcons()
+    DeenOnGradient {
+        CompositionLocalProvider(LocalContentColor provides gradient.content) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .windowInsetsPadding(WindowInsets.screen)
+                    .padding(horizontal = DeenTheme.look.gutter),
+                verticalArrangement = Arrangement.spacedBy(DeenTheme.look.gap),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    GlassChip(onClick = actions.onChangeLocation) {
+                        Icon(painterResource(DeenIcons.Location), contentDescription = null, modifier = Modifier.size(18.dp))
+                        Text(
+                            schedule.location.displayName(),
+                            style = MaterialTheme.typography.titleSmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(start = 6.dp)
+                        )
+                    }
+                    Spacer(Modifier.weight(1f))
+                    GlassChip(onClick = actions.onOpenSettings, circle = true) {
+                        Icon(
+                            painterResource(DeenIcons.Settings),
+                            contentDescription = stringResource(R.string.feature_today_settings),
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                }
+                DateLine(schedule)
+                RingCountdown(state, isFriday, Modifier.padding(vertical = 8.dp))
+                DeenCard(contentPadding = PaddingValues(vertical = 10.dp), modifier = Modifier.rise(entrance, 0, distance = 40.dp)) {
+                    PrayerList(state, extras.prayed[schedule.date].orEmpty(), isFriday, rows)
+                }
+                if (state.alarmSetupNeeded) Box(Modifier.rise(entrance, 1)) { SetupBanner(actions.onOpenReliability) }
+                Box(Modifier.rise(entrance, 2)) { QuickActions(actions) }
+                BelowTheTimes(state, extras, actions, entrance, firstIndex = 3)
+                // Clear of the floating tab bar.
+                Spacer(Modifier.navigationBarsPadding().height(LocalFloatingBarInset.current))
+            }
+        }
+    }
+}
+
+/** A small capsule (or circle) of glass with content in it, e.g. the place name. */
+@Composable
+private fun GlassChip(onClick: () -> Unit, circle: Boolean = false, content: @Composable () -> Unit) {
+    val interaction = remember { MutableInteractionSource() }
+    Row(
+        Modifier
+            .then(if (circle) Modifier.size(44.dp) else Modifier.height(40.dp))
+            .liquidGlass(RoundedCornerShape(percent = 50), interactionSource = interaction, pressScale = 0.94f)
+            .clip(CircleShape)
+            .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onClick)
+            .padding(horizontal = if (circle) 0.dp else 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        if (circle) Box(Modifier.size(44.dp), contentAlignment = Alignment.Center) { content() } else content()
+    }
+}
+
+// ---------------------------------------------------------------------------------------------- Shared
+
+@Composable
+private fun DateLine(schedule: PrayerSchedule) {
+    val gradient = DeenTheme.gradient
+    Text(
+        "${rememberDateFormatter().format(schedule.date)} · ${hijriDateText(schedule.hijriDate)}",
+        style = MaterialTheme.typography.bodyMedium,
+        color = gradient.content.copy(alpha = 0.8f),
+        textAlign = TextAlign.Center
+    )
+}
+
+/** The next prayer's name, countdown and time inside the ring. */
+@Composable
+private fun RingCountdown(state: TodayUiState.Ready, isFriday: Boolean, modifier: Modifier = Modifier) {
+    val gradient = DeenTheme.gradient
+    val timeFormatter = rememberTimeFormatter()
+    val zone = state.schedule.location.zoneId
+    val name = stringResource(state.next.prayer.labelRes(isFriday && state.next.prayer == Prayer.DHUHR))
+    Box(
+        modifier
+            .widthIn(max = 260.dp)
+            .fillMaxWidth(0.68f)
+            .aspectRatio(1f),
+        contentAlignment = Alignment.Center
+    ) {
+        val drawIn = rememberDrawIn()
+        val progress by animateFloatAsState(state.next.progress(state.now), DeenMotion.gentle(), label = "ring")
+        ProgressRing(progress * drawIn, gradient.content)
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // When the next prayer changes, the old name lifts away and the new one rises in.
+            AnimatedContent(
+                targetState = name,
+                transitionSpec = {
+                    (fadeIn(tween(300)) + slideInVertically(DeenMotion.snappy()) { it / 2 }) togetherWith
+                        (fadeOut(tween(200)) + slideOutVertically(DeenMotion.snappy()) { -it / 2 })
+                },
+                label = "nextPrayer"
+            ) { shown -> Text(shown, style = MaterialTheme.typography.headlineMedium, color = gradient.content) }
+            CompositionLocalProvider(LocalContentColor provides gradient.content) {
+                Countdown(Duration.between(state.now, state.next.at).coerceAtLeast(Duration.ZERO), name, 34f)
+            }
+            Text(
+                stringResource(R.string.feature_today_at, timeFormatter.format(state.next.at.atZone(zone))),
+                style = MaterialTheme.typography.titleMedium,
+                color = gradient.content.copy(alpha = 0.85f)
+            )
+        }
+    }
+}
 
 /**
  * Time elapsed towards the next prayer. Sleek adds a soft light behind the countdown that slowly
@@ -452,8 +577,6 @@ private fun ProgressRing(progress: Float, color: Color) {
     }
 }
 
-// ---------------------------------------------------------------------------------------------- Shared
-
 /** HH:MM:SS for the eye; TalkBack hears a polite minute-level sentence instead of every second. */
 @Composable
 private fun Countdown(remaining: Duration, prayerName: String, sizeSp: Float) {
@@ -485,7 +608,7 @@ private fun QuickActions(actions: TodayActions) {
         QuickAction(DeenIcons.Qibla, stringResource(R.string.feature_today_qibla), actions.onOpenQibla)
         QuickAction(DeenIcons.Calendar, stringResource(R.string.feature_today_timetable), actions.onOpenTimetable)
         QuickAction(DeenIcons.Tasbih, stringResource(R.string.feature_today_tasbih), actions.onOpenTasbih)
-        QuickAction(DeenIcons.Settings, stringResource(R.string.feature_today_settings), actions.onOpenSettings)
+        QuickAction(DeenIcons.Ok, stringResource(R.string.feature_today_tracker_short), actions.onOpenTracker)
     }
 }
 
@@ -495,11 +618,11 @@ private fun QuickAction(icon: Int, label: String, onClick: () -> Unit) {
     val interaction = remember { MutableInteractionSource() }
     Column(
         Modifier
-            .pressScale(interaction, enabled = look.motion, pressed = 0.9f)
+            .pressScale(interaction, enabled = look.motion && !look.liquid, pressed = 0.9f)
             .clip(MaterialTheme.shapes.large)
             .clickable(
                 interactionSource = interaction,
-                indication = androidx.compose.material3.ripple(),
+                indication = if (look.liquid) null else androidx.compose.material3.ripple(),
                 role = Role.Button,
                 onClick = onClick
             )
@@ -509,33 +632,69 @@ private fun QuickAction(icon: Int, label: String, onClick: () -> Unit) {
         Box(
             Modifier
                 .size(56.dp)
-                .clip(if (look.sleek) CircleShape else MaterialTheme.shapes.large)
-                .background(if (look.sleek) look.card else MaterialTheme.colorScheme.primary.copy(alpha = 0.10f))
-                .then(if (look.sleek) Modifier.border(look.cardBorder ?: BorderStroke(0.dp, Color.Transparent), CircleShape) else Modifier),
+                .then(
+                    when {
+                        look.liquid -> Modifier.liquidGlass(
+                            RoundedCornerShape(percent = 50),
+                            interactionSource = interaction,
+                            pressScale = 0.9f
+                        )
+
+                        look.sleek ->
+                            Modifier
+                                .clip(CircleShape)
+                                .background(look.card)
+                                .border(look.cardBorder ?: BorderStroke(0.dp, Color.Transparent), CircleShape)
+
+                        else ->
+                            Modifier
+                                .clip(MaterialTheme.shapes.large)
+                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f))
+                    }
+                ),
             contentAlignment = Alignment.Center
         ) {
             Icon(painterResource(icon), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
         }
-        Text(label, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(top = 6.dp), maxLines = 1)
+        Text(
+            label,
+            style = MaterialTheme.typography.labelMedium,
+            color = if (look.liquid) LocalContentColor.current else MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(top = 6.dp),
+            maxLines = 1
+        )
     }
 }
 
-/** Continue reading, hadith of the day, fact of the day and the method chip. */
+/** The tracker, the next Islamic day, the khatmah or continue reading, hadith and fact of the day, and the method chip. */
 @Composable
 private fun BelowTheTimes(
-    schedule: PrayerSchedule,
+    state: TodayUiState.Ready,
     extras: TodayExtras,
     actions: TodayActions,
     entrance: Entrance? = null,
     firstIndex: Int = 0
 ) {
+    val schedule = state.schedule
     fun Modifier.enter(i: Int) = if (entrance != null) rise(entrance, firstIndex + i) else this
+    TrackerCard(extras.prayed, schedule.date, actions.onOpenTracker, Modifier.enter(0))
+    val event = remember(schedule.date, schedule.settings.hijriOffsetDays) {
+        IslamicEvents.next(schedule.date, schedule.settings.hijriOffsetDays)
+    }
+    if (event != null) UpcomingCard(event, schedule.date, actions.onOpenCalendar, Modifier.enter(1))
+
+    val plan = extras.khatmah
+    val pages = extras.pages
     val lastRead = extras.lastRead
     val surah = extras.lastReadSurah
-    if (lastRead != null && surah != null) {
-        DeenCard(onClick = { actions.onOpenQuran(lastRead.surah, lastRead.ayah) }, modifier = Modifier.enter(0)) {
+    if (plan != null && pages != null) {
+        val progress = remember(plan, lastRead, pages, schedule.date) { KhatmahProgress.of(plan, lastRead, pages, schedule.date) }
+        val target = lastRead?.takeIf { pages.pageOf(it) >= plan.startPage && !progress.complete } ?: pages.start(progress.todayFrom)
+        KhatmahCard(progress, onOpen = { actions.onOpenQuran(target.surah, target.ayah) }, modifier = Modifier.enter(2))
+    } else if (lastRead != null && surah != null) {
+        DeenCard(onClick = { actions.onOpenQuran(lastRead.surah, lastRead.ayah) }, modifier = Modifier.enter(2)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Icon(painterResource(DeenIcons.Quran), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                IconTile(DeenIcons.Quran)
                 Column(Modifier.weight(1f)) {
                     Text(
                         stringResource(R.string.feature_today_continue_quran),
@@ -555,9 +714,9 @@ private fun BelowTheTimes(
             }
         }
     } else {
-        DeenCard(onClick = { actions.onOpenQuran(1, 1) }, modifier = Modifier.enter(0)) {
+        DeenCard(onClick = { actions.onOpenQuran(1, 1) }, modifier = Modifier.enter(2)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Icon(painterResource(DeenIcons.Quran), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                IconTile(DeenIcons.Quran)
                 Text(
                     stringResource(R.string.feature_today_start_quran),
                     style = MaterialTheme.typography.titleMedium,
@@ -566,8 +725,8 @@ private fun BelowTheTimes(
             }
         }
     }
-    extras.hadith?.let { DailyHadithCard(it, onClick = { actions.onOpenHadith(it.number) }, modifier = Modifier.enter(1)) }
-    extras.fact?.let { DailyFactCard(it, onClick = actions.onOpenFacts, modifier = Modifier.enter(2)) }
+    extras.hadith?.let { DailyHadithCard(it, onClick = { actions.onOpenHadith(it.number) }, modifier = Modifier.enter(3)) }
+    extras.fact?.let { DailyFactCard(it, onClick = actions.onOpenFacts, modifier = Modifier.enter(4)) }
     AssistChip(
         onClick = actions.onChangeMethod,
         label = {
@@ -581,43 +740,290 @@ private fun BelowTheTimes(
         },
         leadingIcon = { Icon(painterResource(DeenIcons.Tune), contentDescription = null, modifier = Modifier.size(18.dp)) },
         shape = CircleShape,
-        colors = AssistChipDefaults.assistChipColors(leadingIconContentColor = MaterialTheme.colorScheme.primary),
+        colors = AssistChipDefaults.assistChipColors(
+            labelColor = MaterialTheme.colorScheme.onSurface,
+            leadingIconContentColor = MaterialTheme.colorScheme.primary
+        ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f))
     )
     Spacer(Modifier.height(16.dp))
 }
 
+/** A small rounded square in the primary colour holding an icon, at the start of a card. */
 @Composable
-private fun PrayerList(
-    schedule: PrayerSchedule,
-    next: NextPrayer,
-    now: Instant,
-    isFriday: Boolean,
-    alerts: AlertSettings,
-    onCycleAlert: (Prayer) -> Unit
-) {
+private fun IconTile(icon: Int) {
+    Box(
+        Modifier
+            .size(40.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(painterResource(icon), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(22.dp))
+    }
+}
+
+/** This week at a glance: a ring per day filling with each prayer ticked off, and the streak. */
+@Composable
+private fun TrackerCard(prayed: Map<LocalDate, Set<Prayer>>, today: LocalDate, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+    val streak = remember(prayed, today) { PrayerTracker.streak(prayed, today) }
+    val todayCount = PrayerTracker.count(prayed, today)
+    DeenCard(onClick = onOpen, modifier = modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            IconTile(DeenIcons.Ok)
+            Column(Modifier.weight(1f)) {
+                Text(
+                    stringResource(R.string.feature_today_tracker_title),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    if (streak > 0) {
+                        pluralStringResource(R.plurals.feature_today_streak, streak, localDigits(streak))
+                    } else {
+                        stringResource(R.string.feature_today_tracker_hint)
+                    },
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            Text(
+                stringResource(R.string.feature_today_tracker_today, localDigits(todayCount), localDigits(PrayerTracker.prayers.size)),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        WeekStrip(prayed, today, Modifier.padding(top = 14.dp))
+    }
+}
+
+@Composable
+internal fun WeekStrip(prayed: Map<LocalDate, Set<Prayer>>, today: LocalDate, modifier: Modifier = Modifier) {
+    val locale = currentLocale
+    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        (6 downTo 0).forEach { back ->
+            val day = today.minusDays(back.toLong())
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    day.dayOfWeek.getDisplayName(TextStyle.SHORT, locale).take(3),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (back == 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = if (back == 0) FontWeight.SemiBold else FontWeight.Normal
+                )
+                DayRing(PrayerTracker.count(prayed, day), PrayerTracker.prayers.size, highlight = back == 0)
+            }
+        }
+    }
+}
+
+/** A ring in five segments, one per prayer; a full day becomes a filled disc with a tick. */
+@Composable
+internal fun DayRing(count: Int, of: Int, highlight: Boolean, size: androidx.compose.ui.unit.Dp = 30.dp) {
+    val primary = MaterialTheme.colorScheme.primary
+    val onPrimary = MaterialTheme.colorScheme.onPrimary
+    val track = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+    val shown by animateFloatAsState(count.toFloat(), if (DeenTheme.look.motion) DeenMotion.snappy() else snap(), label = "dayRing")
+    Canvas(Modifier.size(size)) {
+        val stroke = 3.5.dp.toPx()
+        val inset = stroke / 2
+        val arc = Size(this.size.width - stroke, this.size.height - stroke)
+        val gap = 14f
+        val sweep = 360f / of
+        if (count >= of) {
+            drawCircle(primary)
+            val tick = Path().apply {
+                moveTo(this@Canvas.size.width * 0.30f, this@Canvas.size.height * 0.52f)
+                lineTo(this@Canvas.size.width * 0.45f, this@Canvas.size.height * 0.66f)
+                lineTo(this@Canvas.size.width * 0.71f, this@Canvas.size.height * 0.38f)
+            }
+            drawPath(tick, onPrimary, style = Stroke(2.2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+            return@Canvas
+        }
+        repeat(of) { i ->
+            val fill = (shown - i).coerceIn(0f, 1f)
+            val start = -90f + i * sweep + gap / 2
+            drawArc(track, start, sweep - gap, false, Offset(inset, inset), arc, style = Stroke(stroke, cap = StrokeCap.Round))
+            if (fill > 0f) {
+                drawArc(
+                    primary,
+                    start,
+                    (sweep - gap) * fill,
+                    false,
+                    Offset(inset, inset),
+                    arc,
+                    style = Stroke(stroke, cap = StrokeCap.Round)
+                )
+            }
+        }
+        if (highlight) drawCircle(primary, radius = 2.dp.toPx())
+    }
+}
+
+/** The next day of the Islamic year (or the white days), with how far off it is. */
+@Composable
+private fun UpcomingCard(event: UpcomingEvent, today: LocalDate, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+    val dates = rememberShortDateFormatter()
+    DeenCard(onClick = onOpen, modifier = modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            IconTile(DeenIcons.Calendar)
+            Column(Modifier.weight(1f)) {
+                Text(
+                    stringResource(R.string.feature_today_upcoming),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(stringResource(event.event.labelRes()), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    "${dates.format(event.date)} · ${hijriDateText(event.hijri)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Text(
+                eventWhen(event.daysAway, started = event.date.isBefore(today)),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+            )
+        }
+    }
+}
+
+/** The khatmah plan: today's portion and the way through the whole Quran. */
+@Composable
+private fun KhatmahCard(progress: KhatmahProgress, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+    DeenCard(onClick = onOpen, modifier = modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            IconTile(DeenIcons.Quran)
+            Column(Modifier.weight(1f)) {
+                Text(
+                    stringResource(
+                        R.string.feature_today_khatmah_day,
+                        localDigits(progress.day.coerceAtMost(progress.plan.days)),
+                        localDigits(progress.plan.days)
+                    ),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    when {
+                        progress.complete -> stringResource(R.string.feature_today_khatmah_complete)
+
+                        progress.pagesLeftToday == 0 -> stringResource(R.string.feature_today_khatmah_done_today)
+
+                        else -> stringResource(
+                            R.string.feature_today_khatmah_today,
+                            localDigits(progress.todayFrom),
+                            localDigits(progress.todayTo)
+                        )
+                    },
+                    style = MaterialTheme.typography.titleMedium
+                )
+                if (!progress.complete && progress.pagesLeftToday > 0) {
+                    Text(
+                        pluralStringResource(
+                            R.plurals.feature_today_khatmah_left,
+                            progress.pagesLeftToday,
+                            localDigits(progress.pagesLeftToday)
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            Text(
+                "${localDigits((progress.fraction * 100).toInt())}%",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        ThinProgress(progress.fraction, Modifier.padding(top = 12.dp))
+    }
+}
+
+@Composable
+private fun PrayerList(state: TodayUiState.Ready, prayed: Set<Prayer>, isFriday: Boolean, rows: PrayerRowActions) {
+    val schedule = state.schedule
+    val now = state.now
     val timeFormatter = rememberTimeFormatter()
     val zone = schedule.location.zoneId
+    val ramadan = schedule.hijriDate.isRamadan
     Prayer.entries.forEach { prayer ->
         val at = schedule.today[prayer]
-        val isNext = next.prayer == prayer && next.at == at
+        val isNext = state.next.prayer == prayer && state.next.at == at
+        val name = stringResource(prayer.labelRes(isFriday && prayer == Prayer.DHUHR))
         PrayerRow(
-            name = stringResource(prayer.labelRes(isFriday && prayer == Prayer.DHUHR)),
+            name = name,
             time = timeFormatter.format(at.atZone(zone)),
+            caption = when {
+                ramadan && prayer == Prayer.FAJR -> stringResource(R.string.feature_today_suhoor_ends)
+                ramadan && prayer == Prayer.MAGHRIB -> stringResource(R.string.feature_today_iftar)
+                else -> null
+            },
             isNext = isNext,
             isMuted = (at.isBefore(now) && !isNext) || prayer == Prayer.SUNRISE,
-            mode = alerts.modeFor(prayer),
-            onCycleAlert = { onCycleAlert(prayer) }
+            mode = state.alerts.modeFor(prayer),
+            onCycleAlert = { rows.onCycleAlert(prayer) },
+            prayed = if (prayer.isPrayer) prayer in prayed else null,
+            // A prayer can be ticked once its time has come.
+            canTick = !at.isAfter(now),
+            onTogglePrayed = { rows.onTogglePrayed(prayer, prayer !in prayed) }
+        )
+    }
+    NightLine(remember(schedule.timeline, now.epochSecond / 60) { NightTimes.of(schedule.timeline, now) }, zone)
+}
+
+/** Under the times: the middle of the night and the start of its last third. */
+@Composable
+private fun NightLine(night: NightTimes, zone: ZoneId) {
+    val timeFormatter = rememberTimeFormatter()
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, top = 6.dp, bottom = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(
+            painterResource(DeenIcons.Night),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(16.dp)
+        )
+        Text(
+            stringResource(
+                R.string.feature_today_night_line,
+                timeFormatter.format(night.midnight.atZone(zone)),
+                timeFormatter.format(night.lastThird.atZone(zone))
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
 
 @Composable
-private fun PrayerRow(name: String, time: String, isNext: Boolean, isMuted: Boolean, mode: AlertMode, onCycleAlert: () -> Unit) {
+private fun PrayerRow(
+    name: String,
+    time: String,
+    caption: String?,
+    isNext: Boolean,
+    isMuted: Boolean,
+    mode: AlertMode,
+    onCycleAlert: () -> Unit,
+    prayed: Boolean?,
+    canTick: Boolean,
+    onTogglePrayed: () -> Unit
+) {
     val sleek = DeenTheme.look.sleek
     val gradient = DeenTheme.gradient
+    // On the gradient pill (Sleek's next prayer) everything takes the gradient's own text colour.
+    val onPill = isNext && sleek
     val color = when {
-        isNext && sleek -> gradient.content
+        onPill -> gradient.content
         isNext -> MaterialTheme.colorScheme.primary
         isMuted -> MaterialTheme.colorScheme.onSurfaceVariant
         else -> MaterialTheme.colorScheme.onSurface
@@ -640,10 +1046,27 @@ private fun PrayerRow(name: String, time: String, isNext: Boolean, isMuted: Bool
                     else -> Modifier
                 }
             )
-            .padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+            .padding(start = 2.dp, end = 4.dp, top = 2.dp, bottom = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(name, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = shownColor, modifier = Modifier.weight(1f))
+        if (prayed != null) {
+            PrayedCheck(
+                checked = prayed,
+                enabled = canTick || prayed,
+                color = if (onPill) gradient.content else MaterialTheme.colorScheme.primary,
+                checkColor = if (onPill) gradient.start else MaterialTheme.colorScheme.onPrimary,
+                description = stringResource(if (prayed) R.string.feature_today_prayed_undo else R.string.feature_today_prayed_mark, name),
+                onToggle = onTogglePrayed
+            )
+        } else {
+            Spacer(Modifier.size(44.dp))
+        }
+        Column(Modifier.weight(1f)) {
+            Text(name, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = shownColor)
+            if (caption != null) {
+                Text(caption, style = MaterialTheme.typography.labelSmall, color = shownColor.copy(alpha = 0.8f))
+            }
+        }
         Text(time, style = MaterialTheme.typography.titleMedium, fontWeight = weight, color = shownColor, textAlign = TextAlign.End)
         val modeLabel = stringResource(mode.labelRes())
         val description = stringResource(R.string.feature_today_alert_for, name, modeLabel)
@@ -652,11 +1075,48 @@ private fun PrayerRow(name: String, time: String, isNext: Boolean, isMuted: Bool
                 painter = painterResource(mode.iconRes()),
                 contentDescription = null,
                 tint = when {
-                    isNext && sleek -> gradient.content
+                    onPill -> gradient.content
                     mode == AlertMode.SILENT -> MaterialTheme.colorScheme.outline
                     else -> MaterialTheme.colorScheme.primary
                 },
                 modifier = Modifier.size(22.dp)
+            )
+        }
+    }
+}
+
+/** A round tick-box: an outline until the prayer is marked, then it fills and the tick draws in. */
+@Composable
+private fun PrayedCheck(checked: Boolean, enabled: Boolean, color: Color, checkColor: Color, description: String, onToggle: () -> Unit) {
+    val motion = DeenTheme.look.motion
+    val haptics = LocalHapticFeedback.current
+    val fill by animateFloatAsState(if (checked) 1f else 0f, if (motion) DeenMotion.bouncy() else snap(), label = "prayed")
+    Box(
+        Modifier
+            .size(44.dp)
+            .clip(CircleShape)
+            .toggleable(value = checked, enabled = enabled, role = Role.Checkbox) {
+                if (motion) haptics.performHapticFeedback(if (it) HapticFeedbackType.Confirm else HapticFeedbackType.SegmentTick)
+                onToggle()
+            }
+            .semantics { contentDescription = description },
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(Modifier.size(22.dp)) {
+            val ring = 1.6.dp.toPx()
+            val radius = size.minDimension / 2
+            drawCircle(color.copy(alpha = if (enabled) 0.6f else 0.25f), radius = radius - ring / 2, style = Stroke(ring))
+            if (fill <= 0f) return@Canvas
+            drawCircle(color, radius = radius * fill.coerceAtMost(1.08f))
+            val tick = Path().apply {
+                moveTo(size.width * 0.28f, size.height * 0.53f)
+                lineTo(size.width * 0.44f, size.height * 0.68f)
+                lineTo(size.width * 0.73f, size.height * 0.36f)
+            }
+            drawPath(
+                tick,
+                checkColor.copy(alpha = fill.coerceIn(0f, 1f)),
+                style = Stroke(2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
             )
         }
     }

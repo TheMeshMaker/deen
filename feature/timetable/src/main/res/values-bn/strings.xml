@@ -15,4 +15,13 @@
     <string name="feature_timetable_short_asr">আসর</string>
     <string name="feature_timetable_short_maghrib">মাগরিব</string>
     <string name="feature_timetable_short_isha">এশা</string>
+    <string name="feature_timetable_islamic_calendar">ইসলামি ক্যালেন্ডার</string>
+    <string name="feature_timetable_sunnah_fasts">সুন্নত রোজা</string>
+    <string name="feature_timetable_sunnah_fasts_body">সোমবার ও বৃহস্পতিবার, এবং প্রতি হিজরি মাসের আইয়ামে বীয (১৩–১৫)।</string>
+    <string name="feature_timetable_calendar_note">তারিখগুলো উম্মুল কুরা ক্যালেন্ডার ও আপনার হিজরি সমন্বয় অনুযায়ী। স্থানীয় চাঁদ দেখায় এক দিনের পার্থক্য হতে পারে।</string>
+    <string name="feature_timetable_next_day">পরবর্তী</string>
+    <plurals name="feature_timetable_days_to_go">
+        <item quantity="one">%1$s দিন বাকি</item>
+        <item quantity="other">%1$s দিন বাকি</item>
+    </plurals>
 </resources>

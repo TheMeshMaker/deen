@@ -6,29 +6,39 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -41,16 +51,24 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -58,6 +76,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -67,6 +86,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import io.github.themeshmaker.dunya.core.designsystem.component.LiquidBackdrop
+import io.github.themeshmaker.dunya.core.designsystem.component.LocalFloatingBarInset
+import io.github.themeshmaker.dunya.core.designsystem.component.ProvideLiquidGlass
+import io.github.themeshmaker.dunya.core.designsystem.component.liquidGlass
+import io.github.themeshmaker.dunya.core.designsystem.component.liquidSource
 import io.github.themeshmaker.dunya.core.designsystem.component.pageBackground
 import io.github.themeshmaker.dunya.core.designsystem.component.pressScale
 import io.github.themeshmaker.dunya.core.designsystem.component.softShadow
@@ -100,12 +124,19 @@ import io.github.themeshmaker.dunya.feature.settings.AboutRoute
 import io.github.themeshmaker.dunya.feature.settings.AdhanVoiceRoute
 import io.github.themeshmaker.dunya.feature.settings.SettingsRoute
 import io.github.themeshmaker.dunya.feature.settings.settingsScreens
+import io.github.themeshmaker.dunya.feature.timetable.IslamicCalendarRoute
 import io.github.themeshmaker.dunya.feature.timetable.TimetableRoute
+import io.github.themeshmaker.dunya.feature.timetable.islamicCalendarScreen
 import io.github.themeshmaker.dunya.feature.timetable.timetableScreen
+import io.github.themeshmaker.dunya.feature.today.PrayerTrackerRoute
 import io.github.themeshmaker.dunya.feature.today.TodayActions
 import io.github.themeshmaker.dunya.feature.today.TodayRoute
 import io.github.themeshmaker.dunya.feature.today.todayScreen
+import io.github.themeshmaker.dunya.feature.today.trackerScreen
 import io.github.themeshmaker.dunya.navigation.TopLevelDestination
+import kotlin.math.abs
+import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 
 /**
  * App shell. The navigation (bottom bar on phones, rail on unfolded foldables and tablets) only
@@ -122,9 +153,14 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
         currentDestination?.let { d -> TopLevelDestination.entries.any { d.hasRoute(it.routeClass) } } ?: (startDestination == TodayRoute)
 
     LaunchedEffect(link, currentDestination != null) {
-        val category = DeenLinks.adhkarCategory(link) ?: return@LaunchedEffect
-        if (currentDestination == null || currentDestination.hasRoute(OnboardingRoute::class)) return@LaunchedEffect
-        navController.navigate(AdhkarReaderRoute(category)) { launchSingleTop = true }
+        if (link == null || currentDestination == null || currentDestination.hasRoute(OnboardingRoute::class)) return@LaunchedEffect
+        val category = DeenLinks.adhkarCategory(link)
+        val position = DeenLinks.quranPosition(link)
+        when {
+            category != null -> navController.navigate(AdhkarReaderRoute(category)) { launchSingleTop = true }
+            position != null -> navController.navigate(QuranReaderRoute(position.surah, position.ayah)) { launchSingleTop = true }
+            else -> return@LaunchedEffect
+        }
         onLinkHandled()
     }
 
@@ -133,7 +169,21 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
     val floatingBar = look.sleek && adaptive == NavigationSuiteType.NavigationBar
 
     val host: @Composable (Modifier) -> Unit = { modifier ->
-        if (look.motion) {
+        if (look.liquid && look.motion) {
+            // Liquid: pages are clear over the shared backdrop, so screens zoom and fade through
+            // each other instead of sliding (two clear pages side by side would overlap).
+            NavHost(
+                navController = navController,
+                startDestination = startDestination,
+                modifier = modifier,
+                enterTransition = { fadeIn(tween(280, delayMillis = 40)) + scaleIn(DeenMotion.screen(), initialScale = 0.94f) },
+                exitTransition = { fadeOut(tween(180)) + scaleOut(DeenMotion.screen(), targetScale = 1.03f) },
+                popEnterTransition = { fadeIn(tween(280, delayMillis = 40)) + scaleIn(DeenMotion.screen(), initialScale = 1.03f) },
+                popExitTransition = { fadeOut(tween(180)) + scaleOut(DeenMotion.screen(), targetScale = 0.94f) }
+            ) {
+                graph(navController)
+            }
+        } else if (look.motion) {
             // Sleek: a pushed screen slides in from the end while the one below drifts back a
             // quarter of the way and dims (and the reverse on back); tabs cross-fade.
             NavHost(
@@ -181,6 +231,37 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
         }
     }
 
+    if (look.liquid) {
+        // The coloured backdrop (the full theme gradient on Today), the screens over it, and on
+        // phones a glass tab bar floating over the screens; tablets keep the side rail.
+        val onToday = currentDestination?.hasRoute(TodayRoute::class) ?: (startDestination == TodayRoute)
+        ProvideLiquidGlass(dark = look.dark) {
+            Surface(color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onBackground, modifier = Modifier.fillMaxSize()) {
+                Box(Modifier.fillMaxSize()) {
+                    LiquidBackdrop(vivid = onToday, modifier = Modifier.fillMaxSize())
+                    if (adaptive == NavigationSuiteType.NavigationBar) {
+                        CompositionLocalProvider(LocalFloatingBarInset provides if (onTab) LiquidBarSpace else 0.dp) {
+                            host(Modifier.fillMaxSize().liquidSource(1f))
+                        }
+                        AnimatedVisibility(
+                            visible = onTab,
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            enter = if (look.motion) slideInVertically(DeenMotion.snappy()) { it } + fadeIn() else fadeIn(snap()),
+                            exit = if (look.motion) slideOutVertically(DeenMotion.snappy()) { it } + fadeOut() else fadeOut(snap())
+                        ) {
+                            LiquidTabBar(currentDestination) { navController.navigateToTopLevel(it) }
+                        }
+                    } else {
+                        RailScaffold(currentDestination, onTab, adaptive, navController, transparent = true) {
+                            host(Modifier.fillMaxSize().liquidSource(1f))
+                        }
+                    }
+                }
+            }
+        }
+        return
+    }
+
     if (floatingBar) {
         // A Surface, not just a background: it also sets the content colour for text on the page.
         Surface(
@@ -216,7 +297,20 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
         return
     }
 
-    // Deen's own bar: plain surface, theme-coloured selection, no Material "pill" indicator.
+    RailScaffold(currentDestination, onTab, adaptive, navController, transparent = false) { host(Modifier.fillMaxSize()) }
+}
+
+/** Deen's own bar or rail: plain surface, theme-coloured selection, no Material "pill" indicator. */
+@Composable
+private fun RailScaffold(
+    currentDestination: NavDestination?,
+    onTab: Boolean,
+    adaptive: NavigationSuiteType,
+    navController: NavHostController,
+    transparent: Boolean,
+    content: @Composable () -> Unit
+) {
+    val look = DeenTheme.look
     val itemColors = NavigationSuiteDefaults.itemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(
             selectedIconColor = MaterialTheme.colorScheme.primary,
@@ -236,8 +330,9 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
     NavigationSuiteScaffold(
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             navigationBarContainerColor = if (look.heritage) look.card else MaterialTheme.colorScheme.surface,
-            navigationRailContainerColor = look.page
+            navigationRailContainerColor = if (transparent) Color.Transparent else look.page
         ),
+        containerColor = if (transparent) Color.Transparent else MaterialTheme.colorScheme.background,
         layoutType = if (onTab) adaptive else NavigationSuiteType.None,
         navigationSuiteItems = {
             TopLevelDestination.entries.forEach { destination ->
@@ -256,9 +351,133 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
             }
         }
     ) {
-        host(Modifier.fillMaxSize())
+        content()
     }
 }
+
+/** Room the floating Liquid tab bar takes at the bottom of a tab screen (above the system bar). */
+private val LiquidBarSpace = 84.dp
+private val LiquidBarHeight = 64.dp
+
+/**
+ * Liquid: the iOS 26 tab bar. A capsule of glass floats over the screen (which scrolls beneath it);
+ * a clearer, tinted lens marks the selected tab, gliding there and stretching as it travels. Drag
+ * along the bar and the lens lifts and follows the finger, choosing the tab it is let go over.
+ */
+@Composable
+internal fun LiquidTabBar(current: NavDestination?, onSelect: (TopLevelDestination) -> Unit) {
+    val look = DeenTheme.look
+    val haptics = LocalHapticFeedback.current
+    val tabs = TopLevelDestination.entries
+    val selected = tabs.indexOfFirst { current.isOn(it) }.coerceAtLeast(0)
+    val scope = rememberCoroutineScope()
+    val position = remember { Animatable(selected.toFloat()) }
+    var dragging by remember { mutableStateOf(false) }
+    LaunchedEffect(selected) {
+        if (!dragging) {
+            if (look.motion) position.animateTo(selected.toFloat(), LensSpring) else position.snapTo(selected.toFloat())
+        }
+    }
+    val lift by animateFloatAsState(if (dragging) 1f else 0f, DeenMotion.bouncy(), label = "lensLift")
+    val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val lensTint = MaterialTheme.colorScheme.primary.copy(alpha = if (look.dark) 0.30f else 0.16f)
+    BoxWithConstraints(
+        Modifier
+            .navigationBarsPadding()
+            .padding(start = 18.dp, end = 18.dp, bottom = 12.dp)
+            .fillMaxWidth()
+            .height(LiquidBarHeight)
+            .liquidGlass(RoundedCornerShape(percent = 50))
+    ) {
+        val tabWidth = maxWidth / tabs.size
+        val tabWidthPx = with(LocalDensity.current) { tabWidth.toPx() }
+        // The lens stretches along its path with speed, and swells a little while lifted by a drag.
+        val stretch = 1f + (abs(position.velocity) / 14f).coerceAtMost(0.32f) + 0.10f * lift
+        Box(
+            Modifier
+                .offset(x = tabWidth * position.value)
+                .width(tabWidth)
+                .fillMaxHeight()
+                .padding(5.dp)
+                .graphicsLayer {
+                    scaleX = stretch
+                    scaleY = 1f + 0.10f * lift
+                }
+                .liquidGlass(RoundedCornerShape(percent = 50), tint = lensTint, clear = true)
+        )
+        Row(
+            Modifier
+                .fillMaxSize()
+                .pointerInput(tabs.size, rtl, tabWidthPx) {
+                    detectHorizontalDragGestures(
+                        onDragStart = { dragging = true },
+                        onDragEnd = {
+                            dragging = false
+                            val target = position.value.roundToInt().coerceIn(0, tabs.lastIndex)
+                            if (target != selected) {
+                                if (look.motion) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                                onSelect(tabs[target])
+                            }
+                            scope.launch { position.animateTo(target.toFloat(), LensSpring) }
+                        },
+                        onDragCancel = {
+                            dragging = false
+                            scope.launch { position.animateTo(selected.toFloat(), LensSpring) }
+                        },
+                        onHorizontalDrag = { change, amount ->
+                            change.consume()
+                            val step = (if (rtl) -amount else amount) / tabWidthPx
+                            scope.launch { position.snapTo((position.value + step).coerceIn(0f, tabs.lastIndex.toFloat())) }
+                        }
+                    )
+                }
+        ) {
+            tabs.forEachIndexed { index, destination ->
+                val isSelected = index == selected
+                val highlight = (1f - abs(position.value - index)).coerceIn(0f, 1f)
+                val tint = lerp(MaterialTheme.colorScheme.onSurface, MaterialTheme.colorScheme.primary, highlight)
+                Column(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, role = Role.Tab) {
+                            if (!isSelected) {
+                                if (look.motion) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                                onSelect(destination)
+                            }
+                        }
+                        .semantics { this.selected = isSelected },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        painterResource(if (isSelected) destination.selectedIcon else destination.icon),
+                        contentDescription = null,
+                        tint = tint,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .graphicsLayer {
+                                val grow = 1f + 0.08f * highlight
+                                scaleX = grow
+                                scaleY = grow
+                            }
+                    )
+                    Text(
+                        stringResource(destination.label),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
+                        color = tint,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 2.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+private val LensSpring = spring<Float>(dampingRatio = 0.72f, stiffness = 380f)
 
 /**
  * Sleek: a rounded bar floating above the page on a wide soft shadow, the selected tab as a
@@ -385,9 +604,12 @@ private fun NavGraphBuilder.graph(navController: NavHostController) {
             onOpenSettings = { navController.navigate(SettingsRoute) },
             onOpenQuran = { surah, ayah -> navController.navigate(QuranReaderRoute(surah, ayah)) },
             onOpenHadith = { number -> navController.navigate(NawawiRoute(number)) },
-            onOpenFacts = { navController.navigate(ProphetFactsRoute) }
+            onOpenFacts = { navController.navigate(ProphetFactsRoute) },
+            onOpenTracker = { navController.navigate(PrayerTrackerRoute) },
+            onOpenCalendar = { navController.navigate(IslamicCalendarRoute) }
         )
     )
+    trackerScreen(onBack = back)
     quranScreens(
         onOpen = { surah, ayah -> navController.navigate(QuranReaderRoute(surah, ayah)) },
         onBack = back,
@@ -415,6 +637,8 @@ private fun NavGraphBuilder.graph(navController: NavHostController) {
             onOpenQibla = { navController.navigate(QiblaRoute) },
             onOpenTimetable = { navController.navigate(TimetableRoute) },
             onOpenTasbih = { navController.navigate(TasbihRoute) },
+            onOpenTracker = { navController.navigate(PrayerTrackerRoute) },
+            onOpenCalendar = { navController.navigate(IslamicCalendarRoute) },
             onOpenReliability = { navController.navigate(ReliabilityRoute()) },
             onOpenSources = { navController.navigate(AboutRoute) }
         )
@@ -430,6 +654,7 @@ private fun NavGraphBuilder.graph(navController: NavHostController) {
     )
     qiblaScreen(onBack = back)
     timetableScreen(onBack = back)
+    islamicCalendarScreen(onBack = back)
 }
 
 private fun NavDestination.isTab(): Boolean = TopLevelDestination.entries.any { hasRoute(it.routeClass) }

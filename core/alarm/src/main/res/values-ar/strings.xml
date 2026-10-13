@@ -48,4 +48,7 @@
 
     <string name="core_alarm_test_title">أذان تجريبي</string>
     <string name="core_alarm_test_body">إذا سمعته والشاشة مقفلة، فالأذان يعمل على هذا الهاتف.</string>
+    <string name="core_alarm_channel_friday">تذكير الجمعة</string>
+    <string name="core_alarm_kahf_title">إنه يوم الجمعة</string>
+    <string name="core_alarm_kahf_body">اقرأ سورة الكهف اليوم. اضغط لفتحها.</string>
 </resources>

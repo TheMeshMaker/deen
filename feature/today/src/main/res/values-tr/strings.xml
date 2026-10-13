@@ -26,4 +26,39 @@
     <string name="feature_today_continue_quran">Okumaya devam et</string>
     <string name="feature_today_quran_position">%1$s · %2$s. ayet</string>
     <string name="feature_today_start_quran">Kur\'an oku</string>
+    <string name="feature_today_tracker_short">Takip</string>
+    <string name="feature_today_tracker_title">Namaz takibi</string>
+    <string name="feature_today_tracker_hint">Kıldığınız her namazı işaretleyin</string>
+    <plurals name="feature_today_streak">
+        <item quantity="one">Üst üste %1$s gün</item>
+        <item quantity="other">Üst üste %1$s gün</item>
+    </plurals>
+    <string name="feature_today_tracker_today">Bugün %1$s/%2$s</string>
+    <string name="feature_today_upcoming">Yaklaşan</string>
+    <string name="feature_today_khatmah_day">Hatim · %2$s günün %1$s. günü</string>
+    <string name="feature_today_khatmah_complete">Kur\'an\'ı hatmettiniz. Allah kabul etsin.</string>
+    <string name="feature_today_khatmah_done_today">Bugünün bölümü tamam</string>
+    <string name="feature_today_khatmah_today">Bugün: %1$s–%2$s. sayfalar</string>
+    <plurals name="feature_today_khatmah_left">
+        <item quantity="one">Bugün %1$s sayfa kaldı</item>
+        <item quantity="other">Bugün %1$s sayfa kaldı</item>
+    </plurals>
+    <string name="feature_today_suhoor_ends">Sahurun sonu</string>
+    <string name="feature_today_iftar">İftar</string>
+    <string name="feature_today_night_line">Gece yarısı %1$s · Son üçte bir %2$s</string>
+    <string name="feature_today_prayed_mark">%1$s namazını kılındı olarak işaretle</string>
+    <string name="feature_today_prayed_undo">%1$s kılındı. Geri almak için dokunun</string>
+    <string name="feature_today_tracker_today_title">Bugünün namazları</string>
+    <string name="feature_today_tracker_private">Takibiniz bu telefonda kalır. Hiçbir yere gönderilmez.</string>
+    <plurals name="feature_today_days_label">
+        <item quantity="one">%1$s gün</item>
+        <item quantity="other">%1$s gün</item>
+    </plurals>
+    <string name="feature_today_stat_streak">Seri</string>
+    <string name="feature_today_stat_best">En iyi</string>
+    <string name="feature_today_stat_month">Bu ay</string>
+    <string name="feature_today_stat_of">%2$s içinde %1$s</string>
+    <string name="feature_today_month_previous">Önceki ay</string>
+    <string name="feature_today_month_next">Sonraki ay</string>
+    <string name="feature_today_day_count">%1$s: %3$s namazdan %2$s</string>
 </resources>

@@ -15,4 +15,12 @@
     <string name="feature_timetable_short_asr">Asar</string>
     <string name="feature_timetable_short_maghrib">Magrib</string>
     <string name="feature_timetable_short_isha">Isya</string>
+    <string name="feature_timetable_islamic_calendar">Kalender Islam</string>
+    <string name="feature_timetable_sunnah_fasts">Puasa sunah</string>
+    <string name="feature_timetable_sunnah_fasts_body">Senin dan Kamis, serta hari-hari putih (13–15) setiap bulan Hijriah.</string>
+    <string name="feature_timetable_calendar_note">Tanggal mengikuti kalender Ummul Qura dengan penyesuaian Hijriah Anda. Rukyat setempat bisa berbeda sehari.</string>
+    <string name="feature_timetable_next_day">Berikutnya</string>
+    <plurals name="feature_timetable_days_to_go">
+        <item quantity="other">%1$s hari lagi</item>
+    </plurals>
 </resources>

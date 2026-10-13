@@ -67,4 +67,27 @@
     <string name="core_ui_daily_fact">Peygamber ﷺ hakkında</string>
     <string name="core_ui_language">Dil</string>
     <string name="core_ui_language_system">Telefonun dili</string>
+    <string name="core_ui_event_new_year">Hicri Yılbaşı</string>
+    <string name="core_ui_event_ashura">Aşure Günü</string>
+    <string name="core_ui_event_ramadan">Ramazan</string>
+    <string name="core_ui_event_last_ten">Son on gece</string>
+    <string name="core_ui_event_eid_fitr">Ramazan Bayramı</string>
+    <string name="core_ui_event_arafah">Arefe Günü</string>
+    <string name="core_ui_event_eid_adha">Kurban Bayramı</string>
+    <string name="core_ui_event_white_days">Eyyâm-ı bîd</string>
+    <string name="core_ui_event_new_year_detail">1 Muharrem, hicri yılın ilk günü.</string>
+    <string name="core_ui_event_ashura_detail">Önceki günle birlikte tutulması tavsiye edilen bir oruç.</string>
+    <string name="core_ui_event_ramadan_detail">Kur\'an\'ın indirildiği oruç ayı.</string>
+    <string name="core_ui_event_last_ten_detail">Kadir gecesini tek gecelerde arayın.</string>
+    <string name="core_ui_event_eid_fitr_detail">Bayram namazıyla Ramazan\'ın sonundaki bayram.</string>
+    <string name="core_ui_event_arafah_detail">Hacda olmayanlar için oruç tutmak tavsiye edilir.</string>
+    <string name="core_ui_event_eid_adha_detail">Bayram namazıyla kurban bayramı.</string>
+    <string name="core_ui_event_white_days_detail">Hicri ayın 13-15. günleri: oruç tutulması tavsiye edilen günler.</string>
+    <string name="core_ui_event_now">Şimdi</string>
+    <string name="core_ui_event_today">Bugün</string>
+    <string name="core_ui_event_tomorrow">Yarın</string>
+    <plurals name="core_ui_event_in_days">
+        <item quantity="one">%d gün sonra</item>
+        <item quantity="other">%d gün sonra</item>
+    </plurals>
 </resources>

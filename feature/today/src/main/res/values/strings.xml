@@ -25,4 +25,39 @@
     <string name="feature_today_continue_quran">Continue reading</string>
     <string name="feature_today_quran_position">%1$s · verse %2$s</string>
     <string name="feature_today_start_quran">Read the Quran</string>
+    <string name="feature_today_tracker_short">Tracker</string>
+    <string name="feature_today_tracker_title">Prayer tracker</string>
+    <string name="feature_today_tracker_hint">Tick each prayer as you pray it</string>
+    <plurals name="feature_today_streak">
+        <item quantity="one">%1$s day in a row</item>
+        <item quantity="other">%1$s days in a row</item>
+    </plurals>
+    <string name="feature_today_tracker_today">%1$s/%2$s today</string>
+    <string name="feature_today_upcoming">Coming up</string>
+    <string name="feature_today_khatmah_day">Khatmah · day %1$s of %2$s</string>
+    <string name="feature_today_khatmah_complete">You finished the Quran. May Allah accept it.</string>
+    <string name="feature_today_khatmah_done_today">Today\'s portion is done</string>
+    <string name="feature_today_khatmah_today">Today: pages %1$s–%2$s</string>
+    <plurals name="feature_today_khatmah_left">
+        <item quantity="one">%1$s page left today</item>
+        <item quantity="other">%1$s pages left today</item>
+    </plurals>
+    <string name="feature_today_suhoor_ends">Suhoor ends</string>
+    <string name="feature_today_iftar">Iftar</string>
+    <string name="feature_today_night_line">Midnight %1$s · Last third %2$s</string>
+    <string name="feature_today_prayed_mark">Mark %1$s as prayed</string>
+    <string name="feature_today_prayed_undo">%1$s prayed. Tap to undo</string>
+    <string name="feature_today_tracker_today_title">Today\'s prayers</string>
+    <string name="feature_today_tracker_private">Your tracker stays on this phone. Nothing is sent anywhere.</string>
+    <plurals name="feature_today_days_label">
+        <item quantity="one">%1$s day</item>
+        <item quantity="other">%1$s days</item>
+    </plurals>
+    <string name="feature_today_stat_streak">Streak</string>
+    <string name="feature_today_stat_best">Best</string>
+    <string name="feature_today_stat_month">This month</string>
+    <string name="feature_today_stat_of">%1$s of %2$s</string>
+    <string name="feature_today_month_previous">Previous month</string>
+    <string name="feature_today_month_next">Next month</string>
+    <string name="feature_today_day_count">%1$s: %2$s of %3$s prayers</string>
 </resources>

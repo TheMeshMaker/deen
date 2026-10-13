@@ -35,15 +35,32 @@ enum class TasbihDhikr(val id: String, val arabic: String, val english: String) 
 
 /**
  * What the user has been doing, kept apart from settings: last Quran position, bookmarks,
- * today's adhkar counts (key "category/id") and the tasbih.
+ * today's adhkar counts (key "category/id"), the tasbih, the prayers they have ticked off and
+ * their khatmah plan.
  */
 data class ActivityData(
     val lastRead: QuranPosition? = null,
     val bookmarks: List<QuranPosition> = emptyList(),
     val adhkarDay: LocalDate? = null,
     val adhkarCounts: Map<String, Int> = emptyMap(),
-    val tasbih: TasbihState = TasbihState()
+    val tasbih: TasbihState = TasbihState(),
+    /** Prayers marked as prayed, by the day they belong to (the saved location's date). */
+    val prayed: Map<LocalDate, Set<Prayer>> = emptyMap(),
+    val khatmah: KhatmahPlan? = null
 ) {
     /** Today's counts, or none if they are from an earlier day. */
     fun adhkarCountsOn(day: LocalDate): Map<String, Int> = if (adhkarDay == day) adhkarCounts else emptyMap()
+
+    fun prayedOn(day: LocalDate): Set<Prayer> = prayed[day].orEmpty()
+}
+
+/**
+ * Reading the whole Quran in [days] days, starting on [startedOn] at Madani page [startPage]
+ * (1–604). Progress is read from where the reader last stopped.
+ */
+data class KhatmahPlan(val startedOn: LocalDate, val days: Int, val startPage: Int = 1) {
+    companion object {
+        const val PAGES = 604
+        val DAY_CHOICES: List<Int> = listOf(7, 10, 15, 20, 30, 60)
+    }
 }

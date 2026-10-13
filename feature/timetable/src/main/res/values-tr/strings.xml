@@ -15,4 +15,13 @@
     <string name="feature_timetable_short_asr">İkindi</string>
     <string name="feature_timetable_short_maghrib">Akşam</string>
     <string name="feature_timetable_short_isha">Yatsı</string>
+    <string name="feature_timetable_islamic_calendar">Hicri takvim</string>
+    <string name="feature_timetable_sunnah_fasts">Sünnet oruçlar</string>
+    <string name="feature_timetable_sunnah_fasts_body">Pazartesi ve perşembe günleri ile her hicri ayın 13–15. günleri.</string>
+    <string name="feature_timetable_calendar_note">Tarihler, hicri düzeltmenizle Ümmü\'l-Kura takvimine göredir. Yerel hilal gözlemi bir gün farklı olabilir.</string>
+    <string name="feature_timetable_next_day">Sıradaki</string>
+    <plurals name="feature_timetable_days_to_go">
+        <item quantity="one">%1$s gün kaldı</item>
+        <item quantity="other">%1$s gün kaldı</item>
+    </plurals>
 </resources>

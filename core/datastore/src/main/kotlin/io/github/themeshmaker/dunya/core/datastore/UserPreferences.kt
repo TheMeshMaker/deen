@@ -62,7 +62,8 @@ data class AlertPreferences(
     val useAlarmClock: Boolean = true,
     val voice: String = "default",
     val fajrVoice: String? = null,
-    val masjid: MasjidPreferences? = null
+    val masjid: MasjidPreferences? = null,
+    val kahf: Boolean = false
 )
 
 @Serializable

@@ -27,4 +27,8 @@
     <string name="feature_more_report">Laporkan masalah atau ide</string>
     <string name="feature_more_report_body">Membuka halaman Deen di GitHub</string>
     <string name="feature_more_dua">Dan mohon ingat kami dalam doa Anda.</string>
+    <string name="feature_more_tracker">Pelacak salat</string>
+    <string name="feature_more_tracker_body">Tandai salat Anda dan lihat konsistensi Anda</string>
+    <string name="feature_more_calendar">Kalender Islam</string>
+    <string name="feature_more_calendar_body">Ramadan, Id, Arafah, dan hari-hari putih</string>
 </resources>

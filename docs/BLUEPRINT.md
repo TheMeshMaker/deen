@@ -97,7 +97,7 @@ Deen/
 │  ├─ location/              # LocationSource interface, platform impl, city search
 │  ├─ location-gms/          # Fused impl (play only)
 │  ├─ alarm/                 # planner, scheduler, receivers, AdhanService, voices, health log, reliability checks
-│  ├─ designsystem/          # theme, DeenLook (Classic/Sleek/Glass/Heritage), type, components, icons, geometric art
+│  ├─ designsystem/          # theme, DeenLook (Classic/Sleek/Glass/Liquid/Heritage), type, components, icons, geometric art
 │  └─ ui/                    # shared composables and formatting, app language, haptics
 ├─ feature/
 │  ├─ onboarding/ today/ quran/ hadith/ adhkar/ (incl. tasbih) qibla/ timetable/
@@ -437,6 +437,14 @@ content/*.json  ──▶  tools/content-builder  ──▶  app/src/main/assets
 - M3 rounded shapes, an extra-large hero card on Today.
 - Gentle motion that respects the system "remove animations" setting.
 
+**Styles** (`UiStyle`, independent of the colour theme): Classic, Sleek, Glass, **Liquid** and Heritage.
+- **Liquid** (2026-10-13) follows iOS 26: the app draws one coloured backdrop under every screen (the full theme
+  gradient on Today), pages are clear, and cards, the floating tab bar (with a lens that slides, stretches and can
+  be dragged), back buttons and controls are glass that bends and blurs what is behind them. Rendering is Haze's
+  Glass effect (Apache-2.0); Android 12 and older get its simpler fallback. Glass follows Deen's light/dark
+  setting, and content on the gradient uses the theme's dark colours (`DeenOnGradient`).
+- Screenshot tests (Roborazzi on Robolectric, `-Pscreenshots`) render Today in each style and the Liquid shell.
+
 **Art**
 - Original 8-fold geometric patterns, used subtly on the hero card and empty states.
 - No figurative imagery, and patterns are checked to make sure they never form cross shapes.
@@ -621,6 +629,7 @@ adb reboot
 | **M3** ✅ | Adhkar and Tasbih | Content pipeline (`tools/content`), 9 adhkar categories, reader with counting and haptics, tasbih. Content awaits the reviewer before 1.0 |
 | **M4** ✅ | Hadith, Qibla, Hijri, widget | Daily hadith and fact, full collections in Arabic, Qibla compass, Hijri timetable, home-screen widget. Screenshot tests still to do |
 | **M4+** ✅ | Maintainer requests (2026-10-10/11) | Quran reader with resume, tafsir and recitation player, settings, four styles, seven colour themes, app language (seven languages), adhan voices, masjid and after-adhan reminders, monthly timetable, new app icon, support section |
+| **M4++** ✅ | Maintainer requests (2026-10-13) | Liquid Glass style, prayer tracker (ticks, week strip, streaks, month calendar), Islamic calendar with countdowns, khatmah plan by Madani page, middle and last third of the night, suhoor/iftar labels in Ramadan, Friday Al-Kahf reminder |
 | **M5** | Support, settings, polish | Tips/links, full settings, Arabic/English, accessibility pass, large-screen layouts |
 | **M6** | Release | Privacy policy, store and F-Droid listings, Play closed test, OEM beta, v1.0 |
 

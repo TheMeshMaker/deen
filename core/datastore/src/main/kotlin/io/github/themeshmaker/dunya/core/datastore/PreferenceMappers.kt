@@ -74,7 +74,8 @@ fun AlertPreferences.toModel() = AlertSettings(
     useAlarmClock = useAlarmClock,
     voice = voice,
     fajrVoice = fajrVoice,
-    masjid = masjid?.toModel() ?: MasjidReminder()
+    masjid = masjid?.toModel() ?: MasjidReminder(),
+    kahfReminder = kahf
 )
 
 fun AlertSettings.toPreferences() = AlertPreferences(
@@ -85,7 +86,8 @@ fun AlertSettings.toPreferences() = AlertPreferences(
     useAlarmClock = useAlarmClock,
     voice = voice,
     fajrVoice = fajrVoice,
-    masjid = masjid.toPreferences()
+    masjid = masjid.toPreferences(),
+    kahf = kahfReminder
 )
 
 fun MasjidPreferences.toModel() = MasjidReminder(

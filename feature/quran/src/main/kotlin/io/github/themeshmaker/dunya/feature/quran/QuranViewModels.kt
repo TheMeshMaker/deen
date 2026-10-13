@@ -11,15 +11,20 @@ import io.github.themeshmaker.dunya.core.audio.WordTimings
 import io.github.themeshmaker.dunya.core.audio.wordAt
 import io.github.themeshmaker.dunya.core.domain.ActivityRepository
 import io.github.themeshmaker.dunya.core.domain.ContentRepository
+import io.github.themeshmaker.dunya.core.domain.KhatmahProgress
+import io.github.themeshmaker.dunya.core.domain.QuranPages
 import io.github.themeshmaker.dunya.core.domain.UserDataRepository
 import io.github.themeshmaker.dunya.core.model.Ayah
 import io.github.themeshmaker.dunya.core.model.JuzStart
+import io.github.themeshmaker.dunya.core.model.KhatmahPlan
 import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.Reciter
 import io.github.themeshmaker.dunya.core.model.Surah
 import io.github.themeshmaker.dunya.core.model.TafsirEntry
 import io.github.themeshmaker.dunya.core.model.TafsirSource
+import java.time.Clock
+import java.time.LocalDate
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -48,9 +53,15 @@ data class QuranHomeUiState(
     val lastRead: QuranPosition? = null,
     val bookmarks: List<QuranPosition> = emptyList(),
     val query: String = "",
-    val tab: QuranTab = QuranTab.SURAHS
+    val tab: QuranTab = QuranTab.SURAHS,
+    val khatmah: KhatmahPlan? = null,
+    val pages: QuranPages? = null,
+    val today: LocalDate? = null
 ) {
     fun surah(number: Int): Surah? = surahs.getOrNull(number - 1)
+
+    val khatmahProgress: KhatmahProgress?
+        get() = if (khatmah != null && pages != null && today != null) KhatmahProgress.of(khatmah, lastRead, pages, today) else null
 
     /** Matches the number, the Arabic name (diacritics ignored), the transliteration or the English meaning. */
     val filtered: List<Surah>
@@ -69,18 +80,40 @@ data class QuranHomeUiState(
 }
 
 @HiltViewModel
-class QuranHomeViewModel @Inject constructor(private val content: ContentRepository, activity: ActivityRepository) : ViewModel() {
+class QuranHomeViewModel @Inject constructor(
+    private val content: ContentRepository,
+    private val activity: ActivityRepository,
+    private val clock: Clock
+) : ViewModel() {
     private val surahs = MutableStateFlow<Pair<List<Surah>, List<JuzStart>>>(emptyList<Surah>() to emptyList())
+    private val pages = MutableStateFlow<QuranPages?>(null)
     private val query = MutableStateFlow("")
     private val tab = MutableStateFlow(QuranTab.SURAHS)
 
     init {
-        viewModelScope.launch { surahs.value = content.surahs() to content.juzStarts() }
+        viewModelScope.launch {
+            surahs.value = content.surahs() to content.juzStarts()
+            pages.value = QuranPages(content.pageStarts())
+        }
     }
 
-    val uiState: StateFlow<QuranHomeUiState> = combine(surahs, activity.activity, query, tab) { (s, j), a, q, t ->
-        QuranHomeUiState(s, j, a.lastRead, a.bookmarks, q, t)
+    val uiState: StateFlow<QuranHomeUiState> = combine(surahs, activity.activity, query, tab, pages) { (s, j), a, q, t, p ->
+        QuranHomeUiState(s, j, a.lastRead, a.bookmarks, q, t, a.khatmah, p, LocalDate.now(clock))
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), QuranHomeUiState())
+
+    /** Starts a khatmah of [days] days, from Al-Fatiha or from the page the reader is on. */
+    fun startKhatmah(days: Int, fromCurrentPage: Boolean) {
+        viewModelScope.launch {
+            val state = uiState.value
+            val start = if (fromCurrentPage) state.lastRead?.let { state.pages?.pageOf(it) } ?: 1 else 1
+            if (!fromCurrentPage) activity.setLastRead(QuranPosition(1, 1))
+            activity.setKhatmah(KhatmahPlan(LocalDate.now(clock), days, start))
+        }
+    }
+
+    fun endKhatmah() {
+        viewModelScope.launch { activity.setKhatmah(null) }
+    }
 
     fun setQuery(value: String) {
         query.value = value

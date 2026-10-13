@@ -26,4 +26,39 @@
     <string name="feature_today_continue_quran">پڑھنا جاری رکھیں</string>
     <string name="feature_today_quran_position">%1$s · آیت %2$s</string>
     <string name="feature_today_start_quran">قرآن پڑھیں</string>
+    <string name="feature_today_tracker_short">ٹریکر</string>
+    <string name="feature_today_tracker_title">نماز ٹریکر</string>
+    <string name="feature_today_tracker_hint">ہر نماز پڑھ کر نشان لگائیں</string>
+    <plurals name="feature_today_streak">
+        <item quantity="one">مسلسل %1$s دن</item>
+        <item quantity="other">مسلسل %1$s دن</item>
+    </plurals>
+    <string name="feature_today_tracker_today">آج %1$s/%2$s</string>
+    <string name="feature_today_upcoming">آنے والا</string>
+    <string name="feature_today_khatmah_day">ختمہ · دن %1$s از %2$s</string>
+    <string name="feature_today_khatmah_complete">آپ نے قرآن مکمل کر لیا۔ اللہ قبول فرمائے۔</string>
+    <string name="feature_today_khatmah_done_today">آج کا حصہ مکمل</string>
+    <string name="feature_today_khatmah_today">آج: صفحات %1$s–%2$s</string>
+    <plurals name="feature_today_khatmah_left">
+        <item quantity="one">آج %1$s صفحہ باقی</item>
+        <item quantity="other">آج %1$s صفحات باقی</item>
+    </plurals>
+    <string name="feature_today_suhoor_ends">سحری کا اختتام</string>
+    <string name="feature_today_iftar">افطار</string>
+    <string name="feature_today_night_line">آدھی رات %1$s · آخری تہائی %2$s</string>
+    <string name="feature_today_prayed_mark">%1$s کو ادا شدہ نشان زد کریں</string>
+    <string name="feature_today_prayed_undo">%1$s ادا ہو گئی۔ واپس لینے کے لیے تھپتھپائیں</string>
+    <string name="feature_today_tracker_today_title">آج کی نمازیں</string>
+    <string name="feature_today_tracker_private">آپ کا ٹریکر اسی فون پر رہتا ہے۔ کچھ بھی کہیں نہیں بھیجا جاتا۔</string>
+    <plurals name="feature_today_days_label">
+        <item quantity="one">%1$s دن</item>
+        <item quantity="other">%1$s دن</item>
+    </plurals>
+    <string name="feature_today_stat_streak">تسلسل</string>
+    <string name="feature_today_stat_best">بہترین</string>
+    <string name="feature_today_stat_month">اس مہینے</string>
+    <string name="feature_today_stat_of">%2$s میں سے %1$s</string>
+    <string name="feature_today_month_previous">پچھلا مہینہ</string>
+    <string name="feature_today_month_next">اگلا مہینہ</string>
+    <string name="feature_today_day_count">%1$s: %3$s میں سے %2$s نمازیں</string>
 </resources>

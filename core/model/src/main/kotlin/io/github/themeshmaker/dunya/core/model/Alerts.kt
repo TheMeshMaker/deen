@@ -23,7 +23,9 @@ data class AlertSettings(
     val voice: String = AdhanVoice.DEFAULT,
     /** A different recording for Fajr, or null to use [voice]. */
     val fajrVoice: String? = null,
-    val masjid: MasjidReminder = MasjidReminder()
+    val masjid: MasjidReminder = MasjidReminder(),
+    /** A reminder on Friday mornings to read Surah Al-Kahf. */
+    val kahfReminder: Boolean = false
 ) {
     fun voiceFor(prayer: Prayer): String = if (prayer == Prayer.FAJR) fajrVoice ?: voice else voice
 
@@ -85,7 +87,10 @@ enum class AlertKind {
     AFTER_ADHAN,
 
     /** "Test adhan in 1 minute" from the reliability screen. */
-    TEST
+    TEST,
+
+    /** Friday morning: "Read Surah Al-Kahf". Filed under sunrise. */
+    KAHF
 }
 
 /** One alarm the system should fire. [prayerAt] differs from [at] only for reminders. */

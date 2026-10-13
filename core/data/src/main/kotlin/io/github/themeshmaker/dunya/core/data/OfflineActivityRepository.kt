@@ -3,6 +3,8 @@ package io.github.themeshmaker.dunya.core.data
 import io.github.themeshmaker.dunya.core.datastore.ActivityDataSource
 import io.github.themeshmaker.dunya.core.domain.ActivityRepository
 import io.github.themeshmaker.dunya.core.model.ActivityData
+import io.github.themeshmaker.dunya.core.model.KhatmahPlan
+import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.TasbihState
 import java.time.LocalDate
@@ -22,4 +24,8 @@ internal class OfflineActivityRepository @Inject constructor(private val source:
     override suspend fun resetAdhkar(day: LocalDate, categoryId: String) = source.resetAdhkar(day, categoryId)
 
     override suspend fun setTasbih(state: TasbihState) = source.setTasbih(state)
+
+    override suspend fun setPrayed(day: LocalDate, prayer: Prayer, prayed: Boolean) = source.setPrayed(day, prayer, prayed)
+
+    override suspend fun setKhatmah(plan: KhatmahPlan?) = source.setKhatmah(plan)
 }

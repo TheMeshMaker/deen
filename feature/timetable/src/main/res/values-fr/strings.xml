@@ -15,4 +15,14 @@
     <string name="feature_timetable_short_asr">Asr</string>
     <string name="feature_timetable_short_maghrib">Magh.</string>
     <string name="feature_timetable_short_isha">Icha</string>
+    <string name="feature_timetable_islamic_calendar">Calendrier islamique</string>
+    <string name="feature_timetable_sunnah_fasts">Jeûnes surérogatoires</string>
+    <string name="feature_timetable_sunnah_fasts_body">Les lundis et jeudis, et les jours blancs (13–15) de chaque mois hégirien.</string>
+    <string name="feature_timetable_calendar_note">Les dates suivent le calendrier Umm al-Qura avec votre ajustement hégirien. L\'observation locale de la lune peut différer d\'un jour.</string>
+    <string name="feature_timetable_next_day">Prochain</string>
+    <plurals name="feature_timetable_days_to_go">
+        <item quantity="one">%1$s jour restant</item>
+        <item quantity="many">%1$s jours restants</item>
+        <item quantity="other">%1$s jours restants</item>
+    </plurals>
 </resources>

@@ -52,4 +52,43 @@
         <item quantity="many">%1$s آية</item>
         <item quantity="other">%1$s آية</item>
     </plurals>
+    <string name="feature_quran_khatmah">الختمة</string>
+    <string name="feature_quran_khatmah_invite">خطة لختم القرآن كاملًا</string>
+    <string name="feature_quran_khatmah_complete">تمّت الختمة، تقبّل الله منك.</string>
+    <string name="feature_quran_khatmah_done_today">أتممت ورد اليوم</string>
+    <string name="feature_quran_khatmah_today">ورد اليوم: الصفحات %1$s–%2$s</string>
+    <string name="feature_quran_khatmah_status">اليوم %1$s من %2$s · %3$s من %4$s صفحة</string>
+    <plurals name="feature_quran_khatmah_behind">
+        <item quantity="zero">متأخر بـ%1$s صفحة</item>
+        <item quantity="one">متأخر بصفحة واحدة</item>
+        <item quantity="two">متأخر بصفحتين</item>
+        <item quantity="few">متأخر بـ%1$s صفحات</item>
+        <item quantity="many">متأخر بـ%1$s صفحة</item>
+        <item quantity="other">متأخر بـ%1$s صفحة</item>
+    </plurals>
+    <string name="feature_quran_khatmah_new">ختمة جديدة</string>
+    <string name="feature_quran_khatmah_end">إنهاء الخطة</string>
+    <string name="feature_quran_khatmah_read">اقرأ ورد اليوم</string>
+    <string name="feature_quran_khatmah_title">خطة الختمة</string>
+    <string name="feature_quran_khatmah_body">اختر عدد الأيام لختم القرآن. يقسّم «دين» صفحات المصحف المدني الـ٦٠٤ إلى أوراد يومية ويتابع تقدّمك وأنت تقرأ.</string>
+    <string name="feature_quran_khatmah_days">الختم خلال</string>
+    <plurals name="feature_quran_khatmah_days_choice">
+        <item quantity="zero">%1$s يوم</item>
+        <item quantity="one">يوم واحد</item>
+        <item quantity="two">يومان</item>
+        <item quantity="few">%1$s أيام</item>
+        <item quantity="many">%1$s يومًا</item>
+        <item quantity="other">%1$s يوم</item>
+    </plurals>
+    <plurals name="feature_quran_khatmah_per_day">
+        <item quantity="zero">نحو %1$s صفحة يوميًا</item>
+        <item quantity="one">نحو صفحة يوميًا</item>
+        <item quantity="two">نحو صفحتين يوميًا</item>
+        <item quantity="few">نحو %1$s صفحات يوميًا</item>
+        <item quantity="many">نحو %1$s صفحة يوميًا</item>
+        <item quantity="other">نحو %1$s صفحة يوميًا</item>
+    </plurals>
+    <string name="feature_quran_khatmah_from_start">من الفاتحة</string>
+    <string name="feature_quran_khatmah_from_here">من موضعي</string>
+    <string name="feature_quran_khatmah_start">ابدأ</string>
 </resources>

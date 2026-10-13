@@ -15,4 +15,13 @@
     <string name="feature_timetable_short_asr">عصر</string>
     <string name="feature_timetable_short_maghrib">مغرب</string>
     <string name="feature_timetable_short_isha">عشاء</string>
+    <string name="feature_timetable_islamic_calendar">اسلامی کیلنڈر</string>
+    <string name="feature_timetable_sunnah_fasts">سنت روزے</string>
+    <string name="feature_timetable_sunnah_fasts_body">پیر اور جمعرات، اور ہر ہجری مہینے کے ایامِ بیض (13–15)۔</string>
+    <string name="feature_timetable_calendar_note">تاریخیں ام القریٰ کیلنڈر اور آپ کی ہجری ترمیم کے مطابق ہیں۔ مقامی رؤیتِ ہلال میں ایک دن کا فرق ہو سکتا ہے۔</string>
+    <string name="feature_timetable_next_day">اگلا</string>
+    <plurals name="feature_timetable_days_to_go">
+        <item quantity="one">%1$s دن باقی</item>
+        <item quantity="other">%1$s دن باقی</item>
+    </plurals>
 </resources>

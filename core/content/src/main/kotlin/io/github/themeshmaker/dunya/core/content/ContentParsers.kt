@@ -12,6 +12,7 @@ import io.github.themeshmaker.dunya.core.model.HadithGrade
 import io.github.themeshmaker.dunya.core.model.JuzStart
 import io.github.themeshmaker.dunya.core.model.LocalizedText
 import io.github.themeshmaker.dunya.core.model.ProphetFact
+import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.QuranRange
 import io.github.themeshmaker.dunya.core.model.Revelation
 import io.github.themeshmaker.dunya.core.model.Surah
@@ -64,7 +65,7 @@ internal fun splitBismillah(surah: Int, number: Int, text: String): Ayah {
 private const val BISMILLAH_WORDS = 4
 
 @Serializable
-private data class QuranMetaDto(val surahs: List<SurahDto>, val juz: List<JuzDto>)
+private data class QuranMetaDto(val surahs: List<SurahDto>, val juz: List<JuzDto>, val pages: List<List<Int>> = emptyList())
 
 @Serializable
 private data class SurahDto(
@@ -79,7 +80,8 @@ private data class SurahDto(
 @Serializable
 private data class JuzDto(val juz: Int, val surah: Int, val ayah: Int)
 
-internal class QuranMeta(val surahs: List<Surah>, val juz: List<JuzStart>)
+/** [pages]: where each of the 604 Madani pages starts. */
+internal class QuranMeta(val surahs: List<Surah>, val juz: List<JuzStart>, val pages: List<QuranPosition>)
 
 internal fun parseQuranMeta(text: String): QuranMeta {
     val dto = json.decodeFromString(QuranMetaDto.serializer(), text)
@@ -100,7 +102,8 @@ internal fun parseQuranMeta(text: String): QuranMeta {
                 }
             )
         },
-        juz = dto.juz.map { JuzStart(it.juz, it.surah, it.ayah) }
+        juz = dto.juz.map { JuzStart(it.juz, it.surah, it.ayah) },
+        pages = dto.pages.mapNotNull { (surah, ayah) -> QuranPosition(surah, ayah).takeIf { surah in 1..114 && ayah >= 1 } }
     )
 }
 

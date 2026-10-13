@@ -102,4 +102,7 @@
     <string name="feature_settings_src_fonts_body">Readex Pro, Amiri ve Amiri Quran (SIL Open Font License). Material Symbols (Apache 2.0).</string>
     <string name="feature_settings_src_app">Deen</string>
     <string name="feature_settings_src_app_body">GPL-3.0 veya sonrası lisanslı özgür yazılım. Reklam yok, takip yok.</string>
+    <string name="feature_settings_kahf">Cuma: Kehf suresi</string>
+    <string name="feature_settings_kahf_body">Cuma sabahları Kehf suresini okumak için hatırlatma</string>
+    <string name="feature_settings_style_liquid">Sıvı Cam</string>
 </resources>

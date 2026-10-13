@@ -101,4 +101,7 @@
     <string name="feature_settings_src_fonts_body">Readex Pro وأميري وأميري قرآن (SIL Open Font License)، وأيقونات Material Symbols (Apache 2.0).</string>
     <string name="feature_settings_src_app">دِين</string>
     <string name="feature_settings_src_app_body">برنامج حر بترخيص GPL-3.0 أو أحدث، بلا إعلانات ولا تتبّع.</string>
+    <string name="feature_settings_kahf">الجمعة: سورة الكهف</string>
+    <string name="feature_settings_kahf_body">تذكير صباح الجمعة بقراءة سورة الكهف</string>
+    <string name="feature_settings_style_liquid">زجاج سائل</string>
 </resources>

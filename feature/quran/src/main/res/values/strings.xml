@@ -48,4 +48,31 @@
         <item quantity="one">%1$s verse</item>
         <item quantity="other">%1$s verses</item>
     </plurals>
+    <string name="feature_quran_khatmah">Khatmah</string>
+    <string name="feature_quran_khatmah_invite">Plan to read the whole Quran</string>
+    <string name="feature_quran_khatmah_complete">Completed. May Allah accept it.</string>
+    <string name="feature_quran_khatmah_done_today">Today\'s portion is done</string>
+    <string name="feature_quran_khatmah_today">Today: pages %1$s–%2$s</string>
+    <string name="feature_quran_khatmah_status">Day %1$s of %2$s · %3$s of %4$s pages</string>
+    <plurals name="feature_quran_khatmah_behind">
+        <item quantity="one">%1$s page behind</item>
+        <item quantity="other">%1$s pages behind</item>
+    </plurals>
+    <string name="feature_quran_khatmah_new">New khatmah</string>
+    <string name="feature_quran_khatmah_end">End plan</string>
+    <string name="feature_quran_khatmah_read">Read today\'s portion</string>
+    <string name="feature_quran_khatmah_title">Khatmah plan</string>
+    <string name="feature_quran_khatmah_body">Choose how many days to finish the Quran in. Deen divides the 604 pages of the Madani Mushaf into daily portions and follows your progress as you read.</string>
+    <string name="feature_quran_khatmah_days">Finish in</string>
+    <plurals name="feature_quran_khatmah_days_choice">
+        <item quantity="one">%1$s day</item>
+        <item quantity="other">%1$s days</item>
+    </plurals>
+    <plurals name="feature_quran_khatmah_per_day">
+        <item quantity="one">About %1$s page a day</item>
+        <item quantity="other">About %1$s pages a day</item>
+    </plurals>
+    <string name="feature_quran_khatmah_from_start">From Al-Fatiha</string>
+    <string name="feature_quran_khatmah_from_here">From where I am</string>
+    <string name="feature_quran_khatmah_start">Start</string>
 </resources>

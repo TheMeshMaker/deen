@@ -51,10 +51,13 @@ enum class UiStyle {
     CLASSIC,
     SLEEK,
     GLASS,
+
+    /** Like iOS 26: refracting, light-catching glass over a coloured backdrop. */
+    LIQUID,
     HERITAGE;
 
-    /** Full-bleed header, floating tab bar and large titles (Sleek and Glass). */
-    val immersive: Boolean get() = this == SLEEK || this == GLASS
+    /** Full-bleed header, floating tab bar and large titles (Sleek, Glass and Liquid). */
+    val immersive: Boolean get() = this == SLEEK || this == GLASS || this == LIQUID
 }
 
 /**

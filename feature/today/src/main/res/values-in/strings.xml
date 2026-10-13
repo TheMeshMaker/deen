@@ -24,4 +24,36 @@
     <string name="feature_today_continue_quran">Lanjutkan membaca</string>
     <string name="feature_today_quran_position">%1$s · ayat %2$s</string>
     <string name="feature_today_start_quran">Baca Al-Qur\'an</string>
+    <string name="feature_today_tracker_short">Pelacak</string>
+    <string name="feature_today_tracker_title">Pelacak salat</string>
+    <string name="feature_today_tracker_hint">Tandai setiap salat yang sudah dikerjakan</string>
+    <plurals name="feature_today_streak">
+        <item quantity="other">%1$s hari berturut-turut</item>
+    </plurals>
+    <string name="feature_today_tracker_today">%1$s/%2$s hari ini</string>
+    <string name="feature_today_upcoming">Akan datang</string>
+    <string name="feature_today_khatmah_day">Khatam · hari ke-%1$s dari %2$s</string>
+    <string name="feature_today_khatmah_complete">Anda telah mengkhatamkan Al-Qur\'an. Semoga Allah menerimanya.</string>
+    <string name="feature_today_khatmah_done_today">Bagian hari ini selesai</string>
+    <string name="feature_today_khatmah_today">Hari ini: halaman %1$s–%2$s</string>
+    <plurals name="feature_today_khatmah_left">
+        <item quantity="other">%1$s halaman lagi hari ini</item>
+    </plurals>
+    <string name="feature_today_suhoor_ends">Akhir sahur</string>
+    <string name="feature_today_iftar">Berbuka</string>
+    <string name="feature_today_night_line">Tengah malam %1$s · Sepertiga akhir %2$s</string>
+    <string name="feature_today_prayed_mark">Tandai %1$s sudah dikerjakan</string>
+    <string name="feature_today_prayed_undo">%1$s sudah dikerjakan. Ketuk untuk membatalkan</string>
+    <string name="feature_today_tracker_today_title">Salat hari ini</string>
+    <string name="feature_today_tracker_private">Catatan Anda tetap di ponsel ini. Tidak ada yang dikirim ke mana pun.</string>
+    <plurals name="feature_today_days_label">
+        <item quantity="other">%1$s hari</item>
+    </plurals>
+    <string name="feature_today_stat_streak">Beruntun</string>
+    <string name="feature_today_stat_best">Terbaik</string>
+    <string name="feature_today_stat_month">Bulan ini</string>
+    <string name="feature_today_stat_of">%1$s dari %2$s</string>
+    <string name="feature_today_month_previous">Bulan sebelumnya</string>
+    <string name="feature_today_month_next">Bulan berikutnya</string>
+    <string name="feature_today_day_count">%1$s: %2$s dari %3$s salat</string>
 </resources>

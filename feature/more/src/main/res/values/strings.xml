@@ -26,4 +26,8 @@
     <string name="feature_more_report">Report a problem or an idea</string>
     <string name="feature_more_report_body">Opens Deen\'s page on GitHub</string>
     <string name="feature_more_dua">And please remember us in your du’a.</string>
+    <string name="feature_more_tracker">Prayer tracker</string>
+    <string name="feature_more_tracker_body">Tick off your prayers and see your streak</string>
+    <string name="feature_more_calendar">Islamic calendar</string>
+    <string name="feature_more_calendar_body">Ramadan, Eid, ʿArafah and the white days</string>
 </resources>

@@ -26,4 +26,39 @@
     <string name="feature_today_continue_quran">পড়া চালিয়ে যান</string>
     <string name="feature_today_quran_position">%1$s · আয়াত %2$s</string>
     <string name="feature_today_start_quran">কুরআন পড়ুন</string>
+    <string name="feature_today_tracker_short">ট্র্যাকার</string>
+    <string name="feature_today_tracker_title">নামাজ ট্র্যাকার</string>
+    <string name="feature_today_tracker_hint">প্রতিটি নামাজ পড়ে টিক দিন</string>
+    <plurals name="feature_today_streak">
+        <item quantity="one">টানা %1$s দিন</item>
+        <item quantity="other">টানা %1$s দিন</item>
+    </plurals>
+    <string name="feature_today_tracker_today">আজ %1$s/%2$s</string>
+    <string name="feature_today_upcoming">আসন্ন</string>
+    <string name="feature_today_khatmah_day">খতম · %2$s দিনের %1$s তম দিন</string>
+    <string name="feature_today_khatmah_complete">আপনি কুরআন খতম করেছেন। আল্লাহ কবুল করুন।</string>
+    <string name="feature_today_khatmah_done_today">আজকের অংশ শেষ</string>
+    <string name="feature_today_khatmah_today">আজ: পৃষ্ঠা %1$s–%2$s</string>
+    <plurals name="feature_today_khatmah_left">
+        <item quantity="one">আজ %1$s পৃষ্ঠা বাকি</item>
+        <item quantity="other">আজ %1$s পৃষ্ঠা বাকি</item>
+    </plurals>
+    <string name="feature_today_suhoor_ends">সাহরির শেষ সময়</string>
+    <string name="feature_today_iftar">ইফতার</string>
+    <string name="feature_today_night_line">মধ্যরাত %1$s · শেষ তৃতীয়াংশ %2$s</string>
+    <string name="feature_today_prayed_mark">%1$s পড়া হয়েছে চিহ্নিত করুন</string>
+    <string name="feature_today_prayed_undo">%1$s পড়া হয়েছে। ফেরাতে ট্যাপ করুন</string>
+    <string name="feature_today_tracker_today_title">আজকের নামাজ</string>
+    <string name="feature_today_tracker_private">আপনার ট্র্যাকার এই ফোনেই থাকে। কোথাও কিছু পাঠানো হয় না।</string>
+    <plurals name="feature_today_days_label">
+        <item quantity="one">%1$s দিন</item>
+        <item quantity="other">%1$s দিন</item>
+    </plurals>
+    <string name="feature_today_stat_streak">ধারাবাহিকতা</string>
+    <string name="feature_today_stat_best">সেরা</string>
+    <string name="feature_today_stat_month">এই মাসে</string>
+    <string name="feature_today_stat_of">%2$s এর মধ্যে %1$s</string>
+    <string name="feature_today_month_previous">আগের মাস</string>
+    <string name="feature_today_month_next">পরের মাস</string>
+    <string name="feature_today_day_count">%1$s: %3$s টির মধ্যে %2$s নামাজ</string>
 </resources>

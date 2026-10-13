@@ -48,7 +48,16 @@ class AlertNotifications @Inject constructor(@ApplicationContext private val con
                 NotificationManager.IMPORTANCE_DEFAULT
             ),
             NotificationChannel(CHANNEL_MASJID, context.getString(R.string.core_alarm_channel_masjid), NotificationManager.IMPORTANCE_HIGH),
-            NotificationChannel(CHANNEL_AFTER, context.getString(R.string.core_alarm_channel_after), NotificationManager.IMPORTANCE_DEFAULT)
+            NotificationChannel(
+                CHANNEL_AFTER,
+                context.getString(R.string.core_alarm_channel_after),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ),
+            NotificationChannel(
+                CHANNEL_FRIDAY,
+                context.getString(R.string.core_alarm_channel_friday),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
         )
         context.getSystemService(NotificationManager::class.java).createNotificationChannels(channels)
     }
@@ -159,6 +168,23 @@ class AlertNotifications @Inject constructor(@ApplicationContext private val con
         manager.notify(AFTER_NOTIFICATION_ID, notification)
     }
 
+    /** Friday morning: "Read Surah Al-Kahf", opening the reader at the surah. */
+    @SuppressLint("MissingPermission")
+    fun showKahf() {
+        if (!manager.areNotificationsEnabled()) return
+        val body = context.getString(R.string.core_alarm_kahf_body)
+        val notification = NotificationCompat.Builder(context, CHANNEL_FRIDAY)
+            .setSmallIcon(R.drawable.ic_stat_deen)
+            .setContentTitle(context.getString(R.string.core_alarm_kahf_title))
+            .setContentText(body)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setAutoCancel(true)
+            .setContentIntent(openAppIntent(DeenLinks.quran(KAHF_SURAH)))
+            .build()
+        manager.notify(KAHF_NOTIFICATION_ID, notification)
+    }
+
     private fun prayerName(alert: PlannedAlert, zone: ZoneId): String {
         val isFriday = alert.prayerAt.atZone(zone).dayOfWeek == DayOfWeek.FRIDAY
         return context.getString(alert.prayer.labelRes(isFriday && alert.prayer == Prayer.DHUHR))
@@ -199,12 +225,15 @@ class AlertNotifications @Inject constructor(@ApplicationContext private val con
         const val CHANNEL_REMINDER = "prayer_reminder"
         const val CHANNEL_MASJID = "masjid_reminder"
         const val CHANNEL_AFTER = "after_adhan_reminder"
+        const val CHANNEL_FRIDAY = "friday_reminder"
 
         internal const val ADHAN_NOTIFICATION_ID = 1
         private const val PRAYER_NOTIFICATION_ID = 2
         private const val REMINDER_NOTIFICATION_ID = 3
         private const val MASJID_NOTIFICATION_ID = 4
         private const val AFTER_NOTIFICATION_ID = 5
+        private const val KAHF_NOTIFICATION_ID = 6
+        private const val KAHF_SURAH = 18
         private const val AFTER_TIMEOUT_MS = 45L * 60 * 1000
         private const val OPEN_APP_REQUEST_CODE = 2100
 
@@ -212,7 +241,8 @@ class AlertNotifications @Inject constructor(@ApplicationContext private val con
         private val LINK_CODES = listOf(
             DeenLinks.adhkar(AdhkarCategory.ADHAN),
             DeenLinks.adhkar(AdhkarCategory.MOSQUE),
-            DeenLinks.adhkar(AdhkarCategory.AFTER_PRAYER)
+            DeenLinks.adhkar(AdhkarCategory.AFTER_PRAYER),
+            DeenLinks.quran(KAHF_SURAH)
         )
     }
 }

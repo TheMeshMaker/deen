@@ -34,6 +34,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenTabScaffold
 import io.github.themeshmaker.dunya.core.designsystem.component.MenuRow
+import io.github.themeshmaker.dunya.core.designsystem.component.paddingExceptBottom
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.model.ProjectLinks
@@ -44,6 +45,8 @@ class MoreActions(
     val onOpenQibla: () -> Unit,
     val onOpenTimetable: () -> Unit,
     val onOpenTasbih: () -> Unit,
+    val onOpenTracker: () -> Unit,
+    val onOpenCalendar: () -> Unit,
     val onOpenReliability: () -> Unit,
     val onOpenSources: () -> Unit
 )
@@ -55,9 +58,10 @@ internal fun MoreScreenRoute(actions: MoreActions, viewModel: MoreViewModel = hi
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .paddingExceptBottom(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = look.gutter),
+                .padding(horizontal = look.gutter)
+                .padding(bottom = padding.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(look.gap)
         ) {
             DeenCard(contentPadding = PaddingValues(vertical = 4.dp)) {
@@ -78,6 +82,18 @@ internal fun MoreScreenRoute(actions: MoreActions, viewModel: MoreViewModel = hi
                     icon = DeenIcons.Tasbih,
                     subtitle = stringResource(R.string.feature_more_tasbih_body),
                     onClick = actions.onOpenTasbih
+                )
+                MenuRow(
+                    stringResource(R.string.feature_more_tracker),
+                    icon = DeenIcons.Ok,
+                    subtitle = stringResource(R.string.feature_more_tracker_body),
+                    onClick = actions.onOpenTracker
+                )
+                MenuRow(
+                    stringResource(R.string.feature_more_calendar),
+                    icon = DeenIcons.History,
+                    subtitle = stringResource(R.string.feature_more_calendar_body),
+                    onClick = actions.onOpenCalendar
                 )
             }
             DeenCard(contentPadding = PaddingValues(vertical = 4.dp)) {

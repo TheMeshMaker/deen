@@ -33,4 +33,51 @@
     <string name="feature_today_continue_quran">أكمل القراءة</string>
     <string name="feature_today_quran_position">%1$s · الآية %2$s</string>
     <string name="feature_today_start_quran">اقرأ القرآن الكريم</string>
+    <string name="feature_today_tracker_short">المتابعة</string>
+    <string name="feature_today_tracker_title">متابعة الصلوات</string>
+    <string name="feature_today_tracker_hint">علِّم كل صلاة حين تصليها</string>
+    <plurals name="feature_today_streak">
+        <item quantity="zero">%1$s يوم متتالٍ</item>
+        <item quantity="one">يوم واحد</item>
+        <item quantity="two">يومان متتاليان</item>
+        <item quantity="few">%1$s أيام متتالية</item>
+        <item quantity="many">%1$s يومًا متتاليًا</item>
+        <item quantity="other">%1$s يوم متتالٍ</item>
+    </plurals>
+    <string name="feature_today_tracker_today">%1$s/%2$s اليوم</string>
+    <string name="feature_today_upcoming">قادم</string>
+    <string name="feature_today_khatmah_day">الختمة · اليوم %1$s من %2$s</string>
+    <string name="feature_today_khatmah_complete">أتممت ختم القرآن، تقبّل الله منك.</string>
+    <string name="feature_today_khatmah_done_today">أتممت ورد اليوم</string>
+    <string name="feature_today_khatmah_today">ورد اليوم: الصفحات %1$s–%2$s</string>
+    <plurals name="feature_today_khatmah_left">
+        <item quantity="zero">%1$s صفحة متبقية اليوم</item>
+        <item quantity="one">صفحة واحدة متبقية اليوم</item>
+        <item quantity="two">صفحتان متبقيتان اليوم</item>
+        <item quantity="few">%1$s صفحات متبقية اليوم</item>
+        <item quantity="many">%1$s صفحة متبقية اليوم</item>
+        <item quantity="other">%1$s صفحة متبقية اليوم</item>
+    </plurals>
+    <string name="feature_today_suhoor_ends">نهاية السحور</string>
+    <string name="feature_today_iftar">الإفطار</string>
+    <string name="feature_today_night_line">منتصف الليل %1$s · الثلث الأخير %2$s</string>
+    <string name="feature_today_prayed_mark">علِّم %1$s أنها صُلِّيت</string>
+    <string name="feature_today_prayed_undo">صُلِّيت %1$s. اضغط للتراجع</string>
+    <string name="feature_today_tracker_today_title">صلوات اليوم</string>
+    <string name="feature_today_tracker_private">تبقى متابعتك على هذا الهاتف، ولا يُرسل منها شيء.</string>
+    <plurals name="feature_today_days_label">
+        <item quantity="zero">%1$s يوم</item>
+        <item quantity="one">%1$s يوم</item>
+        <item quantity="two">يومان</item>
+        <item quantity="few">%1$s أيام</item>
+        <item quantity="many">%1$s يومًا</item>
+        <item quantity="other">%1$s يوم</item>
+    </plurals>
+    <string name="feature_today_stat_streak">متتالية</string>
+    <string name="feature_today_stat_best">الأفضل</string>
+    <string name="feature_today_stat_month">هذا الشهر</string>
+    <string name="feature_today_stat_of">%1$s من %2$s</string>
+    <string name="feature_today_month_previous">الشهر السابق</string>
+    <string name="feature_today_month_next">الشهر التالي</string>
+    <string name="feature_today_day_count">%1$s: %2$s من %3$s صلوات</string>
 </resources>

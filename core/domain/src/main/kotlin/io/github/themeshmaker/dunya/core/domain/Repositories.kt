@@ -11,6 +11,8 @@ import io.github.themeshmaker.dunya.core.model.Hadith
 import io.github.themeshmaker.dunya.core.model.HadithCollection
 import io.github.themeshmaker.dunya.core.model.HadithEntry
 import io.github.themeshmaker.dunya.core.model.JuzStart
+import io.github.themeshmaker.dunya.core.model.KhatmahPlan
+import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.ProphetFact
 import io.github.themeshmaker.dunya.core.model.QuranPosition
@@ -56,7 +58,7 @@ interface UserDataRepository {
     suspend fun setReadingSettings(settings: ReadingSettings)
 }
 
-/** What the user has been doing: reading position, bookmarks, adhkar counts, tasbih. */
+/** What the user has been doing: reading position, bookmarks, adhkar counts, tasbih, prayers, khatmah. */
 interface ActivityRepository {
     val activity: Flow<ActivityData>
 
@@ -69,6 +71,12 @@ interface ActivityRepository {
     suspend fun resetAdhkar(day: LocalDate, categoryId: String)
 
     suspend fun setTasbih(state: TasbihState)
+
+    /** Marks one of the five prayers of [day] as prayed or not. */
+    suspend fun setPrayed(day: LocalDate, prayer: Prayer, prayed: Boolean)
+
+    /** Starts (or replaces) the khatmah plan; null ends it. */
+    suspend fun setKhatmah(plan: KhatmahPlan?)
 }
 
 /** The bundled, offline religious texts (core:content). Everything is read lazily and cached. */
@@ -81,6 +89,9 @@ interface ContentRepository {
     suspend fun ayahs(surah: Int): List<Ayah>
 
     suspend fun juzStarts(): List<JuzStart>
+
+    /** Where each of the 604 Madani pages starts. */
+    suspend fun pageStarts(): List<QuranPosition>
 
     /** An-Nawawi's Forty, with English. */
     suspend fun nawawi(): List<Hadith>

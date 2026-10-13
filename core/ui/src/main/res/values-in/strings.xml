@@ -67,4 +67,26 @@
     <string name="core_ui_daily_fact">Tentang Nabi ﷺ</string>
     <string name="core_ui_language">Bahasa</string>
     <string name="core_ui_language_system">Bahasa ponsel</string>
+    <string name="core_ui_event_new_year">Tahun Baru Islam</string>
+    <string name="core_ui_event_ashura">Hari Asyura</string>
+    <string name="core_ui_event_ramadan">Ramadan</string>
+    <string name="core_ui_event_last_ten">Sepuluh malam terakhir</string>
+    <string name="core_ui_event_eid_fitr">Idulfitri</string>
+    <string name="core_ui_event_arafah">Hari Arafah</string>
+    <string name="core_ui_event_eid_adha">Iduladha</string>
+    <string name="core_ui_event_white_days">Hari-hari putih</string>
+    <string name="core_ui_event_new_year_detail">1 Muharram, hari pertama tahun Hijriah.</string>
+    <string name="core_ui_event_ashura_detail">Puasa yang dianjurkan, bersama hari sebelumnya.</string>
+    <string name="core_ui_event_ramadan_detail">Bulan puasa, saat Al-Qur\'an diturunkan.</string>
+    <string name="core_ui_event_last_ten_detail">Carilah Lailatulqadar di malam-malam ganjil.</string>
+    <string name="core_ui_event_eid_fitr_detail">Hari raya di akhir Ramadan, dengan salat Id.</string>
+    <string name="core_ui_event_arafah_detail">Dianjurkan berpuasa bagi yang tidak berhaji.</string>
+    <string name="core_ui_event_eid_adha_detail">Hari raya kurban, dengan salat Id.</string>
+    <string name="core_ui_event_white_days_detail">Tanggal 13 sampai 15 bulan Hijriah: hari yang dianjurkan berpuasa.</string>
+    <string name="core_ui_event_now">Sekarang</string>
+    <string name="core_ui_event_today">Hari ini</string>
+    <string name="core_ui_event_tomorrow">Besok</string>
+    <plurals name="core_ui_event_in_days">
+        <item quantity="other">%d hari lagi</item>
+    </plurals>
 </resources>

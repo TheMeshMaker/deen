@@ -33,4 +33,7 @@
     <string name="core_alarm_voice_custom">آپ کی اپنی ریکارڈنگ</string>
     <string name="core_alarm_test_title">اذان کی جانچ</string>
     <string name="core_alarm_test_body">اگر اسکرین لاک ہونے پر یہ سنائی دے تو اس فون پر اذان کام کرتی ہے۔</string>
+    <string name="core_alarm_channel_friday">جمعہ کی یاد دہانی</string>
+    <string name="core_alarm_kahf_title">آج جمعہ ہے</string>
+    <string name="core_alarm_kahf_body">آج سورۂ کہف پڑھیں۔ کھولنے کے لیے تھپتھپائیں۔</string>
 </resources>
