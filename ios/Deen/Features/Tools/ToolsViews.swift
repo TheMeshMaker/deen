@@ -241,6 +241,7 @@ struct QuickActions: View {
                 action(L("feature_today_qibla"), symbol: "location.north.circle.fill", id: "qiblaButton") { QiblaView() }
                 action(L("feature_today_timetable"), symbol: "calendar", id: "timetableButton") { TimetableView() }
                 action(L("feature_today_tasbih"), symbol: "circle.hexagongrid.fill", id: "tasbihQuick") { TasbihView() }
+                action(L("feature_today_tracker_short"), symbol: "checkmark.circle", id: "trackerQuick") { TrackerView() }
             }
         }
     }

@@ -230,3 +230,86 @@ private func method(_ name: String) -> CalculationMethod {
     #expect(ramadan.first.map { [$0.year, $0.month, $0.day] } == [2025, 3, 1])
     #expect(ramadan.allSatisfy { $0.hijri.month == 9 })
 }
+
+@Test func islamicDaysAreOnTheirHijriDates() throws {
+    let today = LocalDay(year: 2026, month: 10, day: 13)
+    let events = IslamicEvents.upcoming(today: today)
+    #expect(Set(events.map(\.event)) == Set(IslamicEvent.allCases))
+    #expect(events.map(\.start) == events.map(\.start).sorted())
+    for e in events {
+        #expect(e.start.hijri.day == e.event.day)
+        #expect(e.end >= today)
+        if e.event != .whiteDays { #expect(e.hijri.month == e.event.month) }
+    }
+    let byEvent = Dictionary(uniqueKeysWithValues: events.map { ($0.event, $0) })
+    let ramadan = try #require(byEvent[.ramadan])
+    // 1 Ramadan 1448 is 8 February 2027 on the Umm al-Qura calendar (as on Android).
+    #expect(ramadan.start == LocalDay(year: 2027, month: 2, day: 8))
+    #expect(ramadan.daysAway == 118)
+    #expect(byEvent[.arafah]!.start.adding(days: 1) == byEvent[.eidAlAdha]!.start)
+    // A moon-sighting correction moves the days the other way.
+    #expect(IslamicEvents.upcoming(today: today, offsetDays: 1).first { $0.event == .ramadan }?.start == ramadan.start.adding(days: -1))
+}
+
+@Test func nightTimesSplitTheNight() throws {
+    let makkah = SavedLocation(name: "Makkah", coordinates: Coordinates(latitude: 21.4225, longitude: 39.8262), timeZoneID: "Asia/Riyadh")
+    let settings = PrayerSettings(method: .ummAlQura)
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = makkah.timeZone
+    let evening = calendar.date(from: DateComponents(year: 2026, month: 10, day: 13, hour: 21))!
+    let night = try #require(NightTimes.of(now: evening, location: makkah, settings: settings))
+    #expect(night.maghrib < evening && evening < night.fajr)
+    #expect(abs(night.midnight.timeIntervalSince(night.maghrib) - night.fajr.timeIntervalSince(night.midnight)) < 1)
+    #expect(abs(night.lastThird.timeIntervalSince(night.maghrib) - night.fajr.timeIntervalSince(night.maghrib) * 2 / 3) < 1)
+    let early = calendar.date(from: DateComponents(year: 2026, month: 10, day: 14, hour: 2))!
+    #expect(NightTimes.of(now: early, location: makkah, settings: settings)?.fajr == night.fajr)
+}
+
+@Test func trackerStreaks() {
+    let today = LocalDay(year: 2026, month: 10, day: 13)
+    let all = Set(Prayer.prayers)
+    var prayed: [LocalDay: Set<Prayer>] = [
+        today.adding(days: -1): all, today.adding(days: -2): all, today.adding(days: -3): all.subtracting([.asr]),
+        today: [.fajr, .sunrise]
+    ]
+    #expect(PrayerTracker.count(prayed, today) == 1)
+    #expect(PrayerTracker.streak(prayed, today: today) == 2)
+    prayed[today] = all
+    #expect(PrayerTracker.streak(prayed, today: today) == 3)
+    #expect(PrayerTracker.bestStreak(prayed) == 3)
+    let totals = PrayerTracker.monthTotals(prayed, year: 2026, month: 10, today: today)
+    #expect(totals.due == 13 * 5)
+    #expect(totals.done == 5 + 5 + 5 + 4)
+}
+
+@Test func khatmahPortions() throws {
+    let base = repoRoot.appendingPathComponent("core/content/src/main/assets/quran")
+    let quran = try Quran.load(text: base.appendingPathComponent("quran-uthmani.txt"), meta: base.appendingPathComponent("quran-meta.json"))
+    let pages = quran.pages
+    #expect(pages.count == 604)
+    #expect(pages.page(of: QuranPosition(surah: 1, ayah: 1)) == 1)
+    #expect(pages.page(of: QuranPosition(surah: 2, ayah: 142)) == 22)
+    #expect(pages.page(of: QuranPosition(surah: 114, ayah: 6)) == 604)
+    let start = LocalDay(year: 2026, month: 10, day: 1)
+    let plan = KhatmahPlan(startedOn: start, days: 30)
+    let first = KhatmahProgress.of(plan, lastRead: nil, pages: pages, today: start)
+    #expect(first.todayFrom == 1 && first.todayTo == 21 && first.pagesLeftToday == 21)
+    let later = KhatmahProgress.of(plan, lastRead: QuranPosition(surah: 2, ayah: 142), pages: pages, today: start.adding(days: 1))
+    #expect(later.pagesRead == 21)
+    #expect(later.todayTo == 41)
+    #expect(KhatmahProgress.of(plan, lastRead: QuranPosition(surah: 114, ayah: 6), pages: pages, today: start).complete)
+}
+
+@Test func kahfReminderOnFridayMorning() throws {
+    let makkah = SavedLocation(name: "Makkah", coordinates: Coordinates(latitude: 21.4225, longitude: 39.8262), timeZoneID: "Asia/Riyadh")
+    let settings = PrayerSettings(method: .ummAlQura)
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = makkah.timeZone
+    let monday = calendar.date(from: DateComponents(year: 2026, month: 10, day: 12, hour: 8))!
+    let plan = AlertPlanner.plan(now: monday, location: makkah, prayer: settings, alerts: AlertSettings(kahfReminder: true), days: 7)
+    let kahf = try #require(plan.first { $0.kind == .kahf })
+    #expect(calendar.component(.weekday, from: kahf.at) == 6)
+    let friday = try #require(PrayerEngine.day(year: 2026, month: 10, day: 16, at: makkah.coordinates, settings: settings))
+    #expect(kahf.at == friday[.sunrise].addingTimeInterval(3600))
+    #expect(!AlertPlanner.plan(now: monday, location: makkah, prayer: settings, alerts: AlertSettings(), days: 7).contains { $0.kind == .kahf })
+}

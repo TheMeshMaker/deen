@@ -43,11 +43,14 @@ public struct QuranPosition: Codable, Hashable, Sendable {
 public final class Quran: @unchecked Sendable {
     public let surahs: [Surah]
     public let juz: [JuzStart]
+    /// Where each of the 604 Madani pages starts (for the khatmah plan).
+    public let pages: QuranPages
     private let verses: [Int: [Ayah]]
 
-    private init(surahs: [Surah], juz: [JuzStart], verses: [Int: [Ayah]]) {
+    private init(surahs: [Surah], juz: [JuzStart], pages: QuranPages, verses: [Int: [Ayah]]) {
         self.surahs = surahs
         self.juz = juz
+        self.pages = pages
         self.verses = verses
     }
 
@@ -89,6 +92,7 @@ public final class Quran: @unchecked Sendable {
                       translation: $0.translation, isMedinan: $0.revelation == "MEDINAN")
             },
             juz: meta.juz.map { JuzStart(juz: $0.juz, surah: $0.surah, ayah: $0.ayah) },
+            pages: QuranPages(starts: (meta.pages ?? []).compactMap { $0.count == 2 ? QuranPosition(surah: $0[0], ayah: $0[1]) : nil }),
             verses: verses
         )
     }
@@ -125,5 +129,6 @@ public final class Quran: @unchecked Sendable {
 
         let surahs: [SurahEntry]
         let juz: [JuzEntry]
+        let pages: [[Int]]?
     }
 }

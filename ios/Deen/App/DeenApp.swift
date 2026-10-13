@@ -1,14 +1,20 @@
 import DeenKit
 import SwiftUI
+import UserNotifications
 
 @main
 struct DeenApp: App {
     @State private var model = AppModel()
 
+    init() {
+        UNUserNotificationCenter.current().delegate = NotificationRouter.shared
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(model)
+                .onAppear { NotificationRouter.shared.model = model }
         }
         // Rolls the adhan alarms forward even if the app isn't opened for days.
         .backgroundTask(.appRefresh(AlertScheduler.refreshTaskID)) {
@@ -61,7 +67,7 @@ private struct AlertInputs: Equatable {
 }
 
 enum AppTab: String, Hashable {
-    case today, quran, hadith, adhkar, more, settings, reader, qibla, timetable
+    case today, quran, hadith, adhkar, more, settings, reader, qibla, timetable, tracker, calendar
 }
 
 /// The tab bar: Liquid Glass, shrinking away as the page scrolls.
@@ -73,11 +79,11 @@ struct MainTabs: View {
         switch initial {
         case .settings: _tab = State(initialValue: .more)
         case .reader: _tab = State(initialValue: .quran)
-        case .qibla, .timetable: _tab = State(initialValue: .more)
+        case .qibla, .timetable, .tracker, .calendar: _tab = State(initialValue: .more)
         default: _tab = State(initialValue: initial)
         }
         openSettings = initial == .settings
-        openTool = initial == .qibla || initial == .timetable ? initial.rawValue : nil
+        openTool = [.qibla, .timetable, .tracker, .calendar].contains(initial) ? initial.rawValue : nil
         openReader = initial == .reader
     }
 
@@ -105,5 +111,9 @@ struct MainTabs: View {
         }
         // (Kept full size in screenshot/test mode, so the walkthrough can always reach every tab.)
         .tabBarMinimizeBehavior(model.demo == nil ? .onScrollDown : .never)
+        // A notification asked for a surah (Al-Kahf on Friday): the Quran tab opens it.
+        .onChange(of: model.pendingReader) { _, position in
+            if position != nil { tab = .quran }
+        }
     }
 }

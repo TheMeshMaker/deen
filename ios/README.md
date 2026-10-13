@@ -18,6 +18,7 @@ The iPhone version of Deen, written in SwiftUI for **iOS 26 and newer** so it us
 | 2 | Adhan with AlarmKit (and a "Full adhan" button), reminders before and after the adhan, Quran reader | ✅ |
 | 3 | Adhkar with rewards, tasbih, hadith (daily hadith and fact, an-Nawawi's Forty, the full collections) | ✅ |
 | 4 | Tafsir, recitation player with the recited word in green, Qibla, monthly timetable, home-screen widget | ✅ |
+| 5 | Prayer tracker (ticks on Today, streaks, month calendar), Islamic calendar with countdowns, khatmah plan by Madani page, the middle and last third of the night, suhoor and iftar in Ramadan, Friday Al-Kahf reminder | ✅ |
 
 ## Requirements
 

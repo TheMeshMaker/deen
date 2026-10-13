@@ -16,6 +16,8 @@ public struct AlertSettings: Codable, Equatable, Sendable {
     public var voice: String
     /// A different recording for Fajr, or nil to use [voice].
     public var fajrVoice: String?
+    /// A reminder on Friday mornings to read Surah Al-Kahf.
+    public var kahfReminder: Bool
 
     public static let voices = ["default", "traditional", "aaqib"]
     public static let reminderChoices = [0, 5, 10, 15, 20, 30]
@@ -23,12 +25,13 @@ public struct AlertSettings: Codable, Equatable, Sendable {
     public static let afterAdhanDefault = 10
 
     public init(modes: [Prayer: AlertMode] = [:], reminderMinutes: Int = 0, afterAdhanMinutes: [Prayer: Int] = [:],
-                voice: String = "default", fajrVoice: String? = nil) {
+                voice: String = "default", fajrVoice: String? = nil, kahfReminder: Bool = false) {
         self.modes = modes
         self.reminderMinutes = reminderMinutes
         self.afterAdhanMinutes = afterAdhanMinutes
         self.voice = voice
         self.fajrVoice = fajrVoice
+        self.kahfReminder = kahfReminder
     }
 
     public func mode(for prayer: Prayer) -> AlertMode {
@@ -49,6 +52,7 @@ public struct AlertSettings: Codable, Equatable, Sendable {
         afterAdhanMinutes = (try? c.decodeIfPresent([Prayer: Int].self, forKey: .afterAdhanMinutes)) ?? [:]
         voice = (try? c.decodeIfPresent(String.self, forKey: .voice)) ?? "default"
         fajrVoice = try? c.decodeIfPresent(String.self, forKey: .fajrVoice)
+        kahfReminder = (try? c.decodeIfPresent(Bool.self, forKey: .kahfReminder)) ?? false
     }
 }
 
@@ -61,6 +65,8 @@ public enum AlertKind: String, Codable, Sendable {
     case reminder
     /// "Have you prayed Dhuhr?" some minutes after the adhan.
     case afterAdhan
+    /// Friday morning: "Read Surah Al-Kahf" (filed under sunrise).
+    case kahf
 }
 
 /// One alert the system should deliver. [prayerAt] differs from [at] for reminders.
@@ -94,6 +100,11 @@ public enum AlertPlanner {
                 if after > 0 {
                     result.append(PlannedAlert(prayer: prayer, kind: .afterAdhan, at: at.addingTimeInterval(Double(after) * 60), prayerAt: at))
                 }
+            }
+            // Friday, an hour after sunrise.
+            if alerts.kahfReminder, LocalDay(year: d.year, month: d.month, day: d.day).weekday == 6 {
+                let at = day[.sunrise].addingTimeInterval(3600)
+                result.append(PlannedAlert(prayer: .sunrise, kind: .kahf, at: at, prayerAt: at))
             }
         }
         // Several days are computed from "now" in steps of 24 h; drop anything already past or doubled.

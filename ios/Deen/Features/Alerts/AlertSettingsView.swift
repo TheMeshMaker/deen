@@ -66,6 +66,12 @@ struct AlertSettingsSection: View {
         } footer: {
             Text("\(L("feature_settings_reminder_body")) \(L("feature_settings_after_adhan_body"))")
         }
+
+        Section {
+            Toggle(L("feature_settings_kahf"), isOn: model.binding(\.alerts.kahfReminder))
+        } footer: {
+            Text(L("feature_settings_kahf_body"))
+        }
     }
 
     private func voicePicker(_ title: String, selection: Binding<String>, allowSame: Bool) -> some View {

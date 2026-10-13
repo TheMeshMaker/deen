@@ -41,8 +41,15 @@ struct AppSettings: Codable, Equatable {
     /// Today's adhkar counts ("category/id" → times said); cleared on a new day.
     var adhkarDay = ""
     var adhkarCounts: [String: Int] = [:]
+    /// Prayers ticked off, by the day they belong to ("2026-10-13" → prayers); stays on the phone.
+    var prayed: [String: [Prayer]] = [:]
+    var khatmah: KhatmahPlan?
 
     var isSetUp: Bool { onboardingComplete && location != nil && prayer != nil }
+
+    var prayedDays: [LocalDay: Set<Prayer>] {
+        Dictionary(uniqueKeysWithValues: prayed.compactMap { key, list in LocalDay(key: key).map { ($0, Set(list)) } })
+    }
 
     /// What the home-screen widget shows.
     var widgetSnapshot: WidgetSnapshot? {
@@ -70,6 +77,8 @@ struct AppSettings: Codable, Equatable {
         timetableKind = (try? c.decodeIfPresent(MonthCalendar.Kind.self, forKey: .timetableKind)) ?? .gregorian
         adhkarDay = (try? c.decodeIfPresent(String.self, forKey: .adhkarDay)) ?? ""
         adhkarCounts = (try? c.decodeIfPresent([String: Int].self, forKey: .adhkarCounts)) ?? [:]
+        prayed = (try? c.decodeIfPresent([String: [Prayer]].self, forKey: .prayed)) ?? [:]
+        khatmah = try? c.decodeIfPresent(KhatmahPlan.self, forKey: .khatmah)
     }
 }
 
@@ -86,6 +95,8 @@ final class AppModel {
     private var pickthall: [Int: [Int: String]]?
     /// Screenshot mode (`-DeenDemo today|more|settings|onboarding`): fixed sample data, nothing saved.
     let demo: String?
+    /// A Quran position to open (from a notification, e.g. Al-Kahf on Friday); the Quran tab takes it.
+    var pendingReader: QuranPosition?
 
     nonisolated static let storageKey = "deen.settings"
 
@@ -209,6 +220,20 @@ final class AppModel {
         update { s in s.adhkarCounts = s.adhkarCounts.filter { !$0.key.hasPrefix("\(category)/") } }
     }
 
+    // MARK: Prayer tracker
+
+    /// Ticks [prayer] of [day] as prayed, or unticks it; about a year and a half of history is kept.
+    func setPrayed(_ prayed: Bool, prayer: Prayer, day: LocalDay) {
+        guard prayer.isPrayer else { return }
+        update { s in
+            var set = Set(s.prayed[day.key] ?? [])
+            if prayed { set.insert(prayer) } else { set.remove(prayer) }
+            s.prayed[day.key] = set.isEmpty ? nil : Prayer.prayers.filter(set.contains)
+            let oldest = day.adding(days: -550).key
+            s.prayed = s.prayed.filter { $0.key >= oldest }
+        }
+    }
+
     func countTasbih() {
         update { s in
             if s.tasbih.day != todayKey {
@@ -232,6 +257,15 @@ final class AppModel {
         )
         s.prayer = PrayerSettings(method: .ummAlQura)
         s.lastRead = QuranPosition(surah: 18, ayah: 10)
+        // A few days of the tracker and a khatmah under way, so the screenshots show them.
+        let today = LocalDay.today(in: s.location!.timeZone)
+        s.prayed = [
+            today.key: [.fajr, .dhuhr],
+            today.adding(days: -1).key: Prayer.prayers,
+            today.adding(days: -2).key: Prayer.prayers,
+            today.adding(days: -3).key: [.fajr, .maghrib, .isha]
+        ]
+        s.khatmah = KhatmahPlan(startedOn: today.adding(days: -9), days: 30, startPage: 1)
         return s
     }
 }

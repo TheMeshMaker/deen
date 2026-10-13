@@ -23,6 +23,12 @@ struct MoreView: View {
                     NavigationLink { TasbihView() } label: {
                         MenuLabel(L("feature_more_tasbih"), detail: L("feature_more_tasbih_body"), symbol: "circle.hexagongrid.fill")
                     }
+                    NavigationLink { TrackerView() } label: {
+                        MenuLabel(L("feature_more_tracker"), detail: L("feature_more_tracker_body"), symbol: "checkmark.circle.fill")
+                    }
+                    NavigationLink { IslamicCalendarView() } label: {
+                        MenuLabel(L("feature_more_calendar"), detail: L("feature_more_calendar_body"), symbol: "calendar.badge.clock")
+                    }
                 }
                 Section {
                     NavigationLink(value: "settings") {
@@ -58,6 +64,8 @@ struct MoreView: View {
                 switch page {
                 case "qibla": QiblaView()
                 case "timetable": TimetableView()
+                case "tracker": TrackerView()
+                case "calendar": IslamicCalendarView()
                 default: SettingsView()
                 }
             }

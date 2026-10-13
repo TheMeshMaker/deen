@@ -78,6 +78,27 @@ enum Formats {
         return f.string(from: date)
     }
 
+    /// A day of the place's calendar, written like [longDate] ("Tuesday, 13 October").
+    static func longDate(_ day: LocalDay) -> String { longDate(day.noon, in: TimeZone(identifier: "UTC")!) }
+
+    /// "Tue" / "الثلاثاء", short.
+    static func weekdayShort(_ day: LocalDay) -> String { utcFormat(day, template: "EEE") }
+
+    /// "Feb" / "فبراير".
+    static func monthShort(_ day: LocalDay) -> String { utcFormat(day, template: "MMM") }
+
+    /// "October 2026".
+    static func monthTitle(_ day: LocalDay) -> String { utcFormat(day, template: "MMMMy") }
+
+    private static func utcFormat(_ day: LocalDay, template: String) -> String {
+        let f = DateFormatter()
+        f.locale = .current
+        f.calendar = Calendar(identifier: .gregorian)
+        f.timeZone = TimeZone(identifier: "UTC")
+        f.setLocalizedDateFormatFromTemplate(template)
+        return f.string(from: day.noon)
+    }
+
     /// 01:23:45, with the language's own digits.
     static func countdown(_ interval: TimeInterval) -> String {
         let total = max(Int(interval), 0)

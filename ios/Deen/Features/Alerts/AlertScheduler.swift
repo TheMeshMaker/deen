@@ -121,6 +121,11 @@ enum AlertScheduler {
             content.title = L("core_alarm_after_title", prayerName)
             content.body = LP("core_alarm_after_body", Int(alert.at.timeIntervalSince(alert.prayerAt) / 60))
             content.sound = .default
+        case .kahf:
+            content.title = L("core_alarm_kahf_title")
+            content.body = L("core_alarm_kahf_body")
+            content.sound = .default
+            content.userInfo = [NotificationRouter.openSurahKey: 18]
         }
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, alert.at.timeIntervalSince(now)), repeats: false)
         return UNNotificationRequest(identifier: "\(alert.kind.rawValue)-\(alert.prayer.rawValue)-\(Int(alert.at.timeIntervalSince1970))",
@@ -138,6 +143,24 @@ enum AlertScheduler {
         let request = BGAppRefreshTaskRequest(identifier: refreshTaskID)
         request.earliestBeginDate = Date().addingTimeInterval(12 * 3600)
         try? BGTaskScheduler.shared.submit(request)
+    }
+}
+
+/// Taps on Deen's notifications: the Friday reminder opens Surah Al-Kahf (through the Quran tab).
+final class NotificationRouter: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
+    static let shared = NotificationRouter()
+    static let openSurahKey = "openSurah"
+
+    @MainActor weak var model: AppModel?
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        guard let surah = response.notification.request.content.userInfo[Self.openSurahKey] as? Int else { return }
+        await MainActor.run { model?.pendingReader = QuranPosition(surah: surah, ayah: 1) }
+    }
+
+    /// Shown as a banner even while Deen is open.
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        [.banner, .sound, .list]
     }
 }
 

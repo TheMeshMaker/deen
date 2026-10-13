@@ -36,6 +36,8 @@ shot 04d-hadith -DeenDemo hadith
 shot 04e-adhkar -DeenDemo adhkar
 shot 04f-qibla -DeenDemo qibla
 shot 04g-timetable -DeenDemo timetable
+shot 04h-tracker -DeenDemo tracker
+shot 04i-calendar -DeenDemo calendar
 shot 05-settings -DeenDemo settings
 shot 06-today-arabic -DeenDemo today -AppleLanguages "(ar)" -AppleLocale ar_SA
 shot 07-welcome-urdu -DeenDemo onboarding -AppleLanguages "(ur)" -AppleLocale ur_PK
