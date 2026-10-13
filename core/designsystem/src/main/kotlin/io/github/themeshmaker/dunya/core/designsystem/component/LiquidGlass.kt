@@ -16,17 +16,20 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +37,10 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -142,27 +147,56 @@ fun Modifier.liquidGlass(
             if (light != null) lightPosition(light.alignment)
             interactionLightRadiusFraction(0.85f)
             interactionPositionAnimationSpec(spring(dampingRatio = 1f, stiffness = Spring.StiffnessMedium))
+            // (Haze's own press transform can only shrink glass; the iOS swell is [pressSwell] below.)
             pressed {
                 lightingIntensity(1f)
                 refractionMultiplier(1.18f)
                 whitePointDelta(0.05f)
-                // Quick to swell under the finger; a softer spring with a little overshoot on release.
-                animate(
-                    toSpec = spring(dampingRatio = 0.78f, stiffness = 520f),
-                    fromSpec = spring(dampingRatio = 0.55f, stiffness = 300f)
-                ) {
-                    scale(swell)
-                }
             }
         }
     }
-    hazeGlass(
+    (if (interactionSource != null && swell > 1f) pressSwell(interactionSource, swell) else this).hazeGlass(
         input = HazeInput.Sources(state),
         style = style,
         interactionSource = interactionSource,
         interactionTransformTarget = GlassTransformTarget.MaterialAndContent,
         interactionTransformPivot = GlassTransformPivot.Pointer
     )
+}
+
+/**
+ * Pressed glass swells toward the finger (quickly, without overshoot) and springs back with a little
+ * give when let go, as iOS's Liquid Glass does.
+ */
+private fun Modifier.pressSwell(interactionSource: InteractionSource, to: Float): Modifier = composed {
+    var pressedAt by remember { mutableStateOf<Offset?>(null) }
+    var size by remember { mutableStateOf(IntSize.Zero) }
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> pressedAt = interaction.pressPosition
+                is PressInteraction.Release, is PressInteraction.Cancel -> pressedAt = null
+            }
+        }
+    }
+    val pressed = pressedAt != null
+    val scale by animateFloatAsState(
+        if (pressed) to else 1f,
+        if (pressed) spring(dampingRatio = 0.8f, stiffness = 520f) else spring(dampingRatio = 0.5f, stiffness = 280f),
+        label = "swell"
+    )
+    // Remember where the finger was, so the glass shrinks back toward the same point.
+    var origin by remember { mutableStateOf(TransformOrigin.Center) }
+    pressedAt?.let { at ->
+        if (size.width > 0 && size.height > 0) {
+            origin = TransformOrigin((at.x / size.width).coerceIn(0f, 1f), (at.y / size.height).coerceIn(0f, 1f))
+        }
+    }
+    onSizeChanged { size = it }.graphicsLayer {
+        scaleX = scale
+        scaleY = scale
+        transformOrigin = origin
+    }
 }
 
 /** How much touched glass swells: a little for cards, more for small round controls (as on iOS). */

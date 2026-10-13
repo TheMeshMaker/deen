@@ -3,6 +3,7 @@ package io.github.themeshmaker.dunya.core.designsystem.component
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
@@ -125,12 +127,12 @@ fun DeenCard(
             .fillMaxWidth()
             .pressScale(interaction, enabled = onClick != null && look.motion)
             .softShadow(look)
-            .innerRule(look),
+            .innerRule(look)
+            .cardEdge(look.cardBorder, look.cardShape),
         shape = look.cardShape,
         color = containerColor,
         // Glass cards are see-through, so their text colour can't be derived from the fill.
         contentColor = MaterialTheme.colorScheme.onSurface,
-        border = look.cardBorder,
         onClick = onClick ?: {},
         enabled = onClick != null,
         interactionSource = interaction
@@ -293,6 +295,23 @@ fun Modifier.paddingExceptBottom(padding: PaddingValues): Modifier = composed {
         top = padding.calculateTopPadding(),
         end = padding.calculateEndPadding(direction)
     )
+}
+
+/**
+ * A card's edge, stroked straight onto the canvas. (Compose draws a brush border on a custom shape
+ * through a bitmap as big as the card, which runs out of memory on very tall cards.)
+ */
+fun Modifier.cardEdge(border: BorderStroke?, shape: Shape): Modifier {
+    if (border == null) return this
+    return drawWithCache {
+        val width = border.width.toPx()
+        val inset = width / 2
+        val outline = shape.createOutline(Size(size.width - width, size.height - width), layoutDirection, this)
+        onDrawWithContent {
+            drawContent()
+            translate(inset, inset) { drawOutline(outline, border.brush, style = Stroke(width)) }
+        }
+    }
 }
 
 /** Heritage: a thin second rule just inside the card's frame, like a manuscript border. */
