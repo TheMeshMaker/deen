@@ -105,4 +105,5 @@
     <string name="feature_settings_kahf">Vendredi : sourate Al-Kahf</string>
     <string name="feature_settings_kahf_body">Un rappel le vendredi matin pour lire Al-Kahf</string>
     <string name="feature_settings_style_liquid">Verre liquide</string>
+    <string name="feature_settings_style_coloros">ColorOS</string>
 </resources>

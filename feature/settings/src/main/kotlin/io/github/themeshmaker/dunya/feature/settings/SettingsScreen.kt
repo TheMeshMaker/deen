@@ -83,6 +83,7 @@ import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeviceSkin
 import io.github.themeshmaker.dunya.core.designsystem.theme.gradient
 import io.github.themeshmaker.dunya.core.model.AdhanVoice
 import io.github.themeshmaker.dunya.core.model.AlertSettings
@@ -471,7 +472,8 @@ private fun ThemeSwatches(selected: ThemeStyle, custom: CustomColors, onSelect: 
 @Composable
 private fun StylePicker(selected: UiStyle, onSelect: (UiStyle) -> Unit) {
     Column(Modifier.padding(top = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        UiStyle.entries.chunked(STYLES_PER_ROW).forEach { row ->
+        // The ColorOS style is offered only on ColorOS 17 and newer.
+        UiStyle.entries.filter { it != UiStyle.COLOROS || DeviceSkin.isColorOs17 }.chunked(STYLES_PER_ROW).forEach { row ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 row.forEach { style ->
                     val isSelected = style == selected
@@ -539,6 +541,8 @@ private fun StyleMock(style: UiStyle) {
 
         UiStyle.CLASSIC -> SolidColor(colors.surface)
 
+        UiStyle.COLOROS -> SolidColor(if (dark) Color.Black else Color(0xFFF2F3F5))
+
         UiStyle.SLEEK -> SolidColor(colors.surfaceContainerLow)
 
         UiStyle.GLASS -> Brush.verticalGradient(listOf(lerp(base, gradient.end, 0.26f), lerp(base, gradient.start, 0.12f)))
@@ -548,6 +552,7 @@ private fun StyleMock(style: UiStyle) {
     val card = when (style) {
         UiStyle.LIQUID -> Color.White.copy(alpha = if (dark) 0.16f else 0.50f)
         UiStyle.CLASSIC -> colors.surfaceContainerLow
+        UiStyle.COLOROS -> if (dark) Color(0xFF1C1C1E) else Color.White
         UiStyle.SLEEK -> if (dark) colors.surfaceContainerHighest else Color.White
         UiStyle.GLASS -> Color.White.copy(alpha = if (dark) 0.10f else 0.62f)
         UiStyle.HERITAGE -> if (dark) Color(0xFF1D1912) else Color(0xFFFFFBF1)
@@ -563,7 +568,7 @@ private fun StyleMock(style: UiStyle) {
         UiStyle.SLEEK -> colors.outlineVariant
         UiStyle.GLASS -> Color.White.copy(alpha = if (dark) 0.25f else 0.9f)
         UiStyle.HERITAGE -> gold
-        UiStyle.CLASSIC -> null
+        UiStyle.CLASSIC, UiStyle.COLOROS -> null
     }
     Box(
         Modifier
@@ -628,6 +633,7 @@ private fun StyleMock(style: UiStyle) {
                         UiStyle.SLEEK -> colors.inverseSurface.copy(alpha = 0.85f)
                         UiStyle.HERITAGE -> gold.copy(alpha = 0.25f)
                         UiStyle.CLASSIC -> colors.surfaceContainer
+                        UiStyle.COLOROS -> (if (dark) Color.White else Color.Black).copy(alpha = 0.10f)
                     }
                 )
         )
@@ -787,6 +793,7 @@ private fun UiStyle.nameRes(): Int = when (this) {
     UiStyle.GLASS -> R.string.feature_settings_style_glass
     UiStyle.LIQUID -> R.string.feature_settings_style_liquid
     UiStyle.HERITAGE -> R.string.feature_settings_style_heritage
+    UiStyle.COLOROS -> R.string.feature_settings_style_coloros
 }
 
 private fun ThemeMode.labelRes(): Int = when (this) {

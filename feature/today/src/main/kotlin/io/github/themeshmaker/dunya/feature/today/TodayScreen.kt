@@ -98,6 +98,7 @@ import io.github.themeshmaker.dunya.core.designsystem.component.Entrance
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
 import io.github.themeshmaker.dunya.core.designsystem.component.LightSystemBarIcons
 import io.github.themeshmaker.dunya.core.designsystem.component.LocalFloatingBarInset
+import io.github.themeshmaker.dunya.core.designsystem.component.PRESS_CONTROL
 import io.github.themeshmaker.dunya.core.designsystem.component.RollingText
 import io.github.themeshmaker.dunya.core.designsystem.component.ThinProgress
 import io.github.themeshmaker.dunya.core.designsystem.component.liquidGlass
@@ -459,7 +460,7 @@ private fun GlassChip(onClick: () -> Unit, circle: Boolean = false, content: @Co
     Row(
         Modifier
             .then(if (circle) Modifier.size(44.dp) else Modifier.height(40.dp))
-            .liquidGlass(RoundedCornerShape(percent = 50), interactionSource = interaction, pressScale = 0.94f)
+            .liquidGlass(RoundedCornerShape(percent = 50), interactionSource = interaction, pressScale = PRESS_CONTROL)
             .clip(CircleShape)
             .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onClick)
             .padding(horizontal = if (circle) 0.dp else 14.dp),
@@ -637,7 +638,7 @@ private fun QuickAction(icon: Int, label: String, onClick: () -> Unit) {
                         look.liquid -> Modifier.liquidGlass(
                             RoundedCornerShape(percent = 50),
                             interactionSource = interaction,
-                            pressScale = 0.9f
+                            pressScale = PRESS_CONTROL
                         )
 
                         look.sleek ->

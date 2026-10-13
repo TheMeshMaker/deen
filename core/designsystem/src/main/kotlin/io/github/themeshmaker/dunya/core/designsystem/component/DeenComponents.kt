@@ -322,7 +322,7 @@ private fun BackButton(onBack: () -> Unit, label: String) {
             Modifier
                 .padding(start = 8.dp)
                 .size(44.dp)
-                .liquidGlass(RoundedCornerShape(percent = 50), interactionSource = interaction, pressScale = 0.9f)
+                .liquidGlass(RoundedCornerShape(percent = 50), interactionSource = interaction, pressScale = PRESS_CONTROL)
                 .clip(CircleShape)
                 .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onBack)
                 .semantics { contentDescription = label },

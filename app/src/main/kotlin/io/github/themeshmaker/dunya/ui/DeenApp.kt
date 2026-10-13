@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,8 +37,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -61,10 +66,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -72,12 +81,14 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.lerp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -87,7 +98,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.themeshmaker.dunya.core.designsystem.component.LiquidBackdrop
+import io.github.themeshmaker.dunya.core.designsystem.component.LiquidScrollEdge
 import io.github.themeshmaker.dunya.core.designsystem.component.LocalFloatingBarInset
+import io.github.themeshmaker.dunya.core.designsystem.component.PRESS_CONTROL
 import io.github.themeshmaker.dunya.core.designsystem.component.ProvideLiquidGlass
 import io.github.themeshmaker.dunya.core.designsystem.component.liquidGlass
 import io.github.themeshmaker.dunya.core.designsystem.component.liquidSource
@@ -235,27 +248,58 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
         // The coloured backdrop (the full theme gradient on Today), the screens over it, and on
         // phones a glass tab bar floating over the screens; tablets keep the side rail.
         val onToday = currentDestination?.hasRoute(TodayRoute::class) ?: (startDestination == TodayRoute)
+        // While a page scrolls down the tab bar shrinks to the current tab; scrolling up brings it back.
+        var barMinimized by remember { mutableStateOf(false) }
+        LaunchedEffect(currentDestination) { barMinimized = false }
+        val scrollWatcher = remember {
+            object : NestedScrollConnection {
+                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                    if (available.y < -SCROLL_INTENT) {
+                        barMinimized = true
+                    } else if (available.y > SCROLL_INTENT) {
+                        barMinimized = false
+                    }
+                    return Offset.Zero
+                }
+            }
+        }
         ProvideLiquidGlass(dark = look.dark) {
             Surface(color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onBackground, modifier = Modifier.fillMaxSize()) {
                 Box(Modifier.fillMaxSize()) {
                     LiquidBackdrop(vivid = onToday, modifier = Modifier.fillMaxSize())
                     if (adaptive == NavigationSuiteType.NavigationBar) {
                         CompositionLocalProvider(LocalFloatingBarInset provides if (onTab) LiquidBarSpace else 0.dp) {
-                            host(Modifier.fillMaxSize().liquidSource(1f))
+                            host(
+                                Modifier
+                                    .fillMaxSize()
+                                    .nestedScroll(scrollWatcher)
+                                    .liquidSource(1f)
+                            )
                         }
                         AnimatedVisibility(
                             visible = onTab,
-                            modifier = Modifier.align(Alignment.BottomCenter),
+                            modifier = Modifier.align(Alignment.BottomStart),
                             enter = if (look.motion) slideInVertically(DeenMotion.snappy()) { it } + fadeIn() else fadeIn(snap()),
                             exit = if (look.motion) slideOutVertically(DeenMotion.snappy()) { it } + fadeOut() else fadeOut(snap())
                         ) {
-                            LiquidTabBar(currentDestination) { navController.navigateToTopLevel(it) }
+                            LiquidTabBar(
+                                currentDestination,
+                                minimized = barMinimized && look.motion,
+                                onExpand = { barMinimized = false }
+                            ) { navController.navigateToTopLevel(it) }
                         }
                     } else {
                         RailScaffold(currentDestination, onTab, adaptive, navController, transparent = true) {
                             host(Modifier.fillMaxSize().liquidSource(1f))
                         }
                     }
+                    // Content passing under the status bar melts into a blur (iOS's scroll edge effect).
+                    LiquidScrollEdge(
+                        tint = if (onToday) DeenTheme.gradient.start else look.page,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsTopHeight(WindowInsets.statusBars.add(WindowInsets(top = 14.dp)))
+                    )
                 }
             }
         }
@@ -355,30 +399,58 @@ private fun RailScaffold(
     }
 }
 
+/** How far a scroll must move before it counts as scrolling down or up (for shrinking the bar). */
+private const val SCROLL_INTENT = 6f
+
 /** Room the floating Liquid tab bar takes at the bottom of a tab screen (above the system bar). */
 private val LiquidBarSpace = 84.dp
 private val LiquidBarHeight = 64.dp
 
+/** The bar shrunk while scrolling down: just the current tab. */
+private val LiquidBarCompact = 64.dp
+
 /**
- * Liquid: the iOS 26 tab bar. A capsule of glass floats over the screen (which scrolls beneath it);
- * a clearer, tinted lens marks the selected tab, gliding there and stretching as it travels. Drag
- * along the bar and the lens lifts and follows the finger, choosing the tab it is let go over.
+ * Liquid: the iOS 26/27 tab bar. A capsule of glass floats over the screen (which scrolls beneath
+ * it); a clearer, tinted lens marks the selected tab. The lens behaves like a drop of liquid: it
+ * squashes and stretches as it travels, overshoots a little and settles; pressed or dragged, it
+ * lifts out of the bar and follows the finger, ticking as it passes each tab, and lands on the
+ * one it is let go over. While a page scrolls down, the bar shrinks to the current tab ([minimized]);
+ * scrolling up or tapping it brings it back.
  */
 @Composable
-internal fun LiquidTabBar(current: NavDestination?, onSelect: (TopLevelDestination) -> Unit) {
+internal fun LiquidTabBar(
+    current: NavDestination?,
+    minimized: Boolean = false,
+    onExpand: () -> Unit = {},
+    onSelect: (TopLevelDestination) -> Unit
+) {
     val look = DeenTheme.look
     val haptics = LocalHapticFeedback.current
     val tabs = TopLevelDestination.entries
     val selected = tabs.indexOfFirst { current.isOn(it) }.coerceAtLeast(0)
     val scope = rememberCoroutineScope()
     val position = remember { Animatable(selected.toFloat()) }
+    val pop = remember { Animatable(0f) }
     var dragging by remember { mutableStateOf(false) }
     LaunchedEffect(selected) {
-        if (!dragging) {
-            if (look.motion) position.animateTo(selected.toFloat(), LensSpring) else position.snapTo(selected.toFloat())
+        if (dragging) return@LaunchedEffect
+        if (!look.motion) {
+            position.snapTo(selected.toFloat())
+            return@LaunchedEffect
         }
+        // A tap: the lens swells as it leaves, glides over and settles with a little wobble.
+        launch {
+            pop.animateTo(1f, tween(120))
+            pop.animateTo(0f, LensSpring)
+        }
+        position.animateTo(selected.toFloat(), LensSpring)
     }
-    val lift by animateFloatAsState(if (dragging) 1f else 0f, DeenMotion.bouncy(), label = "lensLift")
+    val lift by animateFloatAsState(if (dragging) 1f else 0f, spring(dampingRatio = 0.6f, stiffness = 420f), label = "lensLift")
+    val collapse by animateFloatAsState(
+        if (minimized) 1f else 0f,
+        if (look.motion) spring(dampingRatio = 0.82f, stiffness = 360f) else snap(),
+        label = "barCollapse"
+    )
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val lensTint = MaterialTheme.colorScheme.primary.copy(alpha = if (look.dark) 0.30f else 0.16f)
     BoxWithConstraints(
@@ -387,89 +459,148 @@ internal fun LiquidTabBar(current: NavDestination?, onSelect: (TopLevelDestinati
             .padding(start = 18.dp, end = 18.dp, bottom = 12.dp)
             .fillMaxWidth()
             .height(LiquidBarHeight)
-            .liquidGlass(RoundedCornerShape(percent = 50))
     ) {
-        val tabWidth = maxWidth / tabs.size
+        val fullWidth = maxWidth
+        val tabWidth = fullWidth / tabs.size
         val tabWidthPx = with(LocalDensity.current) { tabWidth.toPx() }
-        // The lens stretches along its path with speed, and swells a little while lifted by a drag.
-        val stretch = 1f + (abs(position.velocity) / 14f).coerceAtMost(0.32f) + 0.10f * lift
+        val barWidth = lerp(fullWidth, LiquidBarCompact, collapse)
+        val barInteraction = remember { MutableInteractionSource() }
         Box(
             Modifier
-                .offset(x = tabWidth * position.value)
-                .width(tabWidth)
+                .width(barWidth)
                 .fillMaxHeight()
-                .padding(5.dp)
-                .graphicsLayer {
-                    scaleX = stretch
-                    scaleY = 1f + 0.10f * lift
-                }
-                .liquidGlass(RoundedCornerShape(percent = 50), tint = lensTint, clear = true)
-        )
-        Row(
-            Modifier
-                .fillMaxSize()
-                .pointerInput(tabs.size, rtl, tabWidthPx) {
-                    detectHorizontalDragGestures(
-                        onDragStart = { dragging = true },
-                        onDragEnd = {
-                            dragging = false
-                            val target = position.value.roundToInt().coerceIn(0, tabs.lastIndex)
-                            if (target != selected) {
-                                if (look.motion) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
-                                onSelect(tabs[target])
-                            }
-                            scope.launch { position.animateTo(target.toFloat(), LensSpring) }
-                        },
-                        onDragCancel = {
-                            dragging = false
-                            scope.launch { position.animateTo(selected.toFloat(), LensSpring) }
-                        },
-                        onHorizontalDrag = { change, amount ->
-                            change.consume()
-                            val step = (if (rtl) -amount else amount) / tabWidthPx
-                            scope.launch { position.snapTo((position.value + step).coerceIn(0f, tabs.lastIndex.toFloat())) }
-                        }
-                    )
-                }
+                .liquidGlass(
+                    RoundedCornerShape(percent = 50),
+                    interactionSource = if (minimized) barInteraction else null,
+                    pressScale = PRESS_CONTROL
+                )
         ) {
-            tabs.forEachIndexed { index, destination ->
-                val isSelected = index == selected
-                val highlight = (1f - abs(position.value - index)).coerceIn(0f, 1f)
-                val tint = lerp(MaterialTheme.colorScheme.onSurface, MaterialTheme.colorScheme.primary, highlight)
-                Column(
-                    Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, role = Role.Tab) {
-                            if (!isSelected) {
-                                if (look.motion) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
-                                onSelect(destination)
+            // The lens: stretched along its path by speed (and squashed across it), swelling out of
+            // the bar while lifted.
+            val speed = (abs(position.velocity) / 9f).coerceAtMost(1f)
+            val raise = maxOf(lift, pop.value * 0.55f)
+            Box(
+                Modifier
+                    .offset(x = tabWidth * position.value)
+                    .width(tabWidth)
+                    .fillMaxHeight()
+                    .padding(5.dp)
+                    .graphicsLayer {
+                        alpha = 1f - collapse
+                        scaleX = 1f + 0.36f * speed + 0.16f * raise
+                        scaleY = 1f - 0.14f * speed + 0.40f * raise
+                    }
+                    .liquidGlass(RoundedCornerShape(percent = 50), tint = lensTint, clear = true)
+            )
+            Row(
+                Modifier
+                    .requiredWidth(fullWidth)
+                    .fillMaxHeight()
+                    .align(Alignment.CenterStart)
+                    .graphicsLayer { alpha = (1f - collapse * 2.2f).coerceIn(0f, 1f) }
+                    .pointerInput(tabs.size, rtl, tabWidthPx, minimized) {
+                        if (minimized) return@pointerInput
+                        var crossed = selected
+                        detectHorizontalDragGestures(
+                            onDragStart = {
+                                dragging = true
+                                crossed = position.value.roundToInt()
+                            },
+                            onDragEnd = {
+                                dragging = false
+                                val target = position.value.roundToInt().coerceIn(0, tabs.lastIndex)
+                                if (target != selected) onSelect(tabs[target])
+                                scope.launch { position.animateTo(target.toFloat(), LensSpring) }
+                            },
+                            onDragCancel = {
+                                dragging = false
+                                scope.launch { position.animateTo(selected.toFloat(), LensSpring) }
+                            },
+                            onHorizontalDrag = { change, amount ->
+                                change.consume()
+                                val step = (if (rtl) -amount else amount) / tabWidthPx
+                                val next = (position.value + step).coerceIn(0f, tabs.lastIndex.toFloat())
+                                scope.launch { position.snapTo(next) }
+                                // A tick each time the lens passes over a tab, as on iOS.
+                                val over = next.roundToInt()
+                                if (over != crossed) {
+                                    crossed = over
+                                    if (look.motion) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                                }
                             }
-                        }
-                        .semantics { this.selected = isSelected },
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                        )
+                    }
+            ) {
+                tabs.forEachIndexed { index, destination ->
+                    val isSelected = index == selected
+                    val highlight = (1f - abs(position.value - index)).coerceIn(0f, 1f)
+                    val tint = lerp(MaterialTheme.colorScheme.onSurface, MaterialTheme.colorScheme.primary, highlight)
+                    Column(
+                        Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                enabled = !minimized,
+                                role = Role.Tab
+                            ) {
+                                if (!isSelected) {
+                                    if (look.motion) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                                    onSelect(destination)
+                                }
+                            }
+                            .semantics { this.selected = isSelected },
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            painterResource(if (isSelected) destination.selectedIcon else destination.icon),
+                            contentDescription = null,
+                            tint = tint,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .graphicsLayer {
+                                    val grow = 1f + 0.10f * highlight + 0.08f * raise * highlight
+                                    scaleX = grow
+                                    scaleY = grow
+                                }
+                        )
+                        Text(
+                            stringResource(destination.label),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
+                            color = tint,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
+                }
+            }
+            // Shrunk: the current tab alone; a tap brings the whole bar back.
+            if (collapse > 0f) {
+                val destination = tabs[selected]
+                val label = stringResource(destination.label)
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .graphicsLayer { alpha = ((collapse - 0.45f) / 0.55f).coerceIn(0f, 1f) }
+                        .clickable(
+                            interactionSource = barInteraction,
+                            indication = null,
+                            enabled = minimized,
+                            role = Role.Button,
+                            onClick = onExpand
+                        )
+                        .semantics { contentDescription = label },
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painterResource(if (isSelected) destination.selectedIcon else destination.icon),
+                        painterResource(destination.selectedIcon),
                         contentDescription = null,
-                        tint = tint,
-                        modifier = Modifier
-                            .size(24.dp)
-                            .graphicsLayer {
-                                val grow = 1f + 0.08f * highlight
-                                scaleX = grow
-                                scaleY = grow
-                            }
-                    )
-                    Text(
-                        stringResource(destination.label),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
-                        color = tint,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = 2.dp)
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(26.dp)
                     )
                 }
             }
@@ -477,7 +608,8 @@ internal fun LiquidTabBar(current: NavDestination?, onSelect: (TopLevelDestinati
     }
 }
 
-private val LensSpring = spring<Float>(dampingRatio = 0.72f, stiffness = 380f)
+/** Slightly under-damped, so the lens overshoots a touch and settles like liquid. */
+private val LensSpring = spring<Float>(dampingRatio = 0.66f, stiffness = 340f)
 
 /**
  * Sleek: a rounded bar floating above the page on a wide soft shadow, the selected tab as a

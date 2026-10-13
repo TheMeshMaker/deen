@@ -144,6 +144,9 @@ data class DeenLook(
 
     /** Liquid glass over the app's coloured backdrop (see LiquidGlass.kt): pages are clear. */
     val liquid: Boolean get() = uiStyle == UiStyle.LIQUID
+
+    /** ColorOS 17's look: flat cards on a grey page, a frosted floating tab bar. */
+    val colorOs: Boolean get() = uiStyle == UiStyle.COLOROS
     val heritage: Boolean get() = uiStyle == UiStyle.HERITAGE
 }
 
@@ -245,6 +248,25 @@ private fun lookFor(
         shadowColor = Color.Black,
         heroShape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp),
         sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        gutter = 16.dp,
+        gap = 12.dp,
+        motion = !reducedMotion
+    )
+
+    // ColorOS: as OPPO's own apps look on ColorOS 17 ("Fluid Fusion"): flat white cards with smooth,
+    // generous corners on a light-grey page (black in the dark), the phone's own font (see the
+    // typography below), and a frosted tab bar floating over the page (drawn by the app shell).
+    UiStyle.COLOROS -> DeenLook(
+        uiStyle = uiStyle,
+        page = if (dark) Color.Black else Color(0xFFF2F3F5),
+        card = if (dark) Color(0xFF1C1C1E) else Color.White,
+        sheetColor = if (dark) Color(0xFF1C1C1E) else Color.White,
+        cardShape = SquircleShape(22.dp),
+        cardBorder = null,
+        cardElevation = 0.dp,
+        shadowColor = Color.Black,
+        heroShape = SquircleShape(0.dp, 0.dp, 36.dp, 36.dp),
+        sheetShape = SquircleShape(30.dp, 30.dp, 0.dp, 0.dp),
         gutter = 16.dp,
         gap = 12.dp,
         motion = !reducedMotion
@@ -383,18 +405,25 @@ fun DeenTheme(
     val gradient = style.gradient(customColors)
     val pageHeight = LocalWindowInfo.current.containerSize.height.toFloat()
     val language = LocalConfiguration.current.locales[0].language
+    // The ColorOS style only on ColorOS 17 (e.g. after restoring settings onto another phone).
+    val look = if (uiStyle == UiStyle.COLOROS && !DeviceSkin.isColorOs17) UiStyle.SLEEK else uiStyle
 
     CompositionLocalProvider(
         LocalDeenGradient provides gradient,
         LocalDeenDarkScheme provides darkColors,
-        LocalDeenLook provides lookFor(uiStyle, colors, gradient, dark, rememberReducedMotion(), pageHeight).copy(dark = dark)
+        LocalDeenLook provides lookFor(look, colors, gradient, dark, rememberReducedMotion(), pageHeight).copy(dark = dark)
     ) {
         MaterialTheme(
             colorScheme = colors,
-            typography = when (uiStyle) {
+            typography = when (look) {
                 UiStyle.SLEEK, UiStyle.GLASS, UiStyle.LIQUID -> SleekTypography
+
                 UiStyle.HERITAGE -> HeritageTypography
+
                 UiStyle.CLASSIC -> DeenTypography
+
+                // The phone's own font (OPPO Sans on ColorOS).
+                UiStyle.COLOROS -> SleekTypography.withPhoneFont()
             }.let { if (language in PhoneFontLanguages) it.withPhoneFont() else it },
             shapes = DeenShapes,
             content = content
