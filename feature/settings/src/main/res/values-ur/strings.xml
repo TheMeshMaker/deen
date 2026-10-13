@@ -105,4 +105,5 @@
     <string name="feature_settings_kahf">جمعہ: سورۂ کہف</string>
     <string name="feature_settings_kahf_body">جمعہ کی صبح سورۂ کہف پڑھنے کی یاد دہانی</string>
     <string name="feature_settings_style_liquid">لیکوئڈ گلاس</string>
+    <string name="feature_settings_style_coloros">ColorOS</string>
 </resources>

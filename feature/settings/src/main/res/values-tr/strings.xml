@@ -105,4 +105,5 @@
     <string name="feature_settings_kahf">Cuma: Kehf suresi</string>
     <string name="feature_settings_kahf_body">Cuma sabahları Kehf suresini okumak için hatırlatma</string>
     <string name="feature_settings_style_liquid">Sıvı Cam</string>
+    <string name="feature_settings_style_coloros">ColorOS</string>
 </resources>

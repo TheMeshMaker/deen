@@ -31,6 +31,7 @@ work = "2.12.0"
 # Blur and Liquid Glass for Compose (Apache-2.0): the Liquid style.
 haze = { group = "dev.chrisbanes.haze", name = "haze", version.ref = "haze" }
 haze-glass = { group = "dev.chrisbanes.haze", name = "haze-glass", version.ref = "haze" }
+haze-blur = { group = "dev.chrisbanes.haze", name = "haze-blur", version.ref = "haze" }
 adhan = { group = "com.batoulapps.adhan", name = "adhan2", version.ref = "adhan" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }

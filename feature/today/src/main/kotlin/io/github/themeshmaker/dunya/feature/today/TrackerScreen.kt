@@ -26,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -56,6 +55,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenScaffold
+import io.github.themeshmaker.dunya.core.designsystem.component.DeenSwitch
 import io.github.themeshmaker.dunya.core.designsystem.component.SectionLabel
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
 import io.github.themeshmaker.dunya.core.designsystem.component.rise
@@ -254,7 +254,7 @@ private fun DayToggles(
                 color = if (started || checked) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f)
             )
-            Switch(checked = checked, onCheckedChange = null, enabled = started || checked)
+            DeenSwitch(checked = checked, onCheckedChange = null, enabled = started || checked)
         }
     }
 }

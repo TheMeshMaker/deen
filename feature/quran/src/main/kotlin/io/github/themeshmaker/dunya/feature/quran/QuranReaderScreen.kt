@@ -49,7 +49,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -86,6 +85,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.themeshmaker.dunya.core.audio.QuranAudioState
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenScaffold
+import io.github.themeshmaker.dunya.core.designsystem.component.DeenSwitch
 import io.github.themeshmaker.dunya.core.designsystem.component.Tag
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
@@ -138,7 +138,7 @@ internal fun QuranReaderScreenRoute(
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.feature_quran_player_mode)) },
                     leadingIcon = { Icon(painterResource(DeenIcons.Player), contentDescription = null) },
-                    trailingIcon = { Switch(checked = playerMode, onCheckedChange = null) },
+                    trailingIcon = { DeenSwitch(checked = playerMode, onCheckedChange = null) },
                     onClick = {
                         if (playerMode) viewModel.closePlayer() else viewModel.playerMode.value = true
                         menuOpen = false

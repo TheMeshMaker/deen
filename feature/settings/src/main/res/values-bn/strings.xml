@@ -105,4 +105,5 @@
     <string name="feature_settings_kahf">জুমা: সূরা আল-কাহফ</string>
     <string name="feature_settings_kahf_body">জুমার সকালে আল-কাহফ পড়ার রিমাইন্ডার</string>
     <string name="feature_settings_style_liquid">লিকুইড গ্লাস</string>
+    <string name="feature_settings_style_coloros">ColorOS</string>
 </resources>

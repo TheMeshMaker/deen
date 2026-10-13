@@ -476,7 +476,8 @@
   "feature_settings_src_app_body": "Free software under GPL-3.0-or-later. No ads, no tracking.",
   "feature_settings_kahf": "Friday: Surah Al-Kahf",
   "feature_settings_kahf_body": "A reminder on Friday mornings to read Al-Kahf",
-  "feature_settings_style_liquid": "Liquid Glass"
+  "feature_settings_style_liquid": "Liquid Glass",
+  "feature_settings_style_coloros": "ColorOS"
  },
  "feature/timetable": {
   "feature_timetable_title": "Prayer timetable",

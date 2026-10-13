@@ -14,6 +14,7 @@ import io.github.themeshmaker.dunya.core.designsystem.component.LiquidBackdrop
 import io.github.themeshmaker.dunya.core.designsystem.component.ProvideLiquidGlass
 import io.github.themeshmaker.dunya.core.designsystem.component.liquidSource
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+import io.github.themeshmaker.dunya.core.designsystem.theme.DeviceSkin
 import io.github.themeshmaker.dunya.core.domain.PrayerSchedule
 import io.github.themeshmaker.dunya.core.domain.QuranPages
 import io.github.themeshmaker.dunya.core.model.AlertSettings
@@ -101,6 +102,8 @@ class TodayScreenshotTest {
 
                     UiStyle.CLASSIC, UiStyle.HERITAGE -> ClassicToday(state(), extras, actions, rows)
 
+                    UiStyle.COLOROS -> LiquidToday(state(), extras, actions, rows, ownBackground = true)
+
                     else -> SleekToday(state(), extras, actions, rows)
                 }
             }
@@ -121,6 +124,16 @@ class TodayScreenshotTest {
     @Test fun liquidDark() = shoot("liquid-dark", UiStyle.LIQUID, dark = true)
 
     @Test fun liquidRose() = shoot("liquid-rose", UiStyle.LIQUID, dark = false, theme = ThemeStyle.ROSE)
+
+    @Test
+    fun colorOsDark() {
+        DeviceSkin.colorOsOverride = true
+        try {
+            shoot("coloros-dark", UiStyle.COLOROS, dark = true)
+        } finally {
+            DeviceSkin.colorOsOverride = null
+        }
+    }
 
     @Test fun sleekLight() = shoot("sleek-light", UiStyle.SLEEK, dark = false)
 

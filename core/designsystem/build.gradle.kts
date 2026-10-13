@@ -13,6 +13,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.haze)
     implementation(libs.haze.glass)
+    implementation(libs.haze.blur)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.material.color.utilities)
     implementation(projects.core.model)
 }

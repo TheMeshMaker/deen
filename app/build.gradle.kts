@@ -50,6 +50,16 @@ android {
             signingConfig = signingConfigs.findByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+        // Runs like a release (optimised by R8, not debuggable) but is signed with the debug key and
+        // replaces the debug app, so it can be tried on a phone without a release key:
+        // ./gradlew :app:assembleFossFast
+        create("fast") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-fast"
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+        }
     }
 
     buildFeatures {

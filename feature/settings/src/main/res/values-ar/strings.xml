@@ -104,4 +104,5 @@
     <string name="feature_settings_kahf">الجمعة: سورة الكهف</string>
     <string name="feature_settings_kahf_body">تذكير صباح الجمعة بقراءة سورة الكهف</string>
     <string name="feature_settings_style_liquid">زجاج سائل</string>
+    <string name="feature_settings_style_coloros">ColorOS</string>
 </resources>

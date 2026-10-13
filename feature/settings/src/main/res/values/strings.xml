@@ -104,4 +104,5 @@
     <string name="feature_settings_kahf">Friday: Surah Al-Kahf</string>
     <string name="feature_settings_kahf_body">A reminder on Friday mornings to read Al-Kahf</string>
     <string name="feature_settings_style_liquid">Liquid Glass</string>
+    <string name="feature_settings_style_coloros">ColorOS</string>
 </resources>

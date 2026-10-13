@@ -54,10 +54,16 @@ enum class UiStyle {
 
     /** Like iOS 26: refracting, light-catching glass over a coloured backdrop. */
     LIQUID,
-    HERITAGE;
+    HERITAGE,
 
-    /** Full-bleed header, floating tab bar and large titles (Sleek, Glass and Liquid). */
-    val immersive: Boolean get() = this == SLEEK || this == GLASS || this == LIQUID
+    /**
+     * Like the phone itself on ColorOS 17 (OPPO's "Fluid Fusion"): the system font, flat cards on a
+     * light-grey page, a frosted floating tab bar. Offered only on ColorOS 17 and newer.
+     */
+    COLOROS;
+
+    /** Full-bleed header, floating tab bar and large titles (Sleek, Glass, Liquid and ColorOS). */
+    val immersive: Boolean get() = this == SLEEK || this == GLASS || this == LIQUID || this == COLOROS
 }
 
 /**
