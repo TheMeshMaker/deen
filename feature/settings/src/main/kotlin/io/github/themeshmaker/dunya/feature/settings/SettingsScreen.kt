@@ -39,7 +39,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -75,10 +74,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.themeshmaker.dunya.core.alarm.R as AlarmR
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenScaffold
+import io.github.themeshmaker.dunya.core.designsystem.component.DeenSwitch
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
 import io.github.themeshmaker.dunya.core.designsystem.component.MenuRow
 import io.github.themeshmaker.dunya.core.designsystem.component.PillChoice
 import io.github.themeshmaker.dunya.core.designsystem.component.SectionLabel
+import io.github.themeshmaker.dunya.core.designsystem.component.listDivider
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
@@ -739,6 +740,7 @@ internal fun SwitchRow(title: String, subtitle: String?, checked: Boolean, onCha
     Row(
         Modifier
             .fillMaxWidth()
+            .listDivider()
             .clickable(role = Role.Switch) { onChange(!checked) }
             .padding(horizontal = if (inset) 16.dp else 0.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -750,7 +752,7 @@ internal fun SwitchRow(title: String, subtitle: String?, checked: Boolean, onCha
             }
         }
         Spacer(Modifier.width(12.dp))
-        Switch(checked = checked, onCheckedChange = null)
+        DeenSwitch(checked = checked, onCheckedChange = null)
     }
 }
 

@@ -66,8 +66,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -89,6 +97,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -97,11 +106,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import io.github.themeshmaker.dunya.core.designsystem.component.ColorOsColors
 import io.github.themeshmaker.dunya.core.designsystem.component.LiquidBackdrop
 import io.github.themeshmaker.dunya.core.designsystem.component.LiquidScrollEdge
 import io.github.themeshmaker.dunya.core.designsystem.component.LocalFloatingBarInset
 import io.github.themeshmaker.dunya.core.designsystem.component.PRESS_CONTROL
+import io.github.themeshmaker.dunya.core.designsystem.component.ProvideColorOsBlur
 import io.github.themeshmaker.dunya.core.designsystem.component.ProvideLiquidGlass
+import io.github.themeshmaker.dunya.core.designsystem.component.colorOsBlurSource
+import io.github.themeshmaker.dunya.core.designsystem.component.colorOsFrost
 import io.github.themeshmaker.dunya.core.designsystem.component.liquidGlass
 import io.github.themeshmaker.dunya.core.designsystem.component.liquidSource
 import io.github.themeshmaker.dunya.core.designsystem.component.pageBackground
@@ -306,6 +319,28 @@ fun DeenApp(startDestination: Any, link: String?, onLinkHandled: () -> Unit, nav
         return
     }
 
+    if (look.colorOs && adaptive == NavigationSuiteType.NavigationBar) {
+        // ColorOS 17: the page runs under a frosted, pill-shaped tab bar floating over it.
+        Surface(color = look.page, contentColor = MaterialTheme.colorScheme.onBackground, modifier = Modifier.fillMaxSize()) {
+            ProvideColorOsBlur {
+                Box(Modifier.fillMaxSize()) {
+                    CompositionLocalProvider(LocalFloatingBarInset provides if (onTab) FusionBarSpace else 0.dp) {
+                        host(Modifier.fillMaxSize().colorOsBlurSource())
+                    }
+                    AnimatedVisibility(
+                        visible = onTab,
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        enter = if (look.motion) slideInVertically(DeenMotion.snappy()) { it } + fadeIn() else fadeIn(snap()),
+                        exit = if (look.motion) slideOutVertically(DeenMotion.snappy()) { it } + fadeOut() else fadeOut(snap())
+                    ) {
+                        FusionTabBar(currentDestination) { navController.navigateToTopLevel(it) }
+                    }
+                }
+            }
+        }
+        return
+    }
+
     if (floatingBar) {
         // A Surface, not just a background: it also sets the content colour for text on the page.
         Surface(
@@ -399,6 +434,112 @@ private fun RailScaffold(
     }
 }
 
+/** Room ColorOS's floating tab bar takes at the bottom of a tab screen (above the system bar). */
+private val FusionBarSpace = 70.dp
+
+/**
+ * ColorOS 17's tab bar, measured from its Clock app: a 56 dp pill floating 6 dp above the gesture
+ * bar, frosted (what scrolls beneath shows through blurred), lit a touch along its top and bottom
+ * with a fine bright rim all round, and a soft shadow. The current tab is bright with a filled icon
+ * (which gives a small bounce when chosen); the others are outlined in a soft grey.
+ */
+@Composable
+internal fun FusionTabBar(current: NavDestination?, onSelect: (TopLevelDestination) -> Unit) {
+    val look = DeenTheme.look
+    val haptics = LocalHapticFeedback.current
+    val dark = look.dark
+    val shape = CircleShape
+    val idle = if (dark) ColorOsColors.tabIdleDark else ColorOsColors.tabIdleLight
+    val rim = if (dark) {
+        Brush.verticalGradient(
+            0f to Color.White.copy(alpha = 0.24f),
+            0.5f to Color.White.copy(alpha = 0.06f),
+            1f to Color.White.copy(alpha = 0.2f)
+        )
+    } else {
+        Brush.verticalGradient(0f to Color.White, 0.5f to Color.Black.copy(alpha = 0.06f), 1f to Color.Black.copy(alpha = 0.08f))
+    }
+    val sheen = Brush.verticalGradient(
+        0f to Color.White.copy(alpha = if (dark) 0.05f else 0.25f),
+        0.45f to Color.Transparent,
+        1f to Color.White.copy(alpha = if (dark) 0.06f else 0.1f)
+    )
+    Row(
+        Modifier
+            .navigationBarsPadding()
+            .padding(start = 16.dp, end = 16.dp, bottom = 6.dp)
+            .fillMaxWidth()
+            .height(56.dp)
+            .shadow(16.dp, shape, ambientColor = Color.Black, spotColor = Color.Black.copy(alpha = if (dark) 0.7f else 0.16f))
+            .clip(shape)
+            .colorOsFrost(if (dark) ColorOsColors.barDark else ColorOsColors.barLight)
+            .drawWithCache {
+                val line = 1.dp.toPx()
+                val outline = shape.createOutline(Size(size.width - line, size.height - line), layoutDirection, this)
+                onDrawWithContent {
+                    drawRect(sheen)
+                    translate(line / 2, line / 2) { drawOutline(outline, rim, style = Stroke(line)) }
+                    drawContent()
+                }
+            }
+            .padding(horizontal = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TopLevelDestination.entries.forEach { destination ->
+            val selected = current.isOn(destination)
+            val tint by animateColorAsState(
+                if (selected) MaterialTheme.colorScheme.onSurface else idle,
+                if (look.motion) tween(200) else snap(),
+                label = "fusionTint"
+            )
+            val bounce = remember { Animatable(1f) }
+            LaunchedEffect(selected, look.motion) {
+                if (selected && look.motion) {
+                    bounce.snapTo(0.8f)
+                    bounce.animateTo(1f, DeenMotion.bouncy())
+                }
+            }
+            val interaction = remember { MutableInteractionSource() }
+            Column(
+                Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .pressScale(interaction, enabled = look.motion, pressed = 0.9f)
+                    .clickable(interactionSource = interaction, indication = null, role = Role.Tab) {
+                        if (!selected) {
+                            if (look.motion) haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                            onSelect(destination)
+                        }
+                    }
+                    .semantics { this.selected = selected },
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painterResource(if (selected) destination.selectedIcon else destination.icon),
+                    contentDescription = null,
+                    tint = tint,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .graphicsLayer {
+                            scaleX = bounce.value
+                            scaleY = bounce.value
+                        }
+                )
+                Text(
+                    stringResource(destination.label),
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, lineHeight = 13.sp),
+                    fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
+                    color = tint,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(top = 1.dp)
+                )
+            }
+        }
+    }
+}
+
 /** How far a scroll must move before it counts as scrolling down or up (for shrinking the bar). */
 private const val SCROLL_INTENT = 6f
 
@@ -456,12 +597,15 @@ internal fun LiquidTabBar(
     BoxWithConstraints(
         Modifier
             .navigationBarsPadding()
-            .padding(start = 18.dp, end = 18.dp, bottom = 12.dp)
+            .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
             .fillMaxWidth()
             .height(LiquidBarHeight)
     ) {
         val fullWidth = maxWidth
-        val tabWidth = fullWidth / tabs.size
+        // The lens is a wide capsule reaching past its tab on both sides, as on iOS, so the tabs sit
+        // inset by that overhang and the lens still fits inside the bar at either end.
+        val rowPadding = LensOverhang + LensInset
+        val tabWidth = (fullWidth - rowPadding * 2) / tabs.size
         val tabWidthPx = with(LocalDensity.current) { tabWidth.toPx() }
         val barWidth = lerp(fullWidth, LiquidBarCompact, collapse)
         val barInteraction = remember { MutableInteractionSource() }
@@ -481,10 +625,10 @@ internal fun LiquidTabBar(
             val raise = maxOf(lift, pop.value * 0.55f)
             Box(
                 Modifier
-                    .offset(x = tabWidth * position.value)
-                    .width(tabWidth)
+                    .offset(x = LensInset + tabWidth * position.value)
+                    .width(tabWidth + LensOverhang * 2)
                     .fillMaxHeight()
-                    .padding(5.dp)
+                    .padding(vertical = LensInset)
                     .graphicsLayer {
                         alpha = 1f - collapse
                         scaleX = 1f + 0.36f * speed + 0.16f * raise
@@ -498,6 +642,7 @@ internal fun LiquidTabBar(
                     .fillMaxHeight()
                     .align(Alignment.CenterStart)
                     .graphicsLayer { alpha = (1f - collapse * 2.2f).coerceIn(0f, 1f) }
+                    .padding(horizontal = rowPadding)
                     .pointerInput(tabs.size, rtl, tabWidthPx, minimized) {
                         if (minimized) return@pointerInput
                         var crossed = selected
@@ -607,6 +752,10 @@ internal fun LiquidTabBar(
         }
     }
 }
+
+/** How far the lens reaches past its tab on each side, and the gap it keeps from the bar's edge. */
+private val LensOverhang = 15.dp
+private val LensInset = 4.dp
 
 /** Slightly under-damped, so the lens overshoots a touch and settles like liquid. */
 private val LensSpring = spring<Float>(dampingRatio = 0.66f, stiffness = 340f)

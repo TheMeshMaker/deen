@@ -97,7 +97,7 @@ Deen/
 │  ├─ location/              # LocationSource interface, platform impl, city search
 │  ├─ location-gms/          # Fused impl (play only)
 │  ├─ alarm/                 # planner, scheduler, receivers, AdhanService, voices, health log, reliability checks
-│  ├─ designsystem/          # theme, DeenLook (Classic/Sleek/Glass/Liquid/Heritage), type, components, icons, geometric art
+│  ├─ designsystem/          # theme, DeenLook (Classic/Sleek/Glass/Liquid/Heritage/ColorOS), type, components, icons, geometric art
 │  └─ ui/                    # shared composables and formatting, app language, haptics
 ├─ feature/
 │  ├─ onboarding/ today/ quran/ hadith/ adhkar/ (incl. tasbih) qibla/ timetable/
@@ -437,13 +437,20 @@ content/*.json  ──▶  tools/content-builder  ──▶  app/src/main/assets
 - M3 rounded shapes, an extra-large hero card on Today.
 - Gentle motion that respects the system "remove animations" setting.
 
-**Styles** (`UiStyle`, independent of the colour theme): Classic, Sleek, Glass, **Liquid** and Heritage.
+**Styles** (`UiStyle`, independent of the colour theme): Classic, Sleek, Glass, **Liquid**, Heritage and **ColorOS**.
 - **Liquid** (2026-10-13) follows iOS 26: the app draws one coloured backdrop under every screen (the full theme
-  gradient on Today), pages are clear, and cards, the floating tab bar (with a lens that slides, stretches and can
-  be dragged), back buttons and controls are glass that bends and blurs what is behind them. Rendering is Haze's
-  Glass effect (Apache-2.0); Android 12 and older get its simpler fallback. Glass follows Deen's light/dark
-  setting, and content on the gradient uses the theme's dark colours (`DeenOnGradient`).
-- Screenshot tests (Roborazzi on Robolectric, `-Pscreenshots`) render Today in each style and the Liquid shell.
+  gradient on Today), pages are clear, and cards, the floating tab bar (with a wide capsule lens that slides,
+  stretches and can be dragged), back buttons and controls are glass that bends and blurs what is behind them, with
+  a wide band of bending around each edge. Rendering is Haze's Glass effect (Apache-2.0); Android 12 and older get
+  its simpler fallback. Glass follows Deen's light/dark setting, and content on the gradient uses the theme's dark
+  colours (`DeenOnGradient`).
+- **ColorOS** is offered only on ColorOS 17 phones (`DeviceSkin`, from `ro.build.version.oplusrom`) and is measured
+  from ColorOS 17's own apps (Settings, Clock, Weather): flat #303030 cards on a #181818 page (light: white on
+  #F2F3F5), 48 dp rows with inset hairline dividers, small grey group labels, a 40 dp "pebble" back button beside an
+  18 sp title, 32 sp large titles on tabs, ColorOS blue switches and accents, and a 56 dp frosted pill tab bar
+  (blurred, with a fine rim). On Today's gradient everything is white, as in its Weather app. No glass refraction.
+- Screenshot tests (Roborazzi on Robolectric, `-Pscreenshots`) render Today in each style, the Liquid shell and the
+  ColorOS shell.
 
 **Art**
 - Original 8-fold geometric patterns, used subtly on the hero card and empty states.

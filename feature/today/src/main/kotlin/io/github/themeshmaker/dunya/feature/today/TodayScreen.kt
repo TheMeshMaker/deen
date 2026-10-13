@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -98,11 +99,13 @@ import io.github.themeshmaker.dunya.core.designsystem.component.Entrance
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
 import io.github.themeshmaker.dunya.core.designsystem.component.LightSystemBarIcons
 import io.github.themeshmaker.dunya.core.designsystem.component.LocalFloatingBarInset
+import io.github.themeshmaker.dunya.core.designsystem.component.LocalOnGradient
 import io.github.themeshmaker.dunya.core.designsystem.component.PRESS_CONTROL
 import io.github.themeshmaker.dunya.core.designsystem.component.RollingText
 import io.github.themeshmaker.dunya.core.designsystem.component.ThinProgress
 import io.github.themeshmaker.dunya.core.designsystem.component.liquidGlass
 import io.github.themeshmaker.dunya.core.designsystem.component.pageBackground
+import io.github.themeshmaker.dunya.core.designsystem.component.pebble
 import io.github.themeshmaker.dunya.core.designsystem.component.pressScale
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberDrawIn
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
@@ -184,7 +187,12 @@ internal fun TodayRoute(actions: TodayActions, viewModel: TodayViewModel = hiltV
             val look = DeenTheme.look
             when {
                 look.liquid -> LiquidToday(s, extras, actions, rows)
+
+                // ColorOS: laid out like its Weather app, on the theme's gradient with frosted cards.
+                look.colorOs -> LiquidToday(s, extras, actions, rows, ownBackground = true)
+
                 look.sleek -> SleekToday(s, extras, actions, rows)
+
                 else -> ClassicToday(s, extras, actions, rows)
             }
         }
@@ -401,14 +409,30 @@ private val PATTERN_CELL = 48.dp
  * countdown ring on it, and the times, actions and cards as panes of dark glass that bend it.
  */
 @Composable
-internal fun LiquidToday(state: TodayUiState.Ready, extras: TodayExtras, actions: TodayActions, rows: PrayerRowActions) {
+internal fun LiquidToday(
+    state: TodayUiState.Ready,
+    extras: TodayExtras,
+    actions: TodayActions,
+    rows: PrayerRowActions,
+    ownBackground: Boolean = false
+) {
     val schedule = state.schedule
     val isFriday = schedule.date.dayOfWeek == DayOfWeek.FRIDAY
     val gradient = DeenTheme.gradient
     val entrance = rememberEntrance()
     LightSystemBarIcons()
+    // Liquid's gradient is the app's backdrop; the ColorOS style draws its own here.
+    if (ownBackground) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(gradient.brush)
+        ) {
+            GeometricPattern(color = gradient.pattern, modifier = Modifier.matchParentSize(), cell = PATTERN_CELL)
+        }
+    }
     DeenOnGradient {
-        CompositionLocalProvider(LocalContentColor provides gradient.content) {
+        CompositionLocalProvider(LocalContentColor provides gradient.content, LocalOnGradient provides ownBackground) {
             Column(
                 Modifier
                     .fillMaxSize()
@@ -451,6 +475,15 @@ internal fun LiquidToday(state: TodayUiState.Ready, extras: TodayExtras, actions
             }
         }
     }
+    if (ownBackground) {
+        // Content scrolling under the status bar fades into the gradient instead of colliding with the icons.
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .windowInsetsTopHeight(WindowInsets.statusBars.add(WindowInsets(top = 12.dp)))
+                .background(Brush.verticalGradient(listOf(gradient.start, gradient.start.copy(alpha = 0f))))
+        )
+    }
 }
 
 /** A small capsule (or circle) of glass with content in it, e.g. the place name. */
@@ -460,7 +493,13 @@ private fun GlassChip(onClick: () -> Unit, circle: Boolean = false, content: @Co
     Row(
         Modifier
             .then(if (circle) Modifier.size(44.dp) else Modifier.height(40.dp))
-            .liquidGlass(RoundedCornerShape(percent = 50), interactionSource = interaction, pressScale = PRESS_CONTROL)
+            .then(
+                if (DeenTheme.look.colorOs) {
+                    Modifier.pebble(RoundedCornerShape(percent = 50), interaction)
+                } else {
+                    Modifier.liquidGlass(RoundedCornerShape(percent = 50), interactionSource = interaction, pressScale = PRESS_CONTROL)
+                }
+            )
             .clip(CircleShape)
             .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onClick)
             .padding(horizontal = if (circle) 0.dp else 14.dp),
@@ -530,7 +569,8 @@ private fun RingCountdown(state: TodayUiState.Ready, isFriday: Boolean, modifier
 @Composable
 private fun ProgressRing(progress: Float, color: Color) {
     val look = DeenTheme.look
-    val breath = if (look.motion) {
+    // (Not in Liquid: a light that never stops changing would keep every pane of glass re-rendering.)
+    val breath = if (look.motion && !look.liquid) {
         val value by rememberInfiniteTransition(label = "halo").animateFloat(
             initialValue = 0f,
             targetValue = 1f,
@@ -619,11 +659,11 @@ private fun QuickAction(icon: Int, label: String, onClick: () -> Unit) {
     val interaction = remember { MutableInteractionSource() }
     Column(
         Modifier
-            .pressScale(interaction, enabled = look.motion && !look.liquid, pressed = 0.9f)
+            .pressScale(interaction, enabled = look.motion && !look.liquid && !look.colorOs, pressed = 0.9f)
             .clip(MaterialTheme.shapes.large)
             .clickable(
                 interactionSource = interaction,
-                indication = if (look.liquid) null else androidx.compose.material3.ripple(),
+                indication = if (look.liquid || look.colorOs) null else androidx.compose.material3.ripple(),
                 role = Role.Button,
                 onClick = onClick
             )
@@ -635,6 +675,8 @@ private fun QuickAction(icon: Int, label: String, onClick: () -> Unit) {
                 .size(56.dp)
                 .then(
                     when {
+                        look.colorOs -> Modifier.pebble(CircleShape, interaction)
+
                         look.liquid -> Modifier.liquidGlass(
                             RoundedCornerShape(percent = 50),
                             interactionSource = interaction,
@@ -660,7 +702,7 @@ private fun QuickAction(icon: Int, label: String, onClick: () -> Unit) {
         Text(
             label,
             style = MaterialTheme.typography.labelMedium,
-            color = if (look.liquid) LocalContentColor.current else MaterialTheme.colorScheme.onSurface,
+            color = if (look.liquid || look.colorOs) LocalContentColor.current else MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 6.dp),
             maxLines = 1
         )

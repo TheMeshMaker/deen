@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -31,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -122,15 +124,17 @@ fun DeenCard(
         }
         return
     }
+    val frosted = look.colorOs && LocalOnGradient.current && containerColor == look.card
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .pressScale(interaction, enabled = onClick != null && look.motion)
+            .pressScale(interaction, enabled = onClick != null && look.motion, pressed = if (look.colorOs) 0.975f else 0.965f)
             .softShadow(look)
             .innerRule(look)
             .cardEdge(look.cardBorder, look.cardShape),
         shape = look.cardShape,
-        color = containerColor,
+        // ColorOS: on Today's gradient, cards are frosted white like the Weather app's.
+        color = if (frosted) Color.White.copy(alpha = 0.16f) else containerColor,
         // Glass cards are see-through, so their text colour can't be derived from the fill.
         contentColor = MaterialTheme.colorScheme.onSurface,
         onClick = onClick ?: {},
@@ -162,8 +166,13 @@ fun DeenScaffold(
     val look = DeenTheme.look
     DeenBarScaffold(
         title = title,
-        large = look.sleek && largeTitle,
-        smallStyle = if (look.sleek) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleLarge,
+        // ColorOS: a pushed screen's title sits small beside the back button, as in its Settings.
+        large = look.sleek && largeTitle && !look.colorOs,
+        smallStyle = when {
+            look.colorOs -> MaterialTheme.typography.titleLarge.merge(ColorOsType.title)
+            look.sleek -> MaterialTheme.typography.headlineSmall
+            else -> MaterialTheme.typography.titleLarge
+        },
         navigationIcon = { if (onBack != null) BackButton(onBack, backLabel) },
         modifier = modifier,
         actions = actions,
@@ -233,6 +242,8 @@ private fun DeenBarScaffold(
                     title = { Text(title, style = smallStyle, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                     navigationIcon = navigationIcon,
                     actions = actions,
+                    // ColorOS's bar is a little lower, centred on its back button.
+                    expandedHeight = if (look.colorOs) 56.dp else TopAppBarDefaults.TopAppBarExpandedHeight,
                     colors = colors
                 )
             },
@@ -253,11 +264,21 @@ private fun DeenBarScaffold(
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             LargeTopAppBar(
-                title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                title = {
+                    // ColorOS: the expanded title is its big bold one (the folded one keeps the bar's size).
+                    val style = LocalTextStyle.current
+                    val expanded = style.fontSize == MaterialTheme.typography.headlineMedium.fontSize
+                    Text(
+                        title,
+                        style = if (look.colorOs && expanded) style.merge(ColorOsType.largeTitle) else style,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 navigationIcon = navigationIcon,
                 actions = actions,
                 colors = colors,
-                expandedHeight = 120.dp,
+                expandedHeight = if (look.colorOs) 112.dp else 120.dp,
                 scrollBehavior = behavior,
                 modifier = Modifier.drawWithContent {
                     drawContent()
@@ -335,6 +356,27 @@ fun Modifier.softShadow(look: DeenLook, shape: Shape = look.cardShape): Modifier
 @Composable
 private fun BackButton(onBack: () -> Unit, label: String) {
     val look = DeenTheme.look
+    if (look.colorOs) {
+        val interaction = remember { MutableInteractionSource() }
+        Box(
+            Modifier
+                .padding(start = 12.dp, end = 5.dp)
+                .size(40.dp)
+                .pebble(CircleShape, interaction)
+                .clip(CircleShape)
+                .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onBack)
+                .semantics { contentDescription = label },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painterResource(DeenIcons.Back),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(22.dp)
+            )
+        }
+        return
+    }
     if (look.liquid) {
         val interaction = remember { MutableInteractionSource() }
         Box(
@@ -373,6 +415,19 @@ private fun BackButton(onBack: () -> Unit, label: String) {
 /** Small heading above a group of cards or settings. */
 @Composable
 fun SectionLabel(text: String, modifier: Modifier = Modifier) {
+    if (DeenTheme.look.colorOs) {
+        // ColorOS: small grey text above the card, lined up with the text inside it and sitting
+        // nearer the card below than the one above.
+        Text(
+            text,
+            style = MaterialTheme.typography.bodySmall.merge(ColorOsType.groupLabel),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = modifier
+                .offset(y = 5.dp)
+                .padding(top = 9.dp, start = 16.dp)
+        )
+        return
+    }
     Text(
         text,
         style = MaterialTheme.typography.labelLarge,
@@ -413,6 +468,14 @@ fun <T> PillChoice(options: List<T>, selected: T, label: @Composable (T) -> Stri
     val haptics = LocalHapticFeedback.current
     val motion = DeenTheme.look.motion
     val index = options.indexOf(selected).coerceAtLeast(0).toFloat()
+    // ColorOS's segmented control: a lighter pill (white, or grey in the dark) on a grey track.
+    val colorOs = DeenTheme.look.colorOs
+    val thumb = when {
+        !colorOs -> colors.primary
+        DeenTheme.look.dark -> Color(0xFF5A5A5A)
+        else -> Color.White
+    }
+    val selectedText = if (colorOs) colors.onSurface else colors.onPrimary
     // The highlight glides from option to option (Sleek) or jumps there (Classic).
     val position by animateFloatAsState(index, if (motion) DeenMotion.snappy() else snap(), label = "pill")
     val gap = 4.dp
@@ -433,14 +496,14 @@ fun <T> PillChoice(options: List<T>, selected: T, label: @Composable (T) -> Stri
                 val segment = (size.width - gapPx * (options.size - 1)) / options.size
                 val start = position * (segment + gapPx)
                 val x = if (layoutDirection == LayoutDirection.Rtl) size.width - start - segment else start
-                drawRoundRect(colors.primary, Offset(x, 0f), Size(segment, size.height), CornerRadius(size.height / 2f))
+                drawRoundRect(thumb, Offset(x, 0f), Size(segment, size.height), CornerRadius(size.height / 2f))
             },
         horizontalArrangement = Arrangement.spacedBy(gap)
     ) {
         options.forEach { option ->
             val isSelected = option == selected
             val text = label(option)
-            val textColor by animateColorAsState(if (isSelected) colors.onPrimary else colors.onSurfaceVariant, label = "pillText")
+            val textColor by animateColorAsState(if (isSelected) selectedText else colors.onSurfaceVariant, label = "pillText")
             Box(
                 Modifier
                     .weight(1f)
@@ -481,8 +544,11 @@ fun MenuRow(
     Row(
         modifier
             .fillMaxWidth()
+            // ColorOS: a row with an icon has its divider start at the text, past the icon.
+            .listDivider(start = if (icon != null) 66.dp else 16.dp)
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+            // ColorOS's rows are 48 dp.
+            .padding(horizontal = 16.dp, vertical = if (DeenTheme.look.colorOs) 12.dp else 14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -511,6 +577,15 @@ fun MenuRow(
             }
         }
         trailing?.invoke()
+        // ColorOS: a row that opens something ends with a grey chevron.
+        if (trailing == null && onClick != null && DeenTheme.look.colorOs) {
+            Icon(
+                painterResource(DeenIcons.ChevronEnd),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                modifier = Modifier.size(20.dp)
+            )
+        }
     }
 }
 

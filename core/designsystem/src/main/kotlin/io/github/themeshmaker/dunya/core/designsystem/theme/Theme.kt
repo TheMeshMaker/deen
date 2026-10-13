@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.themeshmaker.dunya.core.designsystem.component.ColorOsColors
 import io.github.themeshmaker.dunya.core.designsystem.component.LiquidAppearance
 import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.ThemeMode
@@ -258,9 +259,9 @@ private fun lookFor(
     // typography below), and a frosted tab bar floating over the page (drawn by the app shell).
     UiStyle.COLOROS -> DeenLook(
         uiStyle = uiStyle,
-        page = if (dark) Color.Black else Color(0xFFF2F3F5),
-        card = if (dark) Color(0xFF1C1C1E) else Color.White,
-        sheetColor = if (dark) Color(0xFF1C1C1E) else Color.White,
+        page = if (dark) ColorOsColors.pageDark else ColorOsColors.pageLight,
+        card = if (dark) ColorOsColors.cardDark else ColorOsColors.cardLight,
+        sheetColor = if (dark) Color(0xFF262626) else Color.White,
         cardShape = SquircleShape(22.dp),
         cardBorder = null,
         cardElevation = 0.dp,
@@ -307,7 +308,21 @@ private val LocalDeenDarkScheme = staticCompositionLocalOf { emeraldDark }
 @Composable
 fun DeenOnGradient(content: @Composable () -> Unit) {
     val look = DeenTheme.look
-    MaterialTheme(colorScheme = LocalDeenDarkScheme.current, typography = MaterialTheme.typography, shapes = MaterialTheme.shapes) {
+    val dark = LocalDeenDarkScheme.current
+    // ColorOS keeps everything on a gradient white (as its Weather app does), not its blue.
+    val scheme = if (look.colorOs) {
+        dark.copy(
+            primary = Color.White,
+            onPrimary = DeenTheme.gradient.start,
+            primaryContainer = Color.White.copy(alpha = 0.22f),
+            onPrimaryContainer = Color.White,
+            secondary = Color.White,
+            tertiary = Color.White
+        )
+    } else {
+        dark
+    }
+    MaterialTheme(colorScheme = scheme, typography = MaterialTheme.typography, shapes = MaterialTheme.shapes) {
         CompositionLocalProvider(LocalDeenLook provides look.copy(dark = true)) {
             LiquidAppearance(dark = true, content = content)
         }
@@ -346,6 +361,33 @@ private fun ThemeStyle.darkScheme(custom: CustomColors): ColorScheme = when (thi
     ThemeStyle.DESERT -> desertDark
     ThemeStyle.MIDNIGHT -> seededScheme(seed(custom), dark = true).copy(background = Color(0xFF070914), surface = Color(0xFF070914))
     else -> seededScheme(seed(custom), dark = true)
+}
+
+/**
+ * ColorOS 17's palette, as measured on the phone: its blue for switches, sliders and selection, its
+ * page and card greys, and its grey secondary text. (The theme's gradient still colours Today.)
+ */
+private fun ColorScheme.colorOs(dark: Boolean): ColorScheme {
+    val blue = if (dark) ColorOsColors.blueDark else ColorOsColors.blueLight
+    val page = if (dark) ColorOsColors.pageDark else ColorOsColors.pageLight
+    val card = if (dark) ColorOsColors.cardDark else ColorOsColors.cardLight
+    return copy(
+        primary = blue,
+        onPrimary = Color.White,
+        primaryContainer = blue.copy(alpha = 0.18f),
+        onPrimaryContainer = blue,
+        background = page,
+        surface = page,
+        onBackground = if (dark) Color.White else Color(0xFF1A1A1A),
+        onSurface = if (dark) Color.White else Color(0xFF1A1A1A),
+        onSurfaceVariant = ColorOsColors.secondaryText,
+        surfaceContainerLowest = card,
+        surfaceContainerLow = card,
+        surfaceContainer = card,
+        surfaceContainerHigh = if (dark) Color(0xFF3A3A3A) else Color(0xFFF0F1F3),
+        outline = if (dark) Color(0xFF5A5A5A) else Color(0xFFC8CACE),
+        outlineVariant = if (dark) Color(0xFF3D3D3D) else Color(0xFFE6E7EA)
+    )
 }
 
 /** Clean white pages; cards keep the theme's faint tint (surfaceContainerLow) so they still stand out. */
@@ -400,7 +442,9 @@ fun DeenTheme(
         dark -> remember(style, customColors) { style.darkScheme(customColors) }
         else -> remember(style, customColors) { style.lightScheme(customColors) }
     }
-    val colors = if (themeMode == ThemeMode.OLED_BLACK) base.toOledBlack() else base
+    val colors = (if (themeMode == ThemeMode.OLED_BLACK) base.toOledBlack() else base).let {
+        if (uiStyle == UiStyle.COLOROS && DeviceSkin.isColorOs17) it.colorOs(dark) else it
+    }
     val darkColors = if (dark) colors else remember(style, customColors) { style.darkScheme(customColors) }
     val gradient = style.gradient(customColors)
     val pageHeight = LocalWindowInfo.current.containerSize.height.toFloat()

@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.HazePerformanceMode
 import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.blur.HazeBlurStyle
@@ -141,6 +142,10 @@ fun Modifier.liquidGlass(
         (if (clear) GlassStyle.clear else GlassStyle.regular).then {
             shape(shape)
             if (glassTint.isSpecified) this.tint(glassTint)
+            // A wide band of bending around the edges, as on iOS (Haze's stock band is narrow): what
+            // is behind the glass visibly flows around its rim. Clear glass (the tab lens) bends most
+            // and barely blurs. (Strength, band as a fraction of the shape, displacement, depth, blur.)
+            if (clear) optics(0.95f, 0.5f, 24.dp, 1f, 3.dp) else optics(0.82f, 0.4f, 20.dp, 1f, 14.dp)
             // A brighter rim and highlight than stock, so panes read as separate on busy backdrops.
             specularIntensity(if (dark) 0.5f else 0.62f)
             ambientResponse(if (dark) 0.24f else 0.3f)
@@ -158,6 +163,8 @@ fun Modifier.liquidGlass(
     (if (interactionSource != null && swell > 1f) pressSwell(interactionSource, swell) else this).hazeGlass(
         input = HazeInput.Sources(state),
         style = style,
+        // Cards are many and large: cheaper glass for them; bars and controls keep the balanced quality.
+        performanceMode = if (pressScale == PRESS_CARD) HazePerformanceMode.Performance else HazePerformanceMode.Balanced,
         interactionSource = interactionSource,
         interactionTransformTarget = GlassTransformTarget.MaterialAndContent,
         interactionTransformPivot = GlassTransformPivot.Pointer
@@ -293,7 +300,9 @@ internal class LiquidLight {
             (REST.y - tilt.y * GAIN).coerceIn(REST.y - REACH, REST.y + REACH)
         )
         val current = position.value
-        position.value = current + (target - current) * SMOOTHING
+        val next = current + (target - current) * SMOOTHING
+        // Every move redraws all the glass on screen, so the hand's tiny tremors are ignored.
+        if ((next - current).getDistance() > MIN_MOVE) position.value = next
     }
 
     fun reset() {
@@ -314,8 +323,11 @@ internal class LiquidLight {
         const val GAIN = 0.12f
         const val SMOOTHING = 0.25f
 
-        /** How fast "the way it is held" catches up with the phone (per reading, ~60 a second). */
-        const val SETTLE = 0.02f
+        /** How fast "the way it is held" catches up with the phone (per reading, ~15 a second). */
+        const val SETTLE = 0.06f
+
+        /** The smallest move worth redrawing the glass for. */
+        const val MIN_MOVE = 0.006f
     }
 }
 
@@ -335,7 +347,8 @@ private fun rememberLiquidLight(motion: Boolean): LiquidLight? {
 
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
         }
-        val registered = sensor != null && manager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_GAME)
+        // About 15 readings a second: enough for the light to glide, and far less redrawing than 50.
+        val registered = sensor != null && manager.registerListener(listener, sensor, SENSOR_PERIOD_US)
         onPauseOrDispose {
             if (registered) manager.unregisterListener(listener)
             light.reset()
@@ -343,6 +356,8 @@ private fun rememberLiquidLight(motion: Boolean): LiquidLight? {
     }
     return light
 }
+
+private const val SENSOR_PERIOD_US = 66_000
 
 /** Gravity in screen terms, whichever way the phone is turned. */
 private fun rotated(gravity: Offset, context: Context): Offset = when (displayRotation(context)) {
