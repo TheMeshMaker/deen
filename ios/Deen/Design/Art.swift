@@ -96,27 +96,35 @@ struct ProgressRing: View {
     var progress: Double
     var color: Color
 
+    private let line: CGFloat = 6
+
     var body: some View {
         GeometryReader { geo in
             let size = min(geo.size.width, geo.size.height)
-            let radius = (size - 6) / 2
-            let angle = Angle.degrees(360 * progress - 90)
+            let p = min(max(progress, 0), 1)
+            // The track, the arc and the dot all sit on the same circle: the middle of the line.
+            let radius = (size - line) / 2
+            let angle = 2 * Double.pi * p - Double.pi / 2
             ZStack {
-                Circle().stroke(color.opacity(0.2), lineWidth: 6)
+                Circle().inset(by: line / 2).stroke(color.opacity(0.2), lineWidth: line)
                 Circle()
-                    .trim(from: 0, to: progress)
+                    .inset(by: line / 2)
+                    .trim(from: 0, to: p)
                     .stroke(AngularGradient(colors: [color.opacity(0.35), color], center: .center, startAngle: .degrees(0),
-                                            endAngle: .degrees(max(360 * progress, 1))),
-                            style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                                            endAngle: .degrees(max(360 * p, 1))),
+                            style: StrokeStyle(lineWidth: line, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                 Circle()
                     .fill(color)
-                    .frame(width: 11, height: 11)
+                    .frame(width: 12, height: 12)
                     .shadow(color: color.opacity(0.8), radius: 6)
-                    .offset(x: radius * cos(angle.radians), y: radius * sin(angle.radians))
+                    .position(x: size / 2 + radius * cos(angle), y: size / 2 + radius * sin(angle))
             }
             .frame(width: size, height: size)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // A clock runs clockwise in every language; without this, Arabic and Urdu mirror the dot's
+            // position but not the arc, and the dot lands on the wrong side.
+            .environment(\.layoutDirection, .leftToRight)
+            .position(x: geo.size.width / 2, y: geo.size.height / 2)
         }
         .accessibilityHidden(true)
     }

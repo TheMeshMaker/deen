@@ -96,6 +96,7 @@ struct QiblaView: View {
                 Image(systemName: "location.north.fill").font(.system(size: 44)).foregroundStyle(aligned ? Color.recitation : theme.gradient.content)
             }
             .frame(width: 290, height: 290)
+            .environment(\.layoutDirection, .leftToRight)  // a compass never mirrors
             .sensoryFeedback(.success, trigger: aligned) { _, now in now }
             VStack(spacing: 6) {
                 Text(L("feature_qibla_bearing", Formats.localDigits(String(format: "%.0f", bearing))))
