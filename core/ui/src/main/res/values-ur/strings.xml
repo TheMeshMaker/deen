@@ -67,4 +67,27 @@
     <string name="core_ui_daily_fact">نبی ﷺ کے بارے میں</string>
     <string name="core_ui_language">زبان</string>
     <string name="core_ui_language_system">فون کی زبان</string>
+    <string name="core_ui_event_new_year">اسلامی نیا سال</string>
+    <string name="core_ui_event_ashura">یومِ عاشورا</string>
+    <string name="core_ui_event_ramadan">رمضان</string>
+    <string name="core_ui_event_last_ten">آخری عشرہ</string>
+    <string name="core_ui_event_eid_fitr">عید الفطر</string>
+    <string name="core_ui_event_arafah">یومِ عرفہ</string>
+    <string name="core_ui_event_eid_adha">عید الاضحیٰ</string>
+    <string name="core_ui_event_white_days">ایامِ بیض</string>
+    <string name="core_ui_event_new_year_detail">یکم محرم، ہجری سال کا پہلا دن۔</string>
+    <string name="core_ui_event_ashura_detail">اس کا روزہ مستحب ہے، ساتھ ایک دن پہلے کا بھی۔</string>
+    <string name="core_ui_event_ramadan_detail">روزوں کا مہینہ، جس میں قرآن نازل ہوا۔</string>
+    <string name="core_ui_event_last_ten_detail">طاق راتوں میں لیلۃ القدر تلاش کریں۔</string>
+    <string name="core_ui_event_eid_fitr_detail">رمضان کے اختتام کی عید، نمازِ عید کے ساتھ۔</string>
+    <string name="core_ui_event_arafah_detail">حج نہ کرنے والوں کے لیے اس کا روزہ مستحب ہے۔</string>
+    <string name="core_ui_event_eid_adha_detail">قربانی کی عید، نمازِ عید کے ساتھ۔</string>
+    <string name="core_ui_event_white_days_detail">ہجری مہینے کی تیرہ سے پندرہ تاریخ: روزے کے مستحب دن۔</string>
+    <string name="core_ui_event_now">ابھی</string>
+    <string name="core_ui_event_today">آج</string>
+    <string name="core_ui_event_tomorrow">کل</string>
+    <plurals name="core_ui_event_in_days">
+        <item quantity="one">%d دن میں</item>
+        <item quantity="other">%d دن میں</item>
+    </plurals>
 </resources>

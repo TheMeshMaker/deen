@@ -36,4 +36,7 @@
 
     <string name="core_alarm_test_title">Test adhan</string>
     <string name="core_alarm_test_body">If you hear this with the screen locked, the adhan works on this phone.</string>
+    <string name="core_alarm_channel_friday">Friday reminder</string>
+    <string name="core_alarm_kahf_title">It\'s Friday</string>
+    <string name="core_alarm_kahf_body">Read Surah Al-Kahf today. Tap to open it.</string>
 </resources>

@@ -49,4 +49,31 @@
         <item quantity="one">%1$s آیت</item>
         <item quantity="other">%1$s آیات</item>
     </plurals>
+    <string name="feature_quran_khatmah">ختمہ</string>
+    <string name="feature_quran_khatmah_invite">پورا قرآن پڑھنے کا منصوبہ بنائیں</string>
+    <string name="feature_quran_khatmah_complete">مکمل ہو گیا۔ اللہ قبول فرمائے۔</string>
+    <string name="feature_quran_khatmah_done_today">آج کا حصہ مکمل</string>
+    <string name="feature_quran_khatmah_today">آج: صفحات %1$s–%2$s</string>
+    <string name="feature_quran_khatmah_status">دن %1$s از %2$s · %4$s میں سے %3$s صفحات</string>
+    <plurals name="feature_quran_khatmah_behind">
+        <item quantity="one">%1$s صفحہ پیچھے</item>
+        <item quantity="other">%1$s صفحات پیچھے</item>
+    </plurals>
+    <string name="feature_quran_khatmah_new">نیا ختمہ</string>
+    <string name="feature_quran_khatmah_end">منصوبہ ختم کریں</string>
+    <string name="feature_quran_khatmah_read">آج کا حصہ پڑھیں</string>
+    <string name="feature_quran_khatmah_title">ختمے کا منصوبہ</string>
+    <string name="feature_quran_khatmah_body">منتخب کریں کہ قرآن کتنے دنوں میں ختم کرنا ہے۔ دین مدنی مصحف کے 604 صفحات کو روزانہ حصوں میں بانٹ کر آپ کی پیش رفت دیکھتا ہے۔</string>
+    <string name="feature_quran_khatmah_days">ختم کریں</string>
+    <plurals name="feature_quran_khatmah_days_choice">
+        <item quantity="one">%1$s دن</item>
+        <item quantity="other">%1$s دن</item>
+    </plurals>
+    <plurals name="feature_quran_khatmah_per_day">
+        <item quantity="one">روزانہ تقریباً %1$s صفحہ</item>
+        <item quantity="other">روزانہ تقریباً %1$s صفحات</item>
+    </plurals>
+    <string name="feature_quran_khatmah_from_start">الفاتحہ سے</string>
+    <string name="feature_quran_khatmah_from_here">جہاں ہوں وہاں سے</string>
+    <string name="feature_quran_khatmah_start">شروع کریں</string>
 </resources>

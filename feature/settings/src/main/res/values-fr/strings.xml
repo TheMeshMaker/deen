@@ -102,4 +102,7 @@
     <string name="feature_settings_src_fonts_body">Readex Pro, Amiri et Amiri Quran (SIL Open Font License). Material Symbols (Apache 2.0).</string>
     <string name="feature_settings_src_app">Deen</string>
     <string name="feature_settings_src_app_body">Logiciel libre sous GPL-3.0 ou ultérieure. Sans publicité, sans pistage.</string>
+    <string name="feature_settings_kahf">Vendredi : sourate Al-Kahf</string>
+    <string name="feature_settings_kahf_body">Un rappel le vendredi matin pour lire Al-Kahf</string>
+    <string name="feature_settings_style_liquid">Verre liquide</string>
 </resources>

@@ -67,4 +67,28 @@
     <string name="core_ui_daily_fact">Sur le Prophète ﷺ</string>
     <string name="core_ui_language">Langue</string>
     <string name="core_ui_language_system">Langue du téléphone</string>
+    <string name="core_ui_event_new_year">Nouvel an islamique</string>
+    <string name="core_ui_event_ashura">Jour de ʿĀshūrāʾ</string>
+    <string name="core_ui_event_ramadan">Ramadan</string>
+    <string name="core_ui_event_last_ten">Les dix dernières nuits</string>
+    <string name="core_ui_event_eid_fitr">Aïd al-Fitr</string>
+    <string name="core_ui_event_arafah">Jour de ʿArafa</string>
+    <string name="core_ui_event_eid_adha">Aïd al-Adha</string>
+    <string name="core_ui_event_white_days">Les jours blancs</string>
+    <string name="core_ui_event_new_year_detail">1er Muḥarram, premier jour de l\'année hégirienne.</string>
+    <string name="core_ui_event_ashura_detail">Un jeûne recommandé, avec la veille aussi.</string>
+    <string name="core_ui_event_ramadan_detail">Le mois du jeûne, durant lequel le Coran fut révélé.</string>
+    <string name="core_ui_event_last_ten_detail">Recherchez Laylat al-Qadr durant les nuits impaires.</string>
+    <string name="core_ui_event_eid_fitr_detail">La fête de fin du Ramadan, avec la prière de l\'Aïd.</string>
+    <string name="core_ui_event_arafah_detail">Le jeûne est recommandé à ceux qui ne font pas le Hajj.</string>
+    <string name="core_ui_event_eid_adha_detail">La fête du sacrifice, avec la prière de l\'Aïd.</string>
+    <string name="core_ui_event_white_days_detail">Du 13 au 15 du mois hégirien : jours de jeûne recommandés.</string>
+    <string name="core_ui_event_now">En cours</string>
+    <string name="core_ui_event_today">Aujourd\'hui</string>
+    <string name="core_ui_event_tomorrow">Demain</string>
+    <plurals name="core_ui_event_in_days">
+        <item quantity="one">Dans %d jour</item>
+        <item quantity="many">Dans %d jours</item>
+        <item quantity="other">Dans %d jours</item>
+    </plurals>
 </resources>

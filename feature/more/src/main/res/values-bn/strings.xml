@@ -27,4 +27,8 @@
     <string name="feature_more_report">সমস্যা বা পরামর্শ জানান</string>
     <string name="feature_more_report_body">GitHub-এ Deen-এর পাতা খোলে</string>
     <string name="feature_more_dua">আর অনুগ্রহ করে আপনার দোয়ায় আমাদের স্মরণ রাখবেন।</string>
+    <string name="feature_more_tracker">নামাজ ট্র্যাকার</string>
+    <string name="feature_more_tracker_body">নামাজে টিক দিন, ধারাবাহিকতা দেখুন</string>
+    <string name="feature_more_calendar">ইসলামি ক্যালেন্ডার</string>
+    <string name="feature_more_calendar_body">রমজান, ঈদ, আরাফা ও আইয়ামে বীয</string>
 </resources>

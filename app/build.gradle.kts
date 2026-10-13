@@ -69,6 +69,8 @@ android {
         checkDependencies = true
         abortOnError = true
     }
+
+    testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 dependencies {
@@ -104,4 +106,21 @@ dependencies {
 
     // Google Play services are only ever linked into the Play build.
     "playImplementation"(projects.core.locationGms)
+
+    testImplementation(libs.robolectric)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+// Screenshots of the Liquid shell (build/outputs/roborazzi), only when asked for: -Pscreenshots
+tasks.withType<Test>().configureEach {
+    if (project.hasProperty("screenshots")) {
+        systemProperty("roborazzi.test.record", "true")
+    } else {
+        exclude("**/*ScreenshotTest*")
+        failOnNoDiscoveredTests = false
+    }
 }

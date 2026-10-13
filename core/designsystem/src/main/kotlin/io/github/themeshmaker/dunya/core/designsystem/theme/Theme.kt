@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.themeshmaker.dunya.core.designsystem.component.LiquidAppearance
 import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
@@ -107,7 +108,7 @@ fun ThemeStyle.gradient(custom: CustomColors = CustomColors()): DeenGradient = w
 
 /**
  * The app style (UiStyle) turned into concrete values: every screen draws its cards, pages and
- * headers from here, so Classic, Sleek, Glass and Heritage are the same screens in four looks.
+ * headers from here, so Classic, Sleek, Glass, Liquid and Heritage are the same screens in five looks.
  */
 @Immutable
 data class DeenLook(
@@ -133,11 +134,16 @@ data class DeenLook(
     val gutter: Dp,
     val gap: Dp,
     /** Animations (screen transitions, rolling numbers, entrances); off in Classic and with reduced motion. */
-    val motion: Boolean = false
+    val motion: Boolean = false,
+    /** The colours are the dark scheme. */
+    val dark: Boolean = false
 ) {
-    /** The immersive layout (full-bleed header, floating tab bar, large titles): Sleek and Glass. */
+    /** The immersive layout (full-bleed header, floating tab bar, large titles): Sleek, Glass and Liquid. */
     val sleek: Boolean get() = uiStyle.immersive
     val glass: Boolean get() = uiStyle == UiStyle.GLASS
+
+    /** Liquid glass over the app's coloured backdrop (see LiquidGlass.kt): pages are clear. */
+    val liquid: Boolean get() = uiStyle == UiStyle.LIQUID
     val heritage: Boolean get() = uiStyle == UiStyle.HERITAGE
 }
 
@@ -225,6 +231,25 @@ private fun lookFor(
         )
     }
 
+    // Liquid: like iOS 26. Pages are clear over the app's coloured backdrop, and cards, bars and
+    // buttons are glass that bends and blurs it (drawn by liquidGlass; these colours are only the
+    // fallback and the opaque surfaces). Corners stay plain rounded rectangles, which the glass needs.
+    UiStyle.LIQUID -> DeenLook(
+        uiStyle = uiStyle,
+        page = if (dark) lerp(colors.background, gradient.start, 0.16f) else lerp(Color.White, gradient.end, 0.05f),
+        card = if (dark) Color.White.copy(alpha = 0.08f) else Color.White.copy(alpha = 0.55f),
+        sheetColor = if (dark) colors.surfaceContainer else Color.White,
+        cardShape = RoundedCornerShape(28.dp),
+        cardBorder = null,
+        cardElevation = 0.dp,
+        shadowColor = Color.Black,
+        heroShape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp),
+        sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        gutter = 16.dp,
+        gap = 12.dp,
+        motion = !reducedMotion
+    )
+
     // Heritage: parchment pages and cards framed like a manuscript page (cut corners, a double
     // rule in gold), with Amiri headings. Classic's layout.
     UiStyle.HERITAGE -> {
@@ -251,6 +276,21 @@ private fun lookFor(
 
 private val LocalDeenGradient = staticCompositionLocalOf { EmeraldGradient }
 private val LocalDeenLook = staticCompositionLocalOf<DeenLook> { error("DeenTheme not set") }
+private val LocalDeenDarkScheme = staticCompositionLocalOf { emeraldDark }
+
+/**
+ * For content laid straight on the theme's full gradient (Liquid's Today, like iOS): the theme's
+ * dark colours, so text and accents stay readable, and glass that responds as on a dark background.
+ */
+@Composable
+fun DeenOnGradient(content: @Composable () -> Unit) {
+    val look = DeenTheme.look
+    MaterialTheme(colorScheme = LocalDeenDarkScheme.current, typography = MaterialTheme.typography, shapes = MaterialTheme.shapes) {
+        CompositionLocalProvider(LocalDeenLook provides look.copy(dark = true)) {
+            LiquidAppearance(dark = true, content = content)
+        }
+    }
+}
 
 /** Deen-specific theme values, alongside [MaterialTheme]. */
 object DeenTheme {
@@ -339,18 +379,20 @@ fun DeenTheme(
         else -> remember(style, customColors) { style.lightScheme(customColors) }
     }
     val colors = if (themeMode == ThemeMode.OLED_BLACK) base.toOledBlack() else base
+    val darkColors = if (dark) colors else remember(style, customColors) { style.darkScheme(customColors) }
     val gradient = style.gradient(customColors)
     val pageHeight = LocalWindowInfo.current.containerSize.height.toFloat()
     val language = LocalConfiguration.current.locales[0].language
 
     CompositionLocalProvider(
         LocalDeenGradient provides gradient,
-        LocalDeenLook provides lookFor(uiStyle, colors, gradient, dark, rememberReducedMotion(), pageHeight)
+        LocalDeenDarkScheme provides darkColors,
+        LocalDeenLook provides lookFor(uiStyle, colors, gradient, dark, rememberReducedMotion(), pageHeight).copy(dark = dark)
     ) {
         MaterialTheme(
             colorScheme = colors,
             typography = when (uiStyle) {
-                UiStyle.SLEEK, UiStyle.GLASS -> SleekTypography
+                UiStyle.SLEEK, UiStyle.GLASS, UiStyle.LIQUID -> SleekTypography
                 UiStyle.HERITAGE -> HeritageTypography
                 UiStyle.CLASSIC -> DeenTypography
             }.let { if (language in PhoneFontLanguages) it.withPhoneFont() else it },

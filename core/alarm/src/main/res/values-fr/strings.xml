@@ -36,4 +36,7 @@
     <string name="core_alarm_voice_custom">Votre propre enregistrement</string>
     <string name="core_alarm_test_title">Test de l’adhan</string>
     <string name="core_alarm_test_body">Si vous entendez ceci écran verrouillé, l’adhan fonctionne sur ce téléphone.</string>
+    <string name="core_alarm_channel_friday">Rappel du vendredi</string>
+    <string name="core_alarm_kahf_title">C\'est vendredi</string>
+    <string name="core_alarm_kahf_body">Lisez la sourate Al-Kahf aujourd\'hui. Touchez pour l\'ouvrir.</string>
 </resources>

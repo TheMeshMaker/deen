@@ -70,4 +70,27 @@
     <string name="core_ui_daily_fact">About the Prophet ﷺ</string>
     <string name="core_ui_language">Language</string>
     <string name="core_ui_language_system">Phone\'s language</string>
+    <string name="core_ui_event_new_year">Islamic New Year</string>
+    <string name="core_ui_event_ashura">Day of ʿĀshūrāʾ</string>
+    <string name="core_ui_event_ramadan">Ramadan</string>
+    <string name="core_ui_event_last_ten">The last ten nights</string>
+    <string name="core_ui_event_eid_fitr">Eid al-Fitr</string>
+    <string name="core_ui_event_arafah">Day of ʿArafah</string>
+    <string name="core_ui_event_eid_adha">Eid al-Adha</string>
+    <string name="core_ui_event_white_days">The white days</string>
+    <string name="core_ui_event_new_year_detail">1 Muḥarram, the first day of the Hijri year.</string>
+    <string name="core_ui_event_ashura_detail">A recommended fast, with the day before it too.</string>
+    <string name="core_ui_event_ramadan_detail">The month of fasting, in which the Quran was revealed.</string>
+    <string name="core_ui_event_last_ten_detail">Seek Laylat al-Qadr in the odd nights.</string>
+    <string name="core_ui_event_eid_fitr_detail">The festival at the end of Ramadan, with the Eid prayer.</string>
+    <string name="core_ui_event_arafah_detail">Fasting it is recommended for those not on Hajj.</string>
+    <string name="core_ui_event_eid_adha_detail">The festival of sacrifice, with the Eid prayer.</string>
+    <string name="core_ui_event_white_days_detail">The 13th to 15th of the Hijri month: recommended days to fast.</string>
+    <string name="core_ui_event_now">Now</string>
+    <string name="core_ui_event_today">Today</string>
+    <string name="core_ui_event_tomorrow">Tomorrow</string>
+    <plurals name="core_ui_event_in_days">
+        <item quantity="one">In %d day</item>
+        <item quantity="other">In %d days</item>
+    </plurals>
 </resources>

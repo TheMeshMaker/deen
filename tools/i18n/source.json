@@ -39,7 +39,10 @@
   "core_alarm_voice_aaqib": "Aaqib Azeez",
   "core_alarm_voice_custom": "Your own recording",
   "core_alarm_test_title": "Test adhan",
-  "core_alarm_test_body": "If you hear this with the screen locked, the adhan works on this phone."
+  "core_alarm_test_body": "If you hear this with the screen locked, the adhan works on this phone.",
+  "core_alarm_channel_friday": "Friday reminder",
+  "core_alarm_kahf_title": "It's Friday",
+  "core_alarm_kahf_body": "Read Surah Al-Kahf today. Tap to open it."
  },
  "core/ui": {
   "core_ui_prayer_fajr": "Fajr",
@@ -107,7 +110,30 @@
   "core_ui_daily_hadith": "Hadith of the day",
   "core_ui_daily_fact": "About the Prophet ﷺ",
   "core_ui_language": "Language",
-  "core_ui_language_system": "Phone's language"
+  "core_ui_language_system": "Phone's language",
+  "core_ui_event_new_year": "Islamic New Year",
+  "core_ui_event_ashura": "Day of ʿĀshūrāʾ",
+  "core_ui_event_ramadan": "Ramadan",
+  "core_ui_event_last_ten": "The last ten nights",
+  "core_ui_event_eid_fitr": "Eid al-Fitr",
+  "core_ui_event_arafah": "Day of ʿArafah",
+  "core_ui_event_eid_adha": "Eid al-Adha",
+  "core_ui_event_white_days": "The white days",
+  "core_ui_event_new_year_detail": "1 Muḥarram, the first day of the Hijri year.",
+  "core_ui_event_ashura_detail": "A recommended fast, with the day before it too.",
+  "core_ui_event_ramadan_detail": "The month of fasting, in which the Quran was revealed.",
+  "core_ui_event_last_ten_detail": "Seek Laylat al-Qadr in the odd nights.",
+  "core_ui_event_eid_fitr_detail": "The festival at the end of Ramadan, with the Eid prayer.",
+  "core_ui_event_arafah_detail": "Fasting it is recommended for those not on Hajj.",
+  "core_ui_event_eid_adha_detail": "The festival of sacrifice, with the Eid prayer.",
+  "core_ui_event_white_days_detail": "The 13th to 15th of the Hijri month: recommended days to fast.",
+  "core_ui_event_now": "Now",
+  "core_ui_event_today": "Today",
+  "core_ui_event_tomorrow": "Tomorrow",
+  "core_ui_event_in_days": {
+   "one": "In %d day",
+   "other": "In %d days"
+  }
  },
  "feature/adhkar": {
   "feature_adhkar_title": "Adhkar",
@@ -184,7 +210,11 @@
   "feature_more_star_body": "Helps more people find it",
   "feature_more_report": "Report a problem or an idea",
   "feature_more_report_body": "Opens Deen's page on GitHub",
-  "feature_more_dua": "And please remember us in your du’a."
+  "feature_more_dua": "And please remember us in your du’a.",
+  "feature_more_tracker": "Prayer tracker",
+  "feature_more_tracker_body": "Tick off your prayers and see your streak",
+  "feature_more_calendar": "Islamic calendar",
+  "feature_more_calendar_body": "Ramadan, Eid, ʿArafah and the white days"
  },
  "feature/onboarding": {
   "feature_onboarding_welcome_title": "Welcome to Deen",
@@ -274,7 +304,34 @@
   "feature_quran_verses": {
    "one": "%1$s verse",
    "other": "%1$s verses"
-  }
+  },
+  "feature_quran_khatmah": "Khatmah",
+  "feature_quran_khatmah_invite": "Plan to read the whole Quran",
+  "feature_quran_khatmah_complete": "Completed. May Allah accept it.",
+  "feature_quran_khatmah_done_today": "Today's portion is done",
+  "feature_quran_khatmah_today": "Today: pages %1$s–%2$s",
+  "feature_quran_khatmah_status": "Day %1$s of %2$s · %3$s of %4$s pages",
+  "feature_quran_khatmah_behind": {
+   "one": "%1$s page behind",
+   "other": "%1$s pages behind"
+  },
+  "feature_quran_khatmah_new": "New khatmah",
+  "feature_quran_khatmah_end": "End plan",
+  "feature_quran_khatmah_read": "Read today's portion",
+  "feature_quran_khatmah_title": "Khatmah plan",
+  "feature_quran_khatmah_body": "Choose how many days to finish the Quran in. Deen divides the 604 pages of the Madani Mushaf into daily portions and follows your progress as you read.",
+  "feature_quran_khatmah_days": "Finish in",
+  "feature_quran_khatmah_days_choice": {
+   "one": "%1$s day",
+   "other": "%1$s days"
+  },
+  "feature_quran_khatmah_per_day": {
+   "one": "About %1$s page a day",
+   "other": "About %1$s pages a day"
+  },
+  "feature_quran_khatmah_from_start": "From Al-Fatiha",
+  "feature_quran_khatmah_from_here": "From where I am",
+  "feature_quran_khatmah_start": "Start"
  },
  "feature/reliability": {
   "feature_reliability_title": "Make sure the adhan plays",
@@ -416,7 +473,10 @@
   "feature_settings_src_fonts": "Fonts and icons",
   "feature_settings_src_fonts_body": "Readex Pro, Amiri and Amiri Quran (SIL Open Font License). Material Symbols (Apache 2.0).",
   "feature_settings_src_app": "Deen",
-  "feature_settings_src_app_body": "Free software under GPL-3.0-or-later. No ads, no tracking."
+  "feature_settings_src_app_body": "Free software under GPL-3.0-or-later. No ads, no tracking.",
+  "feature_settings_kahf": "Friday: Surah Al-Kahf",
+  "feature_settings_kahf_body": "A reminder on Friday mornings to read Al-Kahf",
+  "feature_settings_style_liquid": "Liquid Glass"
  },
  "feature/timetable": {
   "feature_timetable_title": "Prayer timetable",
@@ -432,7 +492,16 @@
   "feature_timetable_short_dhuhr": "Dhuhr",
   "feature_timetable_short_asr": "Asr",
   "feature_timetable_short_maghrib": "Magh.",
-  "feature_timetable_short_isha": "Isha"
+  "feature_timetable_short_isha": "Isha",
+  "feature_timetable_islamic_calendar": "Islamic calendar",
+  "feature_timetable_sunnah_fasts": "Sunnah fasts",
+  "feature_timetable_sunnah_fasts_body": "Mondays and Thursdays, and the white days (13th–15th) of every Hijri month.",
+  "feature_timetable_calendar_note": "Dates follow the Umm al-Qura calendar with your Hijri adjustment. Local moon sighting may differ by a day.",
+  "feature_timetable_next_day": "Next",
+  "feature_timetable_days_to_go": {
+   "one": "%1$s day to go",
+   "other": "%1$s days to go"
+  }
  },
  "feature/today": {
   "feature_today_next_prayer": "Next prayer",
@@ -459,7 +528,42 @@
   "feature_today_at": "at %1$s",
   "feature_today_continue_quran": "Continue reading",
   "feature_today_quran_position": "%1$s · verse %2$s",
-  "feature_today_start_quran": "Read the Quran"
+  "feature_today_start_quran": "Read the Quran",
+  "feature_today_tracker_short": "Tracker",
+  "feature_today_tracker_title": "Prayer tracker",
+  "feature_today_tracker_hint": "Tick each prayer as you pray it",
+  "feature_today_streak": {
+   "one": "%1$s day in a row",
+   "other": "%1$s days in a row"
+  },
+  "feature_today_tracker_today": "%1$s/%2$s today",
+  "feature_today_upcoming": "Coming up",
+  "feature_today_khatmah_day": "Khatmah · day %1$s of %2$s",
+  "feature_today_khatmah_complete": "You finished the Quran. May Allah accept it.",
+  "feature_today_khatmah_done_today": "Today's portion is done",
+  "feature_today_khatmah_today": "Today: pages %1$s–%2$s",
+  "feature_today_khatmah_left": {
+   "one": "%1$s page left today",
+   "other": "%1$s pages left today"
+  },
+  "feature_today_suhoor_ends": "Suhoor ends",
+  "feature_today_iftar": "Iftar",
+  "feature_today_night_line": "Midnight %1$s · Last third %2$s",
+  "feature_today_prayed_mark": "Mark %1$s as prayed",
+  "feature_today_prayed_undo": "%1$s prayed. Tap to undo",
+  "feature_today_tracker_today_title": "Today's prayers",
+  "feature_today_tracker_private": "Your tracker stays on this phone. Nothing is sent anywhere.",
+  "feature_today_days_label": {
+   "one": "%1$s day",
+   "other": "%1$s days"
+  },
+  "feature_today_stat_streak": "Streak",
+  "feature_today_stat_best": "Best",
+  "feature_today_stat_month": "This month",
+  "feature_today_stat_of": "%1$s of %2$s",
+  "feature_today_month_previous": "Previous month",
+  "feature_today_month_next": "Next month",
+  "feature_today_day_count": "%1$s: %2$s of %3$s prayers"
  },
  "feature/widget": {
   "feature_widget_name": "Prayer times",

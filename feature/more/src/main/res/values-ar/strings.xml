@@ -26,4 +26,8 @@
     <string name="feature_more_report">أبلغ عن مشكلة أو اقترح فكرة</string>
     <string name="feature_more_report_body">يفتح صفحة دِين على GitHub</string>
     <string name="feature_more_dua">ولا تنسونا من صالح دعائكم.</string>
+    <string name="feature_more_tracker">متابعة الصلوات</string>
+    <string name="feature_more_tracker_body">علِّم صلواتك وتابع استمرارك</string>
+    <string name="feature_more_calendar">التقويم الهجري</string>
+    <string name="feature_more_calendar_body">رمضان والعيدان وعرفة والأيام البيض</string>
 </resources>

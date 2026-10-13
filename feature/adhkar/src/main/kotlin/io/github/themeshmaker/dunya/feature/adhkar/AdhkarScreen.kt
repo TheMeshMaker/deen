@@ -71,6 +71,7 @@ import io.github.themeshmaker.dunya.core.designsystem.component.GradientHero
 import io.github.themeshmaker.dunya.core.designsystem.component.RollingText
 import io.github.themeshmaker.dunya.core.designsystem.component.SectionLabel
 import io.github.themeshmaker.dunya.core.designsystem.component.ThinProgress
+import io.github.themeshmaker.dunya.core.designsystem.component.paddingExceptBottom
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
 import io.github.themeshmaker.dunya.core.designsystem.component.rise
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
@@ -101,9 +102,10 @@ internal fun AdhkarHomeScreenRoute(
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .paddingExceptBottom(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = look.gutter),
+                .padding(horizontal = look.gutter)
+                .padding(bottom = padding.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(look.gap)
         ) {
             Box(Modifier.rise(entrance, 0)) { TasbihCard(state, onOpenTasbih) }

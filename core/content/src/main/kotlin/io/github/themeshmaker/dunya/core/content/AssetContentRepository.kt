@@ -15,6 +15,7 @@ import io.github.themeshmaker.dunya.core.model.HadithCollection
 import io.github.themeshmaker.dunya.core.model.HadithEntry
 import io.github.themeshmaker.dunya.core.model.JuzStart
 import io.github.themeshmaker.dunya.core.model.ProphetFact
+import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.Surah
 import io.github.themeshmaker.dunya.core.model.TafsirEntry
 import io.github.themeshmaker.dunya.core.model.TafsirSource
@@ -54,6 +55,8 @@ internal class AssetContentRepository @Inject constructor(@ApplicationContext co
     override suspend fun surahs(): List<Surah> = meta().surahs
 
     override suspend fun juzStarts(): List<JuzStart> = meta().juz
+
+    override suspend fun pageStarts(): List<QuranPosition> = meta().pages
 
     override suspend fun ayahs(surah: Int): List<Ayah> = quranText()[surah].orEmpty()
 

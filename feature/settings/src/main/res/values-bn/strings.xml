@@ -102,4 +102,7 @@
     <string name="feature_settings_src_fonts_body">Readex Pro, Amiri ও Amiri Quran (SIL Open Font License)। Material Symbols (Apache 2.0)।</string>
     <string name="feature_settings_src_app">Deen</string>
     <string name="feature_settings_src_app_body">GPL-3.0 বা পরবর্তী লাইসেন্সের অধীনে মুক্ত সফটওয়্যার। বিজ্ঞাপন নেই, ট্র্যাকিং নেই।</string>
+    <string name="feature_settings_kahf">জুমা: সূরা আল-কাহফ</string>
+    <string name="feature_settings_kahf_body">জুমার সকালে আল-কাহফ পড়ার রিমাইন্ডার</string>
+    <string name="feature_settings_style_liquid">লিকুইড গ্লাস</string>
 </resources>

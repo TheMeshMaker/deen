@@ -16,16 +16,20 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -33,10 +37,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
@@ -54,6 +60,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -73,7 +80,10 @@ import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.designsystem.theme.SquircleShape
 
-/** A card in the current style: tinted and flat (Classic) or white, rounder and hairline-edged (Sleek). */
+/**
+ * A card in the current style: tinted and flat (Classic), white, rounder and hairline-edged (Sleek),
+ * or a pane of liquid glass (Liquid).
+ */
 @Composable
 fun DeenCard(
     modifier: Modifier = Modifier,
@@ -84,6 +94,32 @@ fun DeenCard(
 ) {
     val look = DeenTheme.look
     val interaction = remember { MutableInteractionSource() }
+    if (look.liquid) {
+        val shape = look.cardShape as? RoundedCornerShape ?: LiquidCardShape
+        Box(
+            modifier
+                .fillMaxWidth()
+                .liquidGlass(
+                    shape,
+                    // A card asked for a colour (e.g. a warning) gets glass tinted with it.
+                    tint = if (containerColor != look.card) containerColor.copy(alpha = 0.55f) else Color.Unspecified,
+                    interactionSource = if (onClick != null) interaction else null
+                )
+                .clip(shape)
+                .then(
+                    if (onClick != null) {
+                        Modifier.clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onClick)
+                    } else {
+                        Modifier
+                    }
+                )
+        ) {
+            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                Column(Modifier.padding(contentPadding), content = content)
+            }
+        }
+        return
+    }
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -142,6 +178,9 @@ fun DeenTabScaffold(
     actions: @Composable RowScope.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
+    // Liquid: the tab bar floats over the page, so the content ends above it but scrolls beneath it.
+    val barInset = LocalFloatingBarInset.current
+    val direction = LocalLayoutDirection.current
     DeenBarScaffold(
         title = title,
         large = DeenTheme.look.sleek,
@@ -150,7 +189,20 @@ fun DeenTabScaffold(
         modifier = modifier,
         actions = actions,
         bottomBar = {},
-        content = content
+        content = { padding ->
+            content(
+                if (barInset == 0.dp) {
+                    padding
+                } else {
+                    PaddingValues(
+                        start = padding.calculateStartPadding(direction),
+                        top = padding.calculateTopPadding(),
+                        end = padding.calculateEndPadding(direction),
+                        bottom = padding.calculateBottomPadding() + barInset
+                    )
+                }
+            )
+        }
     )
 }
 
@@ -167,7 +219,7 @@ private fun DeenBarScaffold(
     content: @Composable (PaddingValues) -> Unit
 ) {
     val look = DeenTheme.look
-    val bar = if (look.pageBrush != null) Color.Transparent else look.page
+    val bar = if (look.pageBrush != null || look.liquid) Color.Transparent else look.page
     val colors = TopAppBarDefaults.topAppBarColors(containerColor = bar, scrolledContainerColor = bar)
     if (!large) {
         Scaffold(
@@ -220,8 +272,28 @@ private fun DeenBarScaffold(
     )
 }
 
-/** The style's page: a plain colour, or Glass's soft gradient (drawn in window coordinates so screens line up). */
-fun Modifier.pageBackground(look: DeenLook): Modifier = look.pageBrush?.let { background(it) } ?: background(look.page)
+/**
+ * The style's page: a plain colour, Glass's soft gradient (drawn in window coordinates so screens
+ * line up), or nothing in Liquid, where the app's backdrop shows through for the glass to bend.
+ */
+fun Modifier.pageBackground(look: DeenLook): Modifier = when {
+    look.liquid -> this
+    look.pageBrush != null -> background(look.pageBrush)
+    else -> background(look.page)
+}
+
+/**
+ * A tab's scaffold padding on every side but the bottom: the content runs to the bottom edge and puts
+ * the bottom padding at the end of its scroll instead, so in Liquid it passes under the floating bar.
+ */
+fun Modifier.paddingExceptBottom(padding: PaddingValues): Modifier = composed {
+    val direction = LocalLayoutDirection.current
+    padding(
+        start = padding.calculateStartPadding(direction),
+        top = padding.calculateTopPadding(),
+        end = padding.calculateEndPadding(direction)
+    )
+}
 
 /** Heritage: a thin second rule just inside the card's frame, like a manuscript border. */
 fun Modifier.innerRule(look: DeenLook, shape: Shape = look.cardShape): Modifier {
@@ -244,6 +316,22 @@ fun Modifier.softShadow(look: DeenLook, shape: Shape = look.cardShape): Modifier
 @Composable
 private fun BackButton(onBack: () -> Unit, label: String) {
     val look = DeenTheme.look
+    if (look.liquid) {
+        val interaction = remember { MutableInteractionSource() }
+        Box(
+            Modifier
+                .padding(start = 8.dp)
+                .size(44.dp)
+                .liquidGlass(RoundedCornerShape(percent = 50), interactionSource = interaction, pressScale = 0.9f)
+                .clip(CircleShape)
+                .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onBack)
+                .semantics { contentDescription = label },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(painterResource(DeenIcons.Back), contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
+        }
+        return
+    }
     IconButton(
         onClick = onBack,
         colors = if (look.sleek) {
@@ -311,8 +399,15 @@ fun <T> PillChoice(options: List<T>, selected: T, label: @Composable (T) -> Stri
     val gap = 4.dp
     Row(
         modifier
-            .clip(CircleShape)
-            .background(colors.surfaceContainerHigh)
+            .then(
+                if (DeenTheme.look.liquid) {
+                    Modifier.liquidGlass(RoundedCornerShape(percent = 50))
+                } else {
+                    Modifier
+                        .clip(CircleShape)
+                        .background(colors.surfaceContainerHigh)
+                }
+            )
             .padding(4.dp)
             .drawBehind {
                 val gapPx = gap.toPx()
@@ -416,6 +511,7 @@ fun GradientHero(modifier: Modifier = Modifier, shape: Shape = DeenTheme.look.he
 }
 
 private val IconTileShape = SquircleShape(10.dp)
+private val LiquidCardShape = RoundedCornerShape(28.dp)
 
 /** A thin rounded progress bar in the primary colour. */
 @Composable

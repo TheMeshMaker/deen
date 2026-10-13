@@ -14,4 +14,13 @@
     <string name="feature_timetable_short_asr">Asr</string>
     <string name="feature_timetable_short_maghrib">Magh.</string>
     <string name="feature_timetable_short_isha">Isha</string>
+    <string name="feature_timetable_islamic_calendar">Islamic calendar</string>
+    <string name="feature_timetable_sunnah_fasts">Sunnah fasts</string>
+    <string name="feature_timetable_sunnah_fasts_body">Mondays and Thursdays, and the white days (13th–15th) of every Hijri month.</string>
+    <string name="feature_timetable_calendar_note">Dates follow the Umm al-Qura calendar with your Hijri adjustment. Local moon sighting may differ by a day.</string>
+    <string name="feature_timetable_next_day">Next</string>
+    <plurals name="feature_timetable_days_to_go">
+        <item quantity="one">%1$s day to go</item>
+        <item quantity="other">%1$s days to go</item>
+    </plurals>
 </resources>

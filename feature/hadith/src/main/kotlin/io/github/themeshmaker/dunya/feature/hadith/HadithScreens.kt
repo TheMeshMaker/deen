@@ -57,6 +57,7 @@ import io.github.themeshmaker.dunya.core.designsystem.component.GradientHero
 import io.github.themeshmaker.dunya.core.designsystem.component.SectionLabel
 import io.github.themeshmaker.dunya.core.designsystem.component.StarBadge
 import io.github.themeshmaker.dunya.core.designsystem.component.Tag
+import io.github.themeshmaker.dunya.core.designsystem.component.paddingExceptBottom
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
 import io.github.themeshmaker.dunya.core.designsystem.component.rise
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
@@ -91,9 +92,10 @@ internal fun HadithHomeScreenRoute(
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .paddingExceptBottom(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = look.gutter),
+                .padding(horizontal = look.gutter)
+                .padding(bottom = padding.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(look.gap)
         ) {
             state.dailyHadith?.let { hadith ->

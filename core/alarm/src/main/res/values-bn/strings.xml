@@ -33,4 +33,7 @@
     <string name="core_alarm_voice_custom">আপনার নিজের রেকর্ডিং</string>
     <string name="core_alarm_test_title">আজান পরীক্ষা</string>
     <string name="core_alarm_test_body">স্ক্রিন লক থাকা অবস্থায় এটি শুনতে পেলে এই ফোনে আজান কাজ করে।</string>
+    <string name="core_alarm_channel_friday">জুমার রিমাইন্ডার</string>
+    <string name="core_alarm_kahf_title">আজ জুমা</string>
+    <string name="core_alarm_kahf_body">আজ সূরা আল-কাহফ পড়ুন। খুলতে ট্যাপ করুন।</string>
 </resources>

@@ -28,4 +28,42 @@
     <string name="feature_today_continue_quran">Reprendre la lecture</string>
     <string name="feature_today_quran_position">%1$s · verset %2$s</string>
     <string name="feature_today_start_quran">Lire le Coran</string>
+    <string name="feature_today_tracker_short">Suivi</string>
+    <string name="feature_today_tracker_title">Suivi des prières</string>
+    <string name="feature_today_tracker_hint">Cochez chaque prière une fois accomplie</string>
+    <plurals name="feature_today_streak">
+        <item quantity="one">%1$s jour d\'affilée</item>
+        <item quantity="many">%1$s jours d\'affilée</item>
+        <item quantity="other">%1$s jours d\'affilée</item>
+    </plurals>
+    <string name="feature_today_tracker_today">%1$s/%2$s aujourd\'hui</string>
+    <string name="feature_today_upcoming">À venir</string>
+    <string name="feature_today_khatmah_day">Khatma · jour %1$s sur %2$s</string>
+    <string name="feature_today_khatmah_complete">Vous avez terminé le Coran. Qu\'Allah l\'accepte.</string>
+    <string name="feature_today_khatmah_done_today">La part du jour est faite</string>
+    <string name="feature_today_khatmah_today">Aujourd\'hui : pages %1$s–%2$s</string>
+    <plurals name="feature_today_khatmah_left">
+        <item quantity="one">Encore %1$s page aujourd\'hui</item>
+        <item quantity="many">Encore %1$s pages aujourd\'hui</item>
+        <item quantity="other">Encore %1$s pages aujourd\'hui</item>
+    </plurals>
+    <string name="feature_today_suhoor_ends">Fin du suhur</string>
+    <string name="feature_today_iftar">Iftar</string>
+    <string name="feature_today_night_line">Minuit %1$s · Dernier tiers %2$s</string>
+    <string name="feature_today_prayed_mark">Marquer %1$s comme accomplie</string>
+    <string name="feature_today_prayed_undo">%1$s accomplie. Touchez pour annuler</string>
+    <string name="feature_today_tracker_today_title">Prières du jour</string>
+    <string name="feature_today_tracker_private">Votre suivi reste sur ce téléphone. Rien n\'est envoyé.</string>
+    <plurals name="feature_today_days_label">
+        <item quantity="one">%1$s jour</item>
+        <item quantity="many">%1$s jours</item>
+        <item quantity="other">%1$s jours</item>
+    </plurals>
+    <string name="feature_today_stat_streak">Série</string>
+    <string name="feature_today_stat_best">Record</string>
+    <string name="feature_today_stat_month">Ce mois-ci</string>
+    <string name="feature_today_stat_of">%1$s sur %2$s</string>
+    <string name="feature_today_month_previous">Mois précédent</string>
+    <string name="feature_today_month_next">Mois suivant</string>
+    <string name="feature_today_day_count">%1$s : %2$s prières sur %3$s</string>
 </resources>

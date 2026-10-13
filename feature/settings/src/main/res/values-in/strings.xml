@@ -102,4 +102,7 @@
     <string name="feature_settings_src_fonts_body">Readex Pro, Amiri, dan Amiri Quran (SIL Open Font License). Material Symbols (Apache 2.0).</string>
     <string name="feature_settings_src_app">Deen</string>
     <string name="feature_settings_src_app_body">Perangkat lunak bebas di bawah GPL-3.0 atau yang lebih baru. Tanpa iklan, tanpa pelacakan.</string>
+    <string name="feature_settings_kahf">Jumat: Surah Al-Kahf</string>
+    <string name="feature_settings_kahf_body">Pengingat setiap Jumat pagi untuk membaca Al-Kahf</string>
+    <string name="feature_settings_style_liquid">Kaca Cair</string>
 </resources>

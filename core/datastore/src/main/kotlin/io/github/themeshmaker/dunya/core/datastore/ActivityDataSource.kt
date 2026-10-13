@@ -4,6 +4,8 @@ import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.Serializer
 import io.github.themeshmaker.dunya.core.model.ActivityData
+import io.github.themeshmaker.dunya.core.model.KhatmahPlan
+import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.TasbihState
 import java.io.InputStream
@@ -27,8 +29,14 @@ data class ActivityPreferences(
     val bookmarks: List<PositionPreferences> = emptyList(),
     val adhkarDay: String? = null,
     val adhkarCounts: Map<String, Int> = emptyMap(),
-    val tasbih: TasbihPreferences = TasbihPreferences()
+    val tasbih: TasbihPreferences = TasbihPreferences(),
+    /** "2026-10-13" → ["FAJR", "DHUHR", …]. */
+    val prayed: Map<String, List<String>> = emptyMap(),
+    val khatmah: KhatmahPreferences? = null
 )
+
+@Serializable
+data class KhatmahPreferences(val startedOn: String, val days: Int, val startPage: Int = 1)
 
 @Serializable
 data class PositionPreferences(val surah: Int, val ayah: Int)
@@ -60,8 +68,35 @@ class ActivityDataSource @Inject constructor(@ActivityStore private val dataStor
                     it.todayTotal,
                     it.allTimeTotal
                 )
+            },
+            prayed = prefs.prayed.mapNotNull { (day, names) ->
+                val date = day.toDate() ?: return@mapNotNull null
+                date to names.mapNotNull { name -> Prayer.entries.firstOrNull { it.name == name }?.takeIf { it.isPrayer } }.toSet()
+            }.toMap(),
+            khatmah = prefs.khatmah?.let { k ->
+                k.startedOn.toDate()?.let { KhatmahPlan(it, k.days.coerceIn(1, 365), k.startPage.coerceIn(1, KhatmahPlan.PAGES)) }
             }
         )
+    }
+
+    /** Ticks a prayer of [day] on or off; history older than about a year and a half is dropped. */
+    suspend fun setPrayed(day: LocalDate, prayer: Prayer, prayed: Boolean) {
+        if (!prayer.isPrayer) return
+        dataStore.updateData { prefs ->
+            val key = day.toString()
+            val current = prefs.prayed[key].orEmpty().toSet()
+            val next = if (prayed) current + prayer.name else current - prayer.name
+            val oldest = day.minusDays(KEEP_PRAYED_DAYS).toString()
+            val kept = (prefs.prayed + (key to next.sortedBy { name -> Prayer.entries.indexOfFirst { it.name == name } }))
+                .filter { (k, v) -> v.isNotEmpty() && k >= oldest }
+            prefs.copy(prayed = kept)
+        }
+    }
+
+    suspend fun setKhatmah(plan: KhatmahPlan?) {
+        dataStore.updateData { prefs ->
+            prefs.copy(khatmah = plan?.let { KhatmahPreferences(it.startedOn.toString(), it.days, it.startPage) })
+        }
     }
 
     suspend fun setLastRead(position: QuranPosition) {
@@ -106,6 +141,8 @@ class ActivityDataSource @Inject constructor(@ActivityStore private val dataStor
         }
     }
 }
+
+private const val KEEP_PRAYED_DAYS = 550L
 
 private fun PositionPreferences.toModel(): QuranPosition? = QuranPosition(surah, ayah).takeIf { surah in 1..114 && ayah >= 1 }
 

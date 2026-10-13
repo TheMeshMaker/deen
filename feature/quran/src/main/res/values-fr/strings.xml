@@ -50,4 +50,34 @@
         <item quantity="many">%1$s versets</item>
         <item quantity="other">%1$s versets</item>
     </plurals>
+    <string name="feature_quran_khatmah">Khatma</string>
+    <string name="feature_quran_khatmah_invite">Planifiez la lecture du Coran entier</string>
+    <string name="feature_quran_khatmah_complete">Terminé. Qu\'Allah l\'accepte.</string>
+    <string name="feature_quran_khatmah_done_today">La part du jour est faite</string>
+    <string name="feature_quran_khatmah_today">Aujourd\'hui : pages %1$s–%2$s</string>
+    <string name="feature_quran_khatmah_status">Jour %1$s sur %2$s · %3$s pages sur %4$s</string>
+    <plurals name="feature_quran_khatmah_behind">
+        <item quantity="one">%1$s page de retard</item>
+        <item quantity="many">%1$s pages de retard</item>
+        <item quantity="other">%1$s pages de retard</item>
+    </plurals>
+    <string name="feature_quran_khatmah_new">Nouvelle khatma</string>
+    <string name="feature_quran_khatmah_end">Arrêter</string>
+    <string name="feature_quran_khatmah_read">Lire la part du jour</string>
+    <string name="feature_quran_khatmah_title">Plan de khatma</string>
+    <string name="feature_quran_khatmah_body">Choisissez en combien de jours terminer le Coran. Deen répartit les 604 pages du Mushaf de Médine en parts quotidiennes et suit votre progression.</string>
+    <string name="feature_quran_khatmah_days">Terminer en</string>
+    <plurals name="feature_quran_khatmah_days_choice">
+        <item quantity="one">%1$s jour</item>
+        <item quantity="many">%1$s jours</item>
+        <item quantity="other">%1$s jours</item>
+    </plurals>
+    <plurals name="feature_quran_khatmah_per_day">
+        <item quantity="one">Environ %1$s page par jour</item>
+        <item quantity="many">Environ %1$s pages par jour</item>
+        <item quantity="other">Environ %1$s pages par jour</item>
+    </plurals>
+    <string name="feature_quran_khatmah_from_start">Depuis Al-Fatiha</string>
+    <string name="feature_quran_khatmah_from_here">D\'où j\'en suis</string>
+    <string name="feature_quran_khatmah_start">Commencer</string>
 </resources>

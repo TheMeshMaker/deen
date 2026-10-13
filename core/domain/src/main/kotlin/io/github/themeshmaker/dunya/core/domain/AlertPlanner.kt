@@ -8,6 +8,7 @@ import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
 import io.github.themeshmaker.dunya.core.prayer.PrayerTimeCalculator
+import java.time.DayOfWeek
 import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
@@ -15,7 +16,8 @@ import javax.inject.Inject
 /**
  * Decides which alarms the system should hold right now: the *next* occurrence of every enabled
  * alert (docs/BLUEPRINT.md §9.3). After each alarm fires, the plan is recomputed, so at most
- * 6 alerts + 5 reminders + 5 masjid reminders + 5 after-adhan reminders are ever scheduled.
+ * 6 alerts + 5 reminders + 5 masjid reminders + 5 after-adhan reminders + the Friday Al-Kahf reminder
+ * are ever scheduled.
  */
 class AlertPlanner @Inject constructor(private val calculator: PrayerTimeCalculator) {
 
@@ -52,6 +54,21 @@ class AlertPlanner @Inject constructor(private val calculator: PrayerTimeCalcula
                     }?.let { at -> add(PlannedAlert(prayer, AlertKind.AFTER_ADHAN, at.plus(delay), at)) }
                 }
             }
+            if (alerts.kahfReminder) nextKahf(now, location, prayerSettings)?.let { add(it) }
         }.sortedBy { it.at }
+    }
+
+    /** Next Friday, an hour after sunrise (within the coming week, so always found). */
+    private fun nextKahf(now: Instant, location: SavedLocation, prayerSettings: PrayerSettings): PlannedAlert? {
+        val today = now.atZone(location.zoneId).toLocalDate()
+        return (0L..7L).map { today.plusDays(it) }
+            .filter { it.dayOfWeek == DayOfWeek.FRIDAY }
+            .map { calculator.prayerDay(it, location.coordinates, prayerSettings)[Prayer.SUNRISE].plus(KAHF_AFTER_SUNRISE) }
+            .firstOrNull { it.isAfter(now) }
+            ?.let { PlannedAlert(Prayer.SUNRISE, AlertKind.KAHF, it, it) }
+    }
+
+    private companion object {
+        val KAHF_AFTER_SUNRISE: Duration = Duration.ofHours(1)
     }
 }

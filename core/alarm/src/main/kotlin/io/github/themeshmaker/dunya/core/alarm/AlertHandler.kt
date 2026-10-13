@@ -32,10 +32,17 @@ class AlertHandler @Inject constructor(
         val zone = inputs?.location?.zoneId ?: ZoneId.systemDefault()
         val ahead = alert.kind == AlertKind.REMINDER || alert.kind == AlertKind.MASJID
         val after = alert.kind == AlertKind.AFTER_ADHAN
+        val kahf = alert.kind == AlertKind.KAHF
         val late = alert.kind != AlertKind.TEST && Duration.between(alert.at, firedAt) > MAX_LATENESS
         val settings = inputs?.alertSettings
         try {
             when {
+                // Not tied to a minute: any time on Friday is fine, so it is never "late".
+                kahf -> {
+                    notifications.showKahf()
+                    log(alert, firedAt, AlertOutcome.REMINDED)
+                }
+
                 // A heads-up that arrives after the prayer has started is useless: drop it.
                 ahead && !firedAt.isBefore(alert.prayerAt) -> log(alert, firedAt, AlertOutcome.LATE)
 

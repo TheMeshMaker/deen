@@ -33,4 +33,7 @@
     <string name="core_alarm_voice_custom">Kendi kaydınız</string>
     <string name="core_alarm_test_title">Ezan testi</string>
     <string name="core_alarm_test_body">Ekran kilitliyken bunu duyuyorsanız ezan bu telefonda çalışıyor demektir.</string>
+    <string name="core_alarm_channel_friday">Cuma hatırlatıcısı</string>
+    <string name="core_alarm_kahf_title">Bugün Cuma</string>
+    <string name="core_alarm_kahf_body">Bugün Kehf suresini okuyun. Açmak için dokunun.</string>
 </resources>

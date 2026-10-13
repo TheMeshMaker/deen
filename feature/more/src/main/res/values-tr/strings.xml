@@ -27,4 +27,8 @@
     <string name="feature_more_report">Sorun veya fikir bildirin</string>
     <string name="feature_more_report_body">Deen\'in GitHub sayfasını açar</string>
     <string name="feature_more_dua">Lütfen bizi de dualarınızda unutmayın.</string>
+    <string name="feature_more_tracker">Namaz takibi</string>
+    <string name="feature_more_tracker_body">Namazlarınızı işaretleyin, serinizi görün</string>
+    <string name="feature_more_calendar">Hicri takvim</string>
+    <string name="feature_more_calendar_body">Ramazan, bayramlar, arefe ve eyyâm-ı bîd</string>
 </resources>

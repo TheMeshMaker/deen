@@ -135,4 +135,18 @@ class AlertPlannerTest {
         val reminder = planner.plan(now, riyadh, settings, alerts).single { it.kind == AlertKind.MASJID }
         assertEquals(tomorrow[Prayer.DHUHR].minus(Duration.ofMinutes(30)), reminder.at)
     }
+
+    @Test
+    fun theKahfReminderIsAnHourAfterFridaySunrise() {
+        // 9 October 2026 is a Friday.
+        val alerts = AlertSettings(kahfReminder = true)
+        val before = planner.plan(today[Prayer.FAJR], riyadh, settings, alerts).single { it.kind == AlertKind.KAHF }
+        assertEquals(today[Prayer.SUNRISE].plus(Duration.ofHours(1)), before.at)
+
+        val nextFriday = calculator.prayerDay(date.plusDays(7), riyadh.coordinates, settings)
+        val after = planner.plan(today[Prayer.DHUHR], riyadh, settings, alerts).single { it.kind == AlertKind.KAHF }
+        assertEquals(nextFriday[Prayer.SUNRISE].plus(Duration.ofHours(1)), after.at)
+
+        assertTrue(planner.plan(today[Prayer.FAJR], riyadh, settings, AlertSettings()).none { it.kind == AlertKind.KAHF })
+    }
 }

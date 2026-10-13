@@ -48,4 +48,28 @@
     <plurals name="feature_quran_verses">
         <item quantity="other">%1$s ayat</item>
     </plurals>
+    <string name="feature_quran_khatmah">Khatam</string>
+    <string name="feature_quran_khatmah_invite">Rencanakan khatam Al-Qur\'an</string>
+    <string name="feature_quran_khatmah_complete">Selesai. Semoga Allah menerimanya.</string>
+    <string name="feature_quran_khatmah_done_today">Bagian hari ini selesai</string>
+    <string name="feature_quran_khatmah_today">Hari ini: halaman %1$s–%2$s</string>
+    <string name="feature_quran_khatmah_status">Hari ke-%1$s dari %2$s · %3$s dari %4$s halaman</string>
+    <plurals name="feature_quran_khatmah_behind">
+        <item quantity="other">Tertinggal %1$s halaman</item>
+    </plurals>
+    <string name="feature_quran_khatmah_new">Khatam baru</string>
+    <string name="feature_quran_khatmah_end">Akhiri rencana</string>
+    <string name="feature_quran_khatmah_read">Baca bagian hari ini</string>
+    <string name="feature_quran_khatmah_title">Rencana khatam</string>
+    <string name="feature_quran_khatmah_body">Pilih berapa hari untuk mengkhatamkan Al-Qur\'an. Deen membagi 604 halaman Mushaf Madinah menjadi bagian harian dan mengikuti kemajuan Anda.</string>
+    <string name="feature_quran_khatmah_days">Selesai dalam</string>
+    <plurals name="feature_quran_khatmah_days_choice">
+        <item quantity="other">%1$s hari</item>
+    </plurals>
+    <plurals name="feature_quran_khatmah_per_day">
+        <item quantity="other">Sekitar %1$s halaman per hari</item>
+    </plurals>
+    <string name="feature_quran_khatmah_from_start">Dari Al-Fatihah</string>
+    <string name="feature_quran_khatmah_from_here">Dari posisi saya</string>
+    <string name="feature_quran_khatmah_start">Mulai</string>
 </resources>

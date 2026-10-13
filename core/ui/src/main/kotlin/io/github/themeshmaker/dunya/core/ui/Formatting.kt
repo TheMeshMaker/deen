@@ -8,6 +8,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import io.github.themeshmaker.dunya.core.model.City
 import io.github.themeshmaker.dunya.core.model.HijriDate
 import io.github.themeshmaker.dunya.core.model.LocalizedText
@@ -87,6 +90,15 @@ fun LocalizedText.text(): String = pick(currentLocale.isArabic)
 @Composable
 @ReadOnlyComposable
 fun localDigits(value: Any): String = value.toString().withDigitsOf(currentLocale)
+
+/** [text] with [number] (as it appears in it) drawn in [numberStyle], e.g. a big count before its unit: "**5** days". */
+fun emphasizeNumber(text: String, number: String, numberStyle: SpanStyle): AnnotatedString {
+    val at = text.indexOf(number)
+    return buildAnnotatedString {
+        append(text)
+        if (at >= 0) addStyle(numberStyle, at, at + number.length)
+    }
+}
 
 fun String.withDigitsOf(locale: Locale): String {
     val zero = DecimalFormatSymbols.getInstance(locale).zeroDigit

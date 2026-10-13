@@ -1,30 +1,46 @@
 package io.github.themeshmaker.dunya.feature.quran
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -38,11 +54,14 @@ import io.github.themeshmaker.dunya.core.designsystem.component.DeenTabScaffold
 import io.github.themeshmaker.dunya.core.designsystem.component.GradientHero
 import io.github.themeshmaker.dunya.core.designsystem.component.PillChoice
 import io.github.themeshmaker.dunya.core.designsystem.component.StarBadge
+import io.github.themeshmaker.dunya.core.designsystem.component.ThinProgress
+import io.github.themeshmaker.dunya.core.designsystem.component.paddingExceptBottom
 import io.github.themeshmaker.dunya.core.designsystem.component.rememberEntrance
 import io.github.themeshmaker.dunya.core.designsystem.component.rise
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+import io.github.themeshmaker.dunya.core.model.KhatmahPlan
 import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.Revelation
 import io.github.themeshmaker.dunya.core.model.Surah
@@ -57,8 +76,17 @@ internal fun QuranHomeScreenRoute(
     viewModel: QuranHomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    QuranHomeScreen(state, onOpen, onOpenTafsir, viewModel::setQuery, viewModel::setTab)
+    QuranHomeScreen(
+        state,
+        onOpen,
+        onOpenTafsir,
+        viewModel::setQuery,
+        viewModel::setTab,
+        KhatmahActions(viewModel::startKhatmah, viewModel::endKhatmah)
+    )
 }
+
+internal class KhatmahActions(val onStart: (days: Int, fromCurrentPage: Boolean) -> Unit, val onEnd: () -> Unit)
 
 @Composable
 private fun QuranHomeScreen(
@@ -66,10 +94,13 @@ private fun QuranHomeScreen(
     onOpen: (Int, Int) -> Unit,
     onOpenTafsir: (Int) -> Unit,
     onQuery: (String) -> Unit,
-    onTab: (QuranTab) -> Unit
+    onTab: (QuranTab) -> Unit,
+    khatmah: KhatmahActions
 ) {
     val look = DeenTheme.look
     val entrance = rememberEntrance()
+    var planning by rememberSaveable { mutableStateOf(false) }
+    if (planning) KhatmahSheet(hasPosition = state.lastRead != null, onStart = khatmah.onStart, onDismiss = { planning = false })
     // Filtered rows glide into place (Sleek) instead of jumping.
     val placement: @Composable androidx.compose.foundation.lazy.LazyItemScope.() -> Modifier = {
         if (look.motion) Modifier.animateItem() else Modifier
@@ -78,13 +109,18 @@ private fun QuranHomeScreen(
         LazyColumn(
             Modifier
                 .fillMaxSize()
-                .padding(padding),
-            contentPadding = PaddingValues(start = look.gutter, end = look.gutter, bottom = 24.dp),
+                .paddingExceptBottom(padding),
+            contentPadding = PaddingValues(start = look.gutter, end = look.gutter, bottom = 24.dp + padding.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(if (look.sleek) 10.dp else 8.dp)
         ) {
             state.lastRead?.let { position ->
                 state.surah(position.surah)?.let { surah ->
                     item(key = "continue") { Box(Modifier.rise(entrance, 0)) { ContinueCard(surah, position, onOpen) } }
+                }
+            }
+            item(key = "khatmah") {
+                Box(Modifier.rise(entrance, 1)) {
+                    KhatmahCard(state, onOpen = onOpen, onPlan = { planning = true }, onEnd = khatmah.onEnd)
                 }
             }
             item(key = "search") {
@@ -288,6 +324,168 @@ private fun SurahRow(surah: Surah, onClick: () -> Unit, onTafsir: () -> Unit, mo
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
+        }
+    }
+}
+
+/** No plan: an invitation to start one. A plan: today's portion, overall progress and a way to end it. */
+@Composable
+private fun KhatmahCard(state: QuranHomeUiState, onOpen: (Int, Int) -> Unit, onPlan: () -> Unit, onEnd: () -> Unit) {
+    val progress = state.khatmahProgress
+    val pages = state.pages
+    DeenCard(onClick = if (progress == null) onPlan else null) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Box(
+                Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painterResource(DeenIcons.Reward),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+            Column(Modifier.weight(1f)) {
+                Text(
+                    stringResource(R.string.feature_quran_khatmah),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                if (progress == null) {
+                    Text(stringResource(R.string.feature_quran_khatmah_invite), style = MaterialTheme.typography.titleMedium)
+                } else {
+                    Text(
+                        when {
+                            progress.complete -> stringResource(R.string.feature_quran_khatmah_complete)
+
+                            progress.pagesLeftToday == 0 -> stringResource(R.string.feature_quran_khatmah_done_today)
+
+                            else -> stringResource(
+                                R.string.feature_quran_khatmah_today,
+                                localDigits(progress.todayFrom),
+                                localDigits(progress.todayTo)
+                            )
+                        },
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        stringResource(
+                            R.string.feature_quran_khatmah_status,
+                            localDigits(progress.day.coerceAtMost(progress.plan.days)),
+                            localDigits(progress.plan.days),
+                            localDigits(progress.pagesRead),
+                            localDigits(progress.totalPages)
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            if (progress != null) {
+                Text(
+                    "${localDigits((progress.fraction * 100).toInt())}%",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+        if (progress != null && pages != null) {
+            ThinProgress(progress.fraction, Modifier.padding(top = 12.dp))
+            if (progress.ahead < 0 && !progress.complete) {
+                Text(
+                    pluralStringResource(R.plurals.feature_quran_khatmah_behind, -progress.ahead, localDigits(-progress.ahead)),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 6.dp)
+                )
+            }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+            ) {
+                TextButton(onClick = onEnd) {
+                    Text(stringResource(if (progress.complete) R.string.feature_quran_khatmah_new else R.string.feature_quran_khatmah_end))
+                }
+                if (!progress.complete) {
+                    Button(onClick = {
+                        val at = state.lastRead?.takeIf { pages.pageOf(it) >= progress.plan.startPage } ?: pages.start(progress.todayFrom)
+                        onOpen(at.surah, at.ayah)
+                    }) { Text(stringResource(R.string.feature_quran_khatmah_read)) }
+                }
+            }
+        }
+    }
+}
+
+/** Choosing a khatmah: how many days, and from the beginning or from where the reader is. */
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+private fun KhatmahSheet(hasPosition: Boolean, onStart: (Int, Boolean) -> Unit, onDismiss: () -> Unit) {
+    val look = DeenTheme.look
+    var days by rememberSaveable { mutableIntStateOf(30) }
+    var fromHere by rememberSaveable { mutableStateOf(false) }
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = look.sheetColor,
+        shape = look.sheetShape
+    ) {
+        Column(
+            Modifier
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Text(stringResource(R.string.feature_quran_khatmah_title), style = MaterialTheme.typography.headlineSmall)
+            Text(
+                stringResource(R.string.feature_quran_khatmah_body),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(stringResource(R.string.feature_quran_khatmah_days), style = MaterialTheme.typography.titleSmall)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                KhatmahPlan.DAY_CHOICES.forEach { choice ->
+                    FilterChip(
+                        selected = choice == days,
+                        onClick = { days = choice },
+                        label = { Text(pluralStringResource(R.plurals.feature_quran_khatmah_days_choice, choice, localDigits(choice))) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
+            }
+            val perDay = (KhatmahPlan.PAGES + days - 1) / days
+            Text(
+                pluralStringResource(R.plurals.feature_quran_khatmah_per_day, perDay, localDigits(perDay)),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            if (hasPosition) {
+                PillChoice(
+                    options = listOf(false, true),
+                    selected = fromHere,
+                    label = {
+                        stringResource(if (it) R.string.feature_quran_khatmah_from_here else R.string.feature_quran_khatmah_from_start)
+                    },
+                    onSelect = { fromHere = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            Button(
+                onClick = {
+                    onStart(days, fromHere && hasPosition)
+                    onDismiss()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) { Text(stringResource(R.string.feature_quran_khatmah_start)) }
         }
     }
 }

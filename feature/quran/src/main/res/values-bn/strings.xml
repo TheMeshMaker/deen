@@ -49,4 +49,31 @@
         <item quantity="one">%1$sটি আয়াত</item>
         <item quantity="other">%1$sটি আয়াত</item>
     </plurals>
+    <string name="feature_quran_khatmah">খতম</string>
+    <string name="feature_quran_khatmah_invite">পুরো কুরআন পড়ার পরিকল্পনা করুন</string>
+    <string name="feature_quran_khatmah_complete">সম্পন্ন। আল্লাহ কবুল করুন।</string>
+    <string name="feature_quran_khatmah_done_today">আজকের অংশ শেষ</string>
+    <string name="feature_quran_khatmah_today">আজ: পৃষ্ঠা %1$s–%2$s</string>
+    <string name="feature_quran_khatmah_status">%2$s দিনের %1$s তম দিন · %4$s পৃষ্ঠার %3$s</string>
+    <plurals name="feature_quran_khatmah_behind">
+        <item quantity="one">%1$s পৃষ্ঠা পিছিয়ে</item>
+        <item quantity="other">%1$s পৃষ্ঠা পিছিয়ে</item>
+    </plurals>
+    <string name="feature_quran_khatmah_new">নতুন খতম</string>
+    <string name="feature_quran_khatmah_end">পরিকল্পনা শেষ করুন</string>
+    <string name="feature_quran_khatmah_read">আজকের অংশ পড়ুন</string>
+    <string name="feature_quran_khatmah_title">খতমের পরিকল্পনা</string>
+    <string name="feature_quran_khatmah_body">কত দিনে কুরআন খতম করবেন বেছে নিন। দীন মাদানি মুসহাফের ৬০৪ পৃষ্ঠাকে দৈনিক অংশে ভাগ করে আপনার অগ্রগতি অনুসরণ করে।</string>
+    <string name="feature_quran_khatmah_days">শেষ করুন</string>
+    <plurals name="feature_quran_khatmah_days_choice">
+        <item quantity="one">%1$s দিন</item>
+        <item quantity="other">%1$s দিন</item>
+    </plurals>
+    <plurals name="feature_quran_khatmah_per_day">
+        <item quantity="one">দিনে প্রায় %1$s পৃষ্ঠা</item>
+        <item quantity="other">দিনে প্রায় %1$s পৃষ্ঠা</item>
+    </plurals>
+    <string name="feature_quran_khatmah_from_start">আল-ফাতিহা থেকে</string>
+    <string name="feature_quran_khatmah_from_here">যেখানে আছি সেখান থেকে</string>
+    <string name="feature_quran_khatmah_start">শুরু করুন</string>
 </resources>

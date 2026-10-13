@@ -316,6 +316,12 @@ private fun SettingsContent(
                 }
             }
             SwitchRow(
+                title = stringResource(R.string.feature_settings_kahf),
+                subtitle = stringResource(R.string.feature_settings_kahf_body),
+                checked = alerts.kahfReminder,
+                onChange = { on -> viewModel.setAlerts { it.copy(kahfReminder = on) } }
+            )
+            SwitchRow(
                 title = stringResource(R.string.feature_settings_respect_silent),
                 subtitle = stringResource(R.string.feature_settings_respect_silent_body),
                 checked = alerts.respectSilentMode,
@@ -461,12 +467,12 @@ private fun ThemeSwatches(selected: ThemeStyle, custom: CustomColors, onSelect: 
     }
 }
 
-/** Little mock screens in a 2×2 grid, so the difference between the styles is visible before choosing. */
+/** Little mock screens, three to a row, so the difference between the styles is visible before choosing. */
 @Composable
 private fun StylePicker(selected: UiStyle, onSelect: (UiStyle) -> Unit) {
-    Column(Modifier.padding(top = 12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        UiStyle.entries.chunked(2).forEach { row ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(Modifier.padding(top = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        UiStyle.entries.chunked(STYLES_PER_ROW).forEach { row ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 row.forEach { style ->
                     val isSelected = style == selected
                     val motion = DeenTheme.look.motion
@@ -497,7 +503,7 @@ private fun StylePicker(selected: UiStyle, onSelect: (UiStyle) -> Unit) {
                             .border(if (isSelected) 2.dp else 1.dp, edge, RoundedCornerShape(18.dp))
                             .clickable(role = Role.RadioButton) { onSelect(style) }
                             .semantics { this.selected = isSelected }
-                            .padding(10.dp),
+                            .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         StyleMock(style)
@@ -510,10 +516,13 @@ private fun StylePicker(selected: UiStyle, onSelect: (UiStyle) -> Unit) {
                         )
                     }
                 }
+                repeat(STYLES_PER_ROW - row.size) { Spacer(Modifier.weight(1f)) }
             }
         }
     }
 }
+
+private const val STYLES_PER_ROW = 3
 
 @Composable
 private fun StyleMock(style: UiStyle) {
@@ -524,12 +533,20 @@ private fun StyleMock(style: UiStyle) {
     val base = if (dark) colors.background else Color.White
     val gold = lerp(colors.primary, Color(0xFFB08D3C), 0.55f)
     val page: Brush = when (style) {
+        UiStyle.LIQUID -> Brush.linearGradient(
+            listOf(lerp(base, gradient.end, 0.45f), lerp(base, gradient.start, 0.30f), lerp(base, gradient.end, 0.20f))
+        )
+
         UiStyle.CLASSIC -> SolidColor(colors.surface)
+
         UiStyle.SLEEK -> SolidColor(colors.surfaceContainerLow)
+
         UiStyle.GLASS -> Brush.verticalGradient(listOf(lerp(base, gradient.end, 0.26f), lerp(base, gradient.start, 0.12f)))
+
         UiStyle.HERITAGE -> SolidColor(if (dark) Color(0xFF14110B) else Color(0xFFF5EEDC))
     }
     val card = when (style) {
+        UiStyle.LIQUID -> Color.White.copy(alpha = if (dark) 0.16f else 0.50f)
         UiStyle.CLASSIC -> colors.surfaceContainerLow
         UiStyle.SLEEK -> if (dark) colors.surfaceContainerHighest else Color.White
         UiStyle.GLASS -> Color.White.copy(alpha = if (dark) 0.10f else 0.62f)
@@ -538,9 +555,11 @@ private fun StyleMock(style: UiStyle) {
     val cardShape: Shape = when (style) {
         UiStyle.CLASSIC -> RoundedCornerShape(4.dp)
         UiStyle.HERITAGE -> CutCornerShape(4.dp)
+        UiStyle.LIQUID -> RoundedCornerShape(12.dp)
         else -> RoundedCornerShape(9.dp)
     }
     val edge: Color? = when (style) {
+        UiStyle.LIQUID -> Color.White.copy(alpha = if (dark) 0.45f else 0.95f)
         UiStyle.SLEEK -> colors.outlineVariant
         UiStyle.GLASS -> Color.White.copy(alpha = if (dark) 0.25f else 0.9f)
         UiStyle.HERITAGE -> gold
@@ -567,7 +586,8 @@ private fun StyleMock(style: UiStyle) {
                             else -> RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
                         }
                     )
-                    .background(gradient.brush)
+                    // Liquid: the gradient is the page itself, so the header melts into it.
+                    .background(if (style == UiStyle.LIQUID) SolidColor(Color.Transparent) else gradient.brush)
             )
             Column(
                 Modifier.padding(horizontal = 6.dp, vertical = if (immersive) 0.dp else 2.dp),
@@ -603,6 +623,7 @@ private fun StyleMock(style: UiStyle) {
                 .clip(if (immersive) CircleShape else RoundedCornerShape(0.dp))
                 .background(
                     when (style) {
+                        UiStyle.LIQUID -> Color.White.copy(alpha = if (dark) 0.22f else 0.65f)
                         UiStyle.GLASS -> Color.White.copy(alpha = if (dark) 0.14f else 0.75f)
                         UiStyle.SLEEK -> colors.inverseSurface.copy(alpha = 0.85f)
                         UiStyle.HERITAGE -> gold.copy(alpha = 0.25f)
@@ -764,6 +785,7 @@ private fun UiStyle.nameRes(): Int = when (this) {
     UiStyle.CLASSIC -> R.string.feature_settings_style_classic
     UiStyle.SLEEK -> R.string.feature_settings_style_sleek
     UiStyle.GLASS -> R.string.feature_settings_style_glass
+    UiStyle.LIQUID -> R.string.feature_settings_style_liquid
     UiStyle.HERITAGE -> R.string.feature_settings_style_heritage
 }
 

@@ -70,4 +70,31 @@
     <string name="core_ui_daily_fact">من سيرة النبي ﷺ</string>
     <string name="core_ui_language">اللغة</string>
     <string name="core_ui_language_system">لغة الهاتف</string>
+    <string name="core_ui_event_new_year">رأس السنة الهجرية</string>
+    <string name="core_ui_event_ashura">يوم عاشوراء</string>
+    <string name="core_ui_event_ramadan">رمضان</string>
+    <string name="core_ui_event_last_ten">العشر الأواخر</string>
+    <string name="core_ui_event_eid_fitr">عيد الفطر</string>
+    <string name="core_ui_event_arafah">يوم عرفة</string>
+    <string name="core_ui_event_eid_adha">عيد الأضحى</string>
+    <string name="core_ui_event_white_days">الأيام البيض</string>
+    <string name="core_ui_event_new_year_detail">الأول من محرم، أول أيام السنة الهجرية.</string>
+    <string name="core_ui_event_ashura_detail">يُستحب صيامه مع اليوم الذي قبله.</string>
+    <string name="core_ui_event_ramadan_detail">شهر الصيام الذي أُنزل فيه القرآن.</string>
+    <string name="core_ui_event_last_ten_detail">التمسوا ليلة القدر في الليالي الوتر.</string>
+    <string name="core_ui_event_eid_fitr_detail">عيد ختام رمضان، وفيه صلاة العيد.</string>
+    <string name="core_ui_event_arafah_detail">يُستحب صيامه لغير الحاج.</string>
+    <string name="core_ui_event_eid_adha_detail">عيد الأضحى، وفيه صلاة العيد والأضحية.</string>
+    <string name="core_ui_event_white_days_detail">الثالث عشر إلى الخامس عشر من الشهر الهجري: يُستحب صيامها.</string>
+    <string name="core_ui_event_now">الآن</string>
+    <string name="core_ui_event_today">اليوم</string>
+    <string name="core_ui_event_tomorrow">غدًا</string>
+    <plurals name="core_ui_event_in_days">
+        <item quantity="zero">بعد %d يوم</item>
+        <item quantity="one">بعد يوم</item>
+        <item quantity="two">بعد يومين</item>
+        <item quantity="few">بعد %d أيام</item>
+        <item quantity="many">بعد %d يومًا</item>
+        <item quantity="other">بعد %d يوم</item>
+    </plurals>
 </resources>

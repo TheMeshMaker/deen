@@ -30,4 +30,7 @@
     <string name="core_alarm_voice_custom">Rekaman Anda sendiri</string>
     <string name="core_alarm_test_title">Uji azan</string>
     <string name="core_alarm_test_body">Jika Anda mendengar ini saat layar terkunci, azan berfungsi di ponsel ini.</string>
+    <string name="core_alarm_channel_friday">Pengingat Jumat</string>
+    <string name="core_alarm_kahf_title">Hari ini Jumat</string>
+    <string name="core_alarm_kahf_body">Bacalah Surah Al-Kahf hari ini. Ketuk untuk membukanya.</string>
 </resources>
