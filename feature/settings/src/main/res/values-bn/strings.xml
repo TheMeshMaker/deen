@@ -105,5 +105,18 @@
     <string name="feature_settings_kahf">জুমা: সূরা আল-কাহফ</string>
     <string name="feature_settings_kahf_body">জুমার সকালে আল-কাহফ পড়ার রিমাইন্ডার</string>
     <string name="feature_settings_style_liquid">লিকুইড গ্লাস</string>
-    <string name="feature_settings_style_coloros">ColorOS</string>
+    <string name="feature_settings_liquid">লিকুইড গ্লাস</string>
+    <string name="feature_settings_liquid_body">কাচটি নিজের মতো করে সাজান। প্রতিটি স্লাইডারের মাঝখান দীনের নিজস্ব রূপ।</string>
+    <string name="feature_settings_liquid_transparency">স্বচ্ছতা</string>
+    <string name="feature_settings_liquid_frosted">ঘোলা</string>
+    <string name="feature_settings_liquid_clear">স্বচ্ছ</string>
+    <string name="feature_settings_liquid_lens">ট্যাব বারের লেন্সের প্রস্থ</string>
+    <string name="feature_settings_liquid_narrow">সরু</string>
+    <string name="feature_settings_liquid_wide">চওড়া</string>
+    <string name="feature_settings_liquid_edge">তরল কিনারা</string>
+    <string name="feature_settings_liquid_thin">পাতলা</string>
+    <string name="feature_settings_liquid_deep">গভীর</string>
+    <string name="feature_settings_liquid_tilt">আলো হেলানো অনুসরণ করুক</string>
+    <string name="feature_settings_liquid_tilt_body">ফোন হেলালে ঝলক নড়ে। বন্ধ করলে কিছুটা ব্যাটারি বাঁচে।</string>
+    <string name="feature_settings_liquid_reset">রিসেট</string>
 </resources>

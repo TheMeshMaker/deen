@@ -104,5 +104,18 @@
     <string name="feature_settings_kahf">Friday: Surah Al-Kahf</string>
     <string name="feature_settings_kahf_body">A reminder on Friday mornings to read Al-Kahf</string>
     <string name="feature_settings_style_liquid">Liquid Glass</string>
-    <string name="feature_settings_style_coloros">ColorOS</string>
+    <string name="feature_settings_liquid">Liquid glass</string>
+    <string name="feature_settings_liquid_body">Tune the glass to your liking. The middle of each slider is Deen\'s own look.</string>
+    <string name="feature_settings_liquid_transparency">Transparency</string>
+    <string name="feature_settings_liquid_frosted">Frosted</string>
+    <string name="feature_settings_liquid_clear">Clear</string>
+    <string name="feature_settings_liquid_lens">Tab bar lens width</string>
+    <string name="feature_settings_liquid_narrow">Narrow</string>
+    <string name="feature_settings_liquid_wide">Wide</string>
+    <string name="feature_settings_liquid_edge">Liquid edge</string>
+    <string name="feature_settings_liquid_thin">Thin</string>
+    <string name="feature_settings_liquid_deep">Deep</string>
+    <string name="feature_settings_liquid_tilt">Light follows tilt</string>
+    <string name="feature_settings_liquid_tilt_body">Highlights move as you tilt the phone. Turning it off saves a little battery.</string>
+    <string name="feature_settings_liquid_reset">Reset</string>
 </resources>

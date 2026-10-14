@@ -105,5 +105,18 @@
     <string name="feature_settings_kahf">Jumat: Surah Al-Kahf</string>
     <string name="feature_settings_kahf_body">Pengingat setiap Jumat pagi untuk membaca Al-Kahf</string>
     <string name="feature_settings_style_liquid">Kaca Cair</string>
-    <string name="feature_settings_style_coloros">ColorOS</string>
+    <string name="feature_settings_liquid">Kaca cair</string>
+    <string name="feature_settings_liquid_body">Atur kaca sesuai selera. Bagian tengah setiap penggeser adalah tampilan asli Deen.</string>
+    <string name="feature_settings_liquid_transparency">Transparansi</string>
+    <string name="feature_settings_liquid_frosted">Buram</string>
+    <string name="feature_settings_liquid_clear">Bening</string>
+    <string name="feature_settings_liquid_lens">Lebar lensa bilah tab</string>
+    <string name="feature_settings_liquid_narrow">Sempit</string>
+    <string name="feature_settings_liquid_wide">Lebar</string>
+    <string name="feature_settings_liquid_edge">Tepi cair</string>
+    <string name="feature_settings_liquid_thin">Tipis</string>
+    <string name="feature_settings_liquid_deep">Dalam</string>
+    <string name="feature_settings_liquid_tilt">Cahaya mengikuti kemiringan</string>
+    <string name="feature_settings_liquid_tilt_body">Kilau bergerak saat ponsel dimiringkan. Mematikannya sedikit menghemat baterai.</string>
+    <string name="feature_settings_liquid_reset">Atur ulang</string>
 </resources>

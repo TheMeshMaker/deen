@@ -39,11 +39,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -74,23 +76,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.themeshmaker.dunya.core.alarm.R as AlarmR
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenCard
 import io.github.themeshmaker.dunya.core.designsystem.component.DeenScaffold
-import io.github.themeshmaker.dunya.core.designsystem.component.DeenSwitch
 import io.github.themeshmaker.dunya.core.designsystem.component.GeometricPattern
 import io.github.themeshmaker.dunya.core.designsystem.component.MenuRow
 import io.github.themeshmaker.dunya.core.designsystem.component.PillChoice
 import io.github.themeshmaker.dunya.core.designsystem.component.SectionLabel
-import io.github.themeshmaker.dunya.core.designsystem.component.listDivider
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
-import io.github.themeshmaker.dunya.core.designsystem.theme.DeviceSkin
 import io.github.themeshmaker.dunya.core.designsystem.theme.gradient
 import io.github.themeshmaker.dunya.core.model.AdhanVoice
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.AppBuildInfo
 import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.DistributionChannel
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.MasjidReminder
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
@@ -207,6 +207,9 @@ private fun SettingsContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             StylePicker(selected = data.uiStyle, onSelect = viewModel::setUiStyle)
+            AnimatedVisibility(visible = data.uiStyle == UiStyle.LIQUID) {
+                LiquidOptions(data.liquid, onChange = viewModel::setLiquid)
+            }
             HorizontalDivider(Modifier.padding(vertical = 12.dp))
             Text(stringResource(R.string.feature_settings_mode), style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(8.dp))
@@ -473,8 +476,7 @@ private fun ThemeSwatches(selected: ThemeStyle, custom: CustomColors, onSelect: 
 @Composable
 private fun StylePicker(selected: UiStyle, onSelect: (UiStyle) -> Unit) {
     Column(Modifier.padding(top = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        // The ColorOS style is offered only on ColorOS 17 and newer.
-        UiStyle.entries.filter { it != UiStyle.COLOROS || DeviceSkin.isColorOs17 }.chunked(STYLES_PER_ROW).forEach { row ->
+        UiStyle.entries.chunked(STYLES_PER_ROW).forEach { row ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 row.forEach { style ->
                     val isSelected = style == selected
@@ -542,8 +544,6 @@ private fun StyleMock(style: UiStyle) {
 
         UiStyle.CLASSIC -> SolidColor(colors.surface)
 
-        UiStyle.COLOROS -> SolidColor(if (dark) Color.Black else Color(0xFFF2F3F5))
-
         UiStyle.SLEEK -> SolidColor(colors.surfaceContainerLow)
 
         UiStyle.GLASS -> Brush.verticalGradient(listOf(lerp(base, gradient.end, 0.26f), lerp(base, gradient.start, 0.12f)))
@@ -553,7 +553,6 @@ private fun StyleMock(style: UiStyle) {
     val card = when (style) {
         UiStyle.LIQUID -> Color.White.copy(alpha = if (dark) 0.16f else 0.50f)
         UiStyle.CLASSIC -> colors.surfaceContainerLow
-        UiStyle.COLOROS -> if (dark) Color(0xFF1C1C1E) else Color.White
         UiStyle.SLEEK -> if (dark) colors.surfaceContainerHighest else Color.White
         UiStyle.GLASS -> Color.White.copy(alpha = if (dark) 0.10f else 0.62f)
         UiStyle.HERITAGE -> if (dark) Color(0xFF1D1912) else Color(0xFFFFFBF1)
@@ -569,7 +568,7 @@ private fun StyleMock(style: UiStyle) {
         UiStyle.SLEEK -> colors.outlineVariant
         UiStyle.GLASS -> Color.White.copy(alpha = if (dark) 0.25f else 0.9f)
         UiStyle.HERITAGE -> gold
-        UiStyle.CLASSIC, UiStyle.COLOROS -> null
+        UiStyle.CLASSIC -> null
     }
     Box(
         Modifier
@@ -634,10 +633,64 @@ private fun StyleMock(style: UiStyle) {
                         UiStyle.SLEEK -> colors.inverseSurface.copy(alpha = 0.85f)
                         UiStyle.HERITAGE -> gold.copy(alpha = 0.25f)
                         UiStyle.CLASSIC -> colors.surfaceContainer
-                        UiStyle.COLOROS -> (if (dark) Color.White else Color.Black).copy(alpha = 0.10f)
                     }
                 )
         )
+    }
+}
+
+/** The Liquid style's glass, tuned to taste. A slider saves when it is let go; the middle is Deen's own look. */
+@Composable
+private fun LiquidOptions(liquid: LiquidSettings, onChange: (LiquidSettings) -> Unit) {
+    Column(Modifier.padding(top = 16.dp)) {
+        Text(stringResource(R.string.feature_settings_liquid), style = MaterialTheme.typography.titleMedium)
+        Text(
+            stringResource(R.string.feature_settings_liquid_body),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        LiquidSlider(
+            R.string.feature_settings_liquid_transparency,
+            R.string.feature_settings_liquid_frosted,
+            R.string.feature_settings_liquid_clear,
+            liquid.transparency
+        ) { onChange(liquid.copy(transparency = it)) }
+        LiquidSlider(
+            R.string.feature_settings_liquid_lens,
+            R.string.feature_settings_liquid_narrow,
+            R.string.feature_settings_liquid_wide,
+            liquid.lensWidth
+        ) { onChange(liquid.copy(lensWidth = it)) }
+        LiquidSlider(
+            R.string.feature_settings_liquid_edge,
+            R.string.feature_settings_liquid_thin,
+            R.string.feature_settings_liquid_deep,
+            liquid.edge
+        ) { onChange(liquid.copy(edge = it)) }
+        SwitchRow(
+            title = stringResource(R.string.feature_settings_liquid_tilt),
+            subtitle = stringResource(R.string.feature_settings_liquid_tilt_body),
+            checked = liquid.tiltLight,
+            onChange = { on -> onChange(liquid.copy(tiltLight = on)) },
+            inset = false
+        )
+        if (liquid != LiquidSettings()) {
+            TextButton(onClick = { onChange(LiquidSettings()) }, modifier = Modifier.align(Alignment.End)) {
+                Text(stringResource(R.string.feature_settings_liquid_reset))
+            }
+        }
+    }
+}
+
+@Composable
+private fun LiquidSlider(title: Int, low: Int, high: Int, value: Float, onDone: (Float) -> Unit) {
+    var shown by remember(value) { mutableFloatStateOf(value) }
+    Text(stringResource(title), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = 12.dp))
+    Slider(value = shown, onValueChange = { shown = it }, onValueChangeFinished = { onDone(shown) })
+    Row(Modifier.fillMaxWidth()) {
+        Text(stringResource(low), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.weight(1f))
+        Text(stringResource(high), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -740,7 +793,6 @@ internal fun SwitchRow(title: String, subtitle: String?, checked: Boolean, onCha
     Row(
         Modifier
             .fillMaxWidth()
-            .listDivider()
             .clickable(role = Role.Switch) { onChange(!checked) }
             .padding(horizontal = if (inset) 16.dp else 0.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -752,7 +804,7 @@ internal fun SwitchRow(title: String, subtitle: String?, checked: Boolean, onCha
             }
         }
         Spacer(Modifier.width(12.dp))
-        DeenSwitch(checked = checked, onCheckedChange = null)
+        Switch(checked = checked, onCheckedChange = null)
     }
 }
 
@@ -795,7 +847,6 @@ private fun UiStyle.nameRes(): Int = when (this) {
     UiStyle.GLASS -> R.string.feature_settings_style_glass
     UiStyle.LIQUID -> R.string.feature_settings_style_liquid
     UiStyle.HERITAGE -> R.string.feature_settings_style_heritage
-    UiStyle.COLOROS -> R.string.feature_settings_style_coloros
 }
 
 private fun ThemeMode.labelRes(): Int = when (this) {

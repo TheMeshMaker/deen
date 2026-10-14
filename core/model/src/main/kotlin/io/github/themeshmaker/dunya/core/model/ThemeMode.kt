@@ -54,16 +54,34 @@ enum class UiStyle {
 
     /** Like iOS 26: refracting, light-catching glass over a coloured backdrop. */
     LIQUID,
-    HERITAGE,
+    HERITAGE;
 
-    /**
-     * Like the phone itself on ColorOS 17 (OPPO's "Fluid Fusion"): the system font, flat cards on a
-     * light-grey page, a frosted floating tab bar. Offered only on ColorOS 17 and newer.
-     */
-    COLOROS;
+    /** Full-bleed header, floating tab bar and large titles (Sleek, Glass and Liquid). */
+    val immersive: Boolean get() = this == SLEEK || this == GLASS || this == LIQUID
 
-    /** Full-bleed header, floating tab bar and large titles (Sleek, Glass, Liquid and ColorOS). */
-    val immersive: Boolean get() = this == SLEEK || this == GLASS || this == LIQUID || this == COLOROS
+    companion object {
+        /** A saved style by name; styles that were removed (the ColorOS style) become Sleek. */
+        fun fromName(name: String): UiStyle? = entries.firstOrNull { it.name == name } ?: SLEEK.takeIf { name == "COLOROS" }
+    }
+}
+
+/**
+ * The Liquid style's glass as the user tuned it in Settings. Each value runs from 0 to 1, and the
+ * defaults are Deen's own look.
+ */
+data class LiquidSettings(
+    /** 0 frosted (blurred and milky) … 1 clear (barely blurred). */
+    val transparency: Float = 0.5f,
+    /** How far the tab bar's lens reaches past its tab: 0 just the tab … 1 wide. */
+    val lensWidth: Float = DEFAULT_LENS_WIDTH,
+    /** How wide the band of bending around each pane's edge is: 0 a thin rim … 1 deep. */
+    val edge: Float = 0.5f,
+    /** The light on the glass follows the phone as it tilts. */
+    val tiltLight: Boolean = true
+) {
+    companion object {
+        const val DEFAULT_LENS_WIDTH = 0.625f
+    }
 }
 
 /**

@@ -104,5 +104,18 @@
     <string name="feature_settings_kahf">الجمعة: سورة الكهف</string>
     <string name="feature_settings_kahf_body">تذكير صباح الجمعة بقراءة سورة الكهف</string>
     <string name="feature_settings_style_liquid">زجاج سائل</string>
-    <string name="feature_settings_style_coloros">ColorOS</string>
+    <string name="feature_settings_liquid">الزجاج السائل</string>
+    <string name="feature_settings_liquid_body">اضبط الزجاج كما تحب. منتصف كل شريط هو مظهر دين الأصلي.</string>
+    <string name="feature_settings_liquid_transparency">الشفافية</string>
+    <string name="feature_settings_liquid_frosted">ضبابي</string>
+    <string name="feature_settings_liquid_clear">صافٍ</string>
+    <string name="feature_settings_liquid_lens">عرض عدسة شريط التبويب</string>
+    <string name="feature_settings_liquid_narrow">ضيّق</string>
+    <string name="feature_settings_liquid_wide">عريض</string>
+    <string name="feature_settings_liquid_edge">حافة السائل</string>
+    <string name="feature_settings_liquid_thin">رفيعة</string>
+    <string name="feature_settings_liquid_deep">عميقة</string>
+    <string name="feature_settings_liquid_tilt">الضوء يتبع الإمالة</string>
+    <string name="feature_settings_liquid_tilt_body">تتحرك اللمعة حين تُميل الهاتف. إيقافه يوفّر قليلًا من البطارية.</string>
+    <string name="feature_settings_liquid_reset">إعادة الضبط</string>
 </resources>

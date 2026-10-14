@@ -105,5 +105,18 @@
     <string name="feature_settings_kahf">Vendredi : sourate Al-Kahf</string>
     <string name="feature_settings_kahf_body">Un rappel le vendredi matin pour lire Al-Kahf</string>
     <string name="feature_settings_style_liquid">Verre liquide</string>
-    <string name="feature_settings_style_coloros">ColorOS</string>
+    <string name="feature_settings_liquid">Verre liquide</string>
+    <string name="feature_settings_liquid_body">Réglez le verre à votre goût. Le milieu de chaque curseur est l\'apparence d\'origine de Deen.</string>
+    <string name="feature_settings_liquid_transparency">Transparence</string>
+    <string name="feature_settings_liquid_frosted">Givré</string>
+    <string name="feature_settings_liquid_clear">Transparent</string>
+    <string name="feature_settings_liquid_lens">Largeur de la loupe de la barre d\'onglets</string>
+    <string name="feature_settings_liquid_narrow">Étroite</string>
+    <string name="feature_settings_liquid_wide">Large</string>
+    <string name="feature_settings_liquid_edge">Bord liquide</string>
+    <string name="feature_settings_liquid_thin">Fin</string>
+    <string name="feature_settings_liquid_deep">Profond</string>
+    <string name="feature_settings_liquid_tilt">La lumière suit l\'inclinaison</string>
+    <string name="feature_settings_liquid_tilt_body">Les reflets bougent quand vous inclinez le téléphone. Le désactiver économise un peu de batterie.</string>
+    <string name="feature_settings_liquid_reset">Réinitialiser</string>
 </resources>

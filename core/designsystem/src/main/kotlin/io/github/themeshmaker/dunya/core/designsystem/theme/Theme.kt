@@ -25,9 +25,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.github.themeshmaker.dunya.core.designsystem.component.ColorOsColors
 import io.github.themeshmaker.dunya.core.designsystem.component.LiquidAppearance
+import io.github.themeshmaker.dunya.core.designsystem.component.LocalLiquidSettings
 import io.github.themeshmaker.dunya.core.model.CustomColors
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
 import io.github.themeshmaker.dunya.core.model.UiStyle
@@ -146,8 +147,6 @@ data class DeenLook(
     /** Liquid glass over the app's coloured backdrop (see LiquidGlass.kt): pages are clear. */
     val liquid: Boolean get() = uiStyle == UiStyle.LIQUID
 
-    /** ColorOS 17's look: flat cards on a grey page, a frosted floating tab bar. */
-    val colorOs: Boolean get() = uiStyle == UiStyle.COLOROS
     val heritage: Boolean get() = uiStyle == UiStyle.HERITAGE
 }
 
@@ -254,25 +253,6 @@ private fun lookFor(
         motion = !reducedMotion
     )
 
-    // ColorOS: as OPPO's own apps look on ColorOS 17 ("Fluid Fusion"): flat white cards with smooth,
-    // generous corners on a light-grey page (black in the dark), the phone's own font (see the
-    // typography below), and a frosted tab bar floating over the page (drawn by the app shell).
-    UiStyle.COLOROS -> DeenLook(
-        uiStyle = uiStyle,
-        page = if (dark) ColorOsColors.pageDark else ColorOsColors.pageLight,
-        card = if (dark) ColorOsColors.cardDark else ColorOsColors.cardLight,
-        sheetColor = if (dark) Color(0xFF262626) else Color.White,
-        cardShape = SquircleShape(22.dp),
-        cardBorder = null,
-        cardElevation = 0.dp,
-        shadowColor = Color.Black,
-        heroShape = SquircleShape(0.dp, 0.dp, 36.dp, 36.dp),
-        sheetShape = SquircleShape(30.dp, 30.dp, 0.dp, 0.dp),
-        gutter = 16.dp,
-        gap = 12.dp,
-        motion = !reducedMotion
-    )
-
     // Heritage: parchment pages and cards framed like a manuscript page (cut corners, a double
     // rule in gold), with Amiri headings. Classic's layout.
     UiStyle.HERITAGE -> {
@@ -308,21 +288,7 @@ private val LocalDeenDarkScheme = staticCompositionLocalOf { emeraldDark }
 @Composable
 fun DeenOnGradient(content: @Composable () -> Unit) {
     val look = DeenTheme.look
-    val dark = LocalDeenDarkScheme.current
-    // ColorOS keeps everything on a gradient white (as its Weather app does), not its blue.
-    val scheme = if (look.colorOs) {
-        dark.copy(
-            primary = Color.White,
-            onPrimary = DeenTheme.gradient.start,
-            primaryContainer = Color.White.copy(alpha = 0.22f),
-            onPrimaryContainer = Color.White,
-            secondary = Color.White,
-            tertiary = Color.White
-        )
-    } else {
-        dark
-    }
-    MaterialTheme(colorScheme = scheme, typography = MaterialTheme.typography, shapes = MaterialTheme.shapes) {
+    MaterialTheme(colorScheme = LocalDeenDarkScheme.current, typography = MaterialTheme.typography, shapes = MaterialTheme.shapes) {
         CompositionLocalProvider(LocalDeenLook provides look.copy(dark = true)) {
             LiquidAppearance(dark = true, content = content)
         }
@@ -363,33 +329,6 @@ private fun ThemeStyle.darkScheme(custom: CustomColors): ColorScheme = when (thi
     else -> seededScheme(seed(custom), dark = true)
 }
 
-/**
- * ColorOS 17's palette, as measured on the phone: its blue for switches, sliders and selection, its
- * page and card greys, and its grey secondary text. (The theme's gradient still colours Today.)
- */
-private fun ColorScheme.colorOs(dark: Boolean): ColorScheme {
-    val blue = if (dark) ColorOsColors.blueDark else ColorOsColors.blueLight
-    val page = if (dark) ColorOsColors.pageDark else ColorOsColors.pageLight
-    val card = if (dark) ColorOsColors.cardDark else ColorOsColors.cardLight
-    return copy(
-        primary = blue,
-        onPrimary = Color.White,
-        primaryContainer = blue.copy(alpha = 0.18f),
-        onPrimaryContainer = blue,
-        background = page,
-        surface = page,
-        onBackground = if (dark) Color.White else Color(0xFF1A1A1A),
-        onSurface = if (dark) Color.White else Color(0xFF1A1A1A),
-        onSurfaceVariant = ColorOsColors.secondaryText,
-        surfaceContainerLowest = card,
-        surfaceContainerLow = card,
-        surfaceContainer = card,
-        surfaceContainerHigh = if (dark) Color(0xFF3A3A3A) else Color(0xFFF0F1F3),
-        outline = if (dark) Color(0xFF5A5A5A) else Color(0xFFC8CACE),
-        outlineVariant = if (dark) Color(0xFF3D3D3D) else Color(0xFFE6E7EA)
-    )
-}
-
 /** Clean white pages; cards keep the theme's faint tint (surfaceContainerLow) so they still stand out. */
 private fun ColorScheme.withWhiteBackground(): ColorScheme = copy(
     background = Color.White,
@@ -416,8 +355,9 @@ private fun ColorScheme.toOledBlack(): ColorScheme = copy(
 
 /**
  * @param style one of the (free) colour themes; Emerald green-and-white by default.
- * @param uiStyle the look (Classic, Sleek, Glass or Heritage), independent of the colours.
+ * @param uiStyle the look (Classic, Sleek, Glass, Liquid or Heritage), independent of the colours.
  * @param customColors the two colours of [ThemeStyle.CUSTOM].
+ * @param liquid how the Liquid style's glass is tuned (transparency, lens width, edge, tilt light).
  * @param dynamicColor use the wallpaper's Material You colours instead (Android 12+). Off by
  *   default: Deen keeps its own look.
  */
@@ -427,6 +367,7 @@ fun DeenTheme(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     uiStyle: UiStyle = UiStyle.CLASSIC,
     customColors: CustomColors = CustomColors(),
+    liquid: LiquidSettings = LiquidSettings(),
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -442,32 +383,24 @@ fun DeenTheme(
         dark -> remember(style, customColors) { style.darkScheme(customColors) }
         else -> remember(style, customColors) { style.lightScheme(customColors) }
     }
-    val colors = (if (themeMode == ThemeMode.OLED_BLACK) base.toOledBlack() else base).let {
-        if (uiStyle == UiStyle.COLOROS && DeviceSkin.isColorOs17) it.colorOs(dark) else it
-    }
+    val colors = if (themeMode == ThemeMode.OLED_BLACK) base.toOledBlack() else base
     val darkColors = if (dark) colors else remember(style, customColors) { style.darkScheme(customColors) }
     val gradient = style.gradient(customColors)
     val pageHeight = LocalWindowInfo.current.containerSize.height.toFloat()
     val language = LocalConfiguration.current.locales[0].language
-    // The ColorOS style only on ColorOS 17 (e.g. after restoring settings onto another phone).
-    val look = if (uiStyle == UiStyle.COLOROS && !DeviceSkin.isColorOs17) UiStyle.SLEEK else uiStyle
 
     CompositionLocalProvider(
         LocalDeenGradient provides gradient,
         LocalDeenDarkScheme provides darkColors,
-        LocalDeenLook provides lookFor(look, colors, gradient, dark, rememberReducedMotion(), pageHeight).copy(dark = dark)
+        LocalDeenLook provides lookFor(uiStyle, colors, gradient, dark, rememberReducedMotion(), pageHeight).copy(dark = dark),
+        LocalLiquidSettings provides liquid
     ) {
         MaterialTheme(
             colorScheme = colors,
-            typography = when (look) {
+            typography = when (uiStyle) {
                 UiStyle.SLEEK, UiStyle.GLASS, UiStyle.LIQUID -> SleekTypography
-
                 UiStyle.HERITAGE -> HeritageTypography
-
                 UiStyle.CLASSIC -> DeenTypography
-
-                // The phone's own font (OPPO Sans on ColorOS).
-                UiStyle.COLOROS -> SleekTypography.withPhoneFont()
             }.let { if (language in PhoneFontLanguages) it.withPhoneFont() else it },
             shapes = DeenShapes,
             content = content

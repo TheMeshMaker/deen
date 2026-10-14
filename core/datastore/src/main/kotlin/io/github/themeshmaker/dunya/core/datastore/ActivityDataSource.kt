@@ -4,6 +4,7 @@ import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.Serializer
 import io.github.themeshmaker.dunya.core.model.ActivityData
+import io.github.themeshmaker.dunya.core.model.ChallengeKind
 import io.github.themeshmaker.dunya.core.model.KhatmahPlan
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.QuranPosition
@@ -32,7 +33,9 @@ data class ActivityPreferences(
     val tasbih: TasbihPreferences = TasbihPreferences(),
     /** "2026-10-13" → ["FAJR", "DHUHR", …]. */
     val prayed: Map<String, List<String>> = emptyMap(),
-    val khatmah: KhatmahPreferences? = null
+    val khatmah: KhatmahPreferences? = null,
+    /** "2026-10-14" → ["DUA", "TASBIH"]: the daily challenges done that day. */
+    val challenges: Map<String, List<String>> = emptyMap()
 )
 
 @Serializable
@@ -75,8 +78,25 @@ class ActivityDataSource @Inject constructor(@ActivityStore private val dataStor
             }.toMap(),
             khatmah = prefs.khatmah?.let { k ->
                 k.startedOn.toDate()?.let { KhatmahPlan(it, k.days.coerceIn(1, 365), k.startPage.coerceIn(1, KhatmahPlan.PAGES)) }
-            }
+            },
+            challenges = prefs.challenges.mapNotNull { (day, names) ->
+                val date = day.toDate() ?: return@mapNotNull null
+                date to names.mapNotNull { name -> ChallengeKind.entries.firstOrNull { it.name == name } }.toSet()
+            }.toMap()
         )
+    }
+
+    /** Marks one of [day]'s challenges done or not; history older than about a year and a half is dropped. */
+    suspend fun setChallengeDone(day: LocalDate, kind: ChallengeKind, done: Boolean) {
+        dataStore.updateData { prefs ->
+            val key = day.toString()
+            val current = prefs.challenges[key].orEmpty().toSet()
+            val next = if (done) current + kind.name else current - kind.name
+            val oldest = day.minusDays(KEEP_PRAYED_DAYS).toString()
+            val kept = (prefs.challenges + (key to next.sortedBy { name -> ChallengeKind.entries.indexOfFirst { it.name == name } }))
+                .filter { (k, v) -> v.isNotEmpty() && k >= oldest }
+            prefs.copy(challenges = kept)
+        }
     }
 
     /** Ticks a prayer of [day] on or off; history older than about a year and a half is dropped. */

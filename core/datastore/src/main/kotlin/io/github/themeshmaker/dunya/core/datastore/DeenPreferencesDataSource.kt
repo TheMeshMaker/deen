@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.CustomColors
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
@@ -30,7 +31,7 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
             alertSettings = prefs.alerts?.toModel() ?: AlertSettings(),
             confirmedReliabilitySteps = prefs.confirmedReliabilitySteps,
             themeMode = enumOrNull<ThemeMode>(prefs.themeMode) ?: ThemeMode.SYSTEM,
-            uiStyle = enumOrNull<UiStyle>(prefs.uiStyle) ?: UiStyle.CLASSIC,
+            uiStyle = UiStyle.fromName(prefs.uiStyle) ?: UiStyle.CLASSIC,
             secretsUnlocked = prefs.secretsUnlocked,
             timetableCalendar = enumOrNull<CalendarType>(prefs.timetableCalendar) ?: CalendarType.GREGORIAN,
             reading = ReadingSettings(
@@ -39,8 +40,22 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
                 haptics = prefs.reading.haptics,
                 reciterId = prefs.reading.reciterId,
                 tafsirId = prefs.reading.tafsirId
-            )
+            ),
+            liquid = prefs.liquid.let {
+                LiquidSettings(
+                    it.transparency.unit(0.5f),
+                    it.lensWidth.unit(LiquidSettings.DEFAULT_LENS_WIDTH),
+                    it.edge.unit(0.5f),
+                    it.tiltLight
+                )
+            }
         )
+    }
+
+    suspend fun setLiquidSettings(settings: LiquidSettings) {
+        dataStore.updateData {
+            it.copy(liquid = LiquidPreferences(settings.transparency, settings.lensWidth, settings.edge, settings.tiltLight))
+        }
     }
 
     suspend fun setLocation(location: SavedLocation) {
@@ -103,3 +118,6 @@ class DeenPreferencesDataSource @Inject constructor(private val dataStore: DataS
         dataStore.updateData { it.copy(onboardingComplete = true) }
     }
 }
+
+/** A 0–1 setting, or [default] if the file holds something else. */
+private fun Float.unit(default: Float): Float = if (isFinite() && this in 0f..1f) this else default

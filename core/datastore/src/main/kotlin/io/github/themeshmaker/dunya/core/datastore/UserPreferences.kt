@@ -20,7 +20,16 @@ data class UserPreferences(
     val uiStyle: String = "CLASSIC",
     val secretsUnlocked: Boolean = false,
     val timetableCalendar: String = "GREGORIAN",
-    val reading: ReadingPreferences = ReadingPreferences()
+    val reading: ReadingPreferences = ReadingPreferences(),
+    val liquid: LiquidPreferences = LiquidPreferences()
+)
+
+@Serializable
+data class LiquidPreferences(
+    val transparency: Float = 0.5f,
+    val lensWidth: Float = 0.625f,
+    val edge: Float = 0.5f,
+    val tiltLight: Boolean = true
 )
 
 @Serializable

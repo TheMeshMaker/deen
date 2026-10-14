@@ -1,6 +1,7 @@
 package io.github.themeshmaker.dunya.core.datastore
 
 import androidx.datastore.core.DataStore
+import io.github.themeshmaker.dunya.core.model.ChallengeKind
 import io.github.themeshmaker.dunya.core.model.QuranPosition
 import io.github.themeshmaker.dunya.core.model.TasbihState
 import java.io.ByteArrayOutputStream
@@ -56,5 +57,25 @@ class ActivityDataSourceTest {
         assertEquals(QuranPosition(18, 23), reloaded.lastRead)
         assertEquals(listOf(QuranPosition(2, 255)), reloaded.bookmarks)
         assertEquals(TasbihState("istighfar", 12, 100, day, 40, 1_000), reloaded.tasbih)
+    }
+
+    @Test
+    fun dailyChallengesAreKeptByDayAndSurviveTheFileFormat() = runTest {
+        val store = InMemoryDataStore()
+        val source = ActivityDataSource(store)
+        source.setChallengeDone(day, ChallengeKind.TASBIH, true)
+        source.setChallengeDone(day, ChallengeKind.DUA, true)
+        source.setChallengeDone(day, ChallengeKind.QURAN, true)
+        source.setChallengeDone(day, ChallengeKind.QURAN, false)
+        source.setChallengeDone(day.minusDays(1), ChallengeKind.QURAN, true)
+        source.setChallengeDone(day.minusDays(1), ChallengeKind.QURAN, false)
+        assertEquals(listOf("DUA", "TASBIH"), store.data.first().challenges[day.toString()])
+        // A day with nothing left done is dropped.
+        assertTrue(day.minusDays(1).toString() !in store.data.first().challenges)
+
+        val serializer = ActivityPreferencesSerializer()
+        val bytes = ByteArrayOutputStream().also { serializer.writeTo(store.data.first(), it) }.toByteArray()
+        val reloaded = ActivityDataSource(InMemoryDataStore(serializer.readFrom(bytes.inputStream()))).activity.first()
+        assertEquals(mapOf(day to setOf(ChallengeKind.DUA, ChallengeKind.TASBIH)), reloaded.challenges)
     }
 }

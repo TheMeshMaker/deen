@@ -22,4 +22,55 @@
     <string name="feature_tasbih_tap">Sayı: %1$s. Bir eklemek için dokunun.</string>
     <string name="feature_tasbih_today_label">Bugün</string>
     <string name="feature_tasbih_all_time">Toplam</string>
+    <string name="feature_adhkar_challenges">Günlük görevler</string>
+    <string name="feature_adhkar_challenges_progress">%2$s görevden %1$s tamam</string>
+    <string name="feature_adhkar_challenges_all_done">Bugünkü görevlerin hepsi tamam. Yenileri yarın.</string>
+    <plurals name="feature_adhkar_challenge_streak">
+        <item quantity="one">Üst üste %1$s gün</item>
+        <item quantity="other">Üst üste %1$s gün</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_best">En uzun seri: %1$s</string>
+    <string name="feature_adhkar_challenge_streak_note">Serini korumak için her gün üçünü de tamamla</string>
+    <string name="feature_adhkar_challenge_dua_label">Dua</string>
+    <string name="feature_adhkar_challenge_quran_label">Kur\'an</string>
+    <string name="feature_adhkar_challenge_tasbih_label">Tesbih</string>
+    <string name="feature_adhkar_challenge_say_dua">Bu duayı oku</string>
+    <plurals name="feature_adhkar_challenge_times">
+        <item quantity="one">%1$s kez</item>
+        <item quantity="other">%1$s kez</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_from">Zikirler · %1$s</string>
+    <string name="feature_adhkar_challenge_read_surah">%1$s suresini oku</string>
+    <string name="feature_adhkar_challenge_read_kursi">Âyetü\'l-Kürsî\'yi oku</string>
+    <string name="feature_adhkar_challenge_read_baqarah_end">Bakara suresinin son iki ayetini oku</string>
+    <string name="feature_adhkar_challenge_read_kahf_ten">Kehf suresinin ilk on ayetini oku</string>
+    <string name="feature_adhkar_challenge_read_quls">İhlâs, Felak ve Nâs surelerini oku</string>
+    <plurals name="feature_adhkar_challenge_read_pages">
+        <item quantity="one">Kaldığın yerden %1$s sayfa oku</item>
+        <item quantity="other">Kaldığın yerden %1$s sayfa oku</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_open">Aç</string>
+    <string name="feature_adhkar_challenge_start">Başla</string>
+    <string name="feature_adhkar_challenge_show_all">Tamamını göster</string>
+    <string name="feature_adhkar_challenge_show_less">Daha az göster</string>
+    <string name="feature_adhkar_challenge_done">Tamamlandı</string>
+    <string name="feature_adhkar_challenge_not_done">Henüz yapılmadı</string>
+    <string name="feature_tasbih_challenge">Bugünün görevi</string>
+    <string name="feature_tasbih_challenge_done">Bugünün görevi tamam</string>
+    <string name="feature_tasbih_challenge_take">Saymaya başla</string>
+    <string name="feature_adhkar_challenge_adhkar_label">Zikir</string>
+    <string name="feature_adhkar_challenge_finish_adhkar">Zikirleri tamamla: %1$s</string>
+    <string name="feature_adhkar_challenge_progress_of">%2$s içinden %1$s</string>
+    <string name="feature_adhkar_challenge_prayers_label">Namaz</string>
+    <string name="feature_adhkar_challenge_prayers">Beş vakit namazı kıl ve işaretle</string>
+    <string name="feature_adhkar_challenge_hadith_label">Hadis</string>
+    <string name="feature_adhkar_challenge_hadith">Günün hadisini oku</string>
+    <string name="feature_adhkar_challenge_sunnah_label">Sünnet</string>
+    <string name="feature_adhkar_sunnah_duha">İki rekât kuşluk namazı kıl</string>
+    <string name="feature_adhkar_sunnah_witr">Uyumadan önce vitir kıl</string>
+    <string name="feature_adhkar_sunnah_fajr">Sabah namazının iki rekât sünnetini kıl</string>
+    <string name="feature_adhkar_sunnah_charity">Az da olsa sadaka ver</string>
+    <string name="feature_adhkar_sunnah_kinship">Bir akrabanı ara ya da ziyaret et</string>
+    <string name="feature_adhkar_sunnah_kind_word">Birine güzel bir söz söyle</string>
+    <string name="feature_adhkar_sunnah_dua_for_others">Birine gıyabında dua et</string>
 </resources>

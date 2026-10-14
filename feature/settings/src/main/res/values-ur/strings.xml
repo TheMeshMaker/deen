@@ -105,5 +105,18 @@
     <string name="feature_settings_kahf">جمعہ: سورۂ کہف</string>
     <string name="feature_settings_kahf_body">جمعہ کی صبح سورۂ کہف پڑھنے کی یاد دہانی</string>
     <string name="feature_settings_style_liquid">لیکوئڈ گلاس</string>
-    <string name="feature_settings_style_coloros">ColorOS</string>
+    <string name="feature_settings_liquid">لیکوئڈ گلاس</string>
+    <string name="feature_settings_liquid_body">شیشے کو اپنی پسند کے مطابق ترتیب دیں۔ ہر سلائیڈر کا درمیان دین کا اپنا انداز ہے۔</string>
+    <string name="feature_settings_liquid_transparency">شفافیت</string>
+    <string name="feature_settings_liquid_frosted">دھندلا</string>
+    <string name="feature_settings_liquid_clear">شفاف</string>
+    <string name="feature_settings_liquid_lens">ٹیب بار کے لینز کی چوڑائی</string>
+    <string name="feature_settings_liquid_narrow">تنگ</string>
+    <string name="feature_settings_liquid_wide">چوڑا</string>
+    <string name="feature_settings_liquid_edge">مائع کنارہ</string>
+    <string name="feature_settings_liquid_thin">پتلا</string>
+    <string name="feature_settings_liquid_deep">گہرا</string>
+    <string name="feature_settings_liquid_tilt">روشنی جھکاؤ کے ساتھ</string>
+    <string name="feature_settings_liquid_tilt_body">فون جھکانے پر چمک حرکت کرتی ہے۔ بند کرنے سے کچھ بیٹری بچتی ہے۔</string>
+    <string name="feature_settings_liquid_reset">ری سیٹ</string>
 </resources>

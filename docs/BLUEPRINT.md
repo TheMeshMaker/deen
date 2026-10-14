@@ -43,7 +43,7 @@ AdMob policy forbids asking users to view ads to "support us", including in rewa
 | Prayer times | Offline calculation, all major methods, Hanafi/standard Asr, high-latitude rules, per-prayer minute offsets, Ramadan Isha +30 for Umm al-Qura. **Monthly timetable, paged by Gregorian or Hijri month** ✅ | Iqama times, timetable export |
 | Alerts | Per prayer: Adhan / Notification / Silent. Optional pre-adhan reminder. **Three bundled voices, a separate Fajr voice, your own audio file** ✅. **"Go to the masjid" reminder** (hidden option) ✅ | Jumu'ah / Al-Kahf reminder, auto-silent during prayer |
 | Quran | **Reader with all 114 surahs (Tanzil Uthmani text, Amiri Quran font), surah search, juz index, bookmarks, resumes where you stopped** ✅. **Tafsir per surah and per verse (al-Jalalayn offline; Ibn Kathir, al-Baghawi, al-Qurtubi on demand), recitation player with 7 reciters that lights up the recited word, long-press verse actions** ✅ | More translations, mushaf page view, downloading a whole surah ahead |
-| Adhkar | **Morning, evening, after prayer, before sleep, waking up, with the adhan, mosque, wudu, leaving home. Tap-to-count, haptics, daily progress** ✅ | Adhkar reminders |
+| Adhkar | **Morning, evening, after prayer, before sleep, waking up, with the adhan, mosque, wudu, leaving home. Tap-to-count, haptics, daily progress. Daily challenges (dua, Quran, tasbih) with a streak** ✅ | Adhkar reminders |
 | Tasbih | **8 phrases, targets 33/99/100/∞, ring progress, haptics, today and all-time totals** ✅ | Volume-key counting |
 | Hadith | **Hadith of the day (an-Nawawi's Forty, Arabic + English), a daily fact about the Prophet ﷺ (61, sourced), the six books + Muwatta + Forty Qudsi in Arabic with gradings, browse by book, search, copy/share** ✅ | English for the full collections (needs a licensed translation), favourites |
 | Qibla | **Compass (rotation vector, true-north corrected), turn hints, vibration when aligned, calibration hint, distance to the Kaaba** ✅ | — |
@@ -97,7 +97,7 @@ Deen/
 │  ├─ location/              # LocationSource interface, platform impl, city search
 │  ├─ location-gms/          # Fused impl (play only)
 │  ├─ alarm/                 # planner, scheduler, receivers, AdhanService, voices, health log, reliability checks
-│  ├─ designsystem/          # theme, DeenLook (Classic/Sleek/Glass/Liquid/Heritage/ColorOS), type, components, icons, geometric art
+│  ├─ designsystem/          # theme, DeenLook (Classic/Sleek/Glass/Liquid/Heritage), type, components, icons, geometric art
 │  └─ ui/                    # shared composables and formatting, app language, haptics
 ├─ feature/
 │  ├─ onboarding/ today/ quran/ hadith/ adhkar/ (incl. tasbih) qibla/ timetable/
@@ -340,6 +340,28 @@ Not shown to the user. Each vendor has an **ordered list of candidate intents**.
 └────────────────────────────────────────┘
 ```
 
+### Daily challenges (2026-10-14, maintainer request)
+
+- A card at the top of the Adhkar tab with three challenges a day. **Which three, in what order and what each asks
+  for are drawn at random each day** (`DailyChallengePicker`, seeded by the date so a day's challenges stay put when
+  the app is reopened) from seven kinds, the first three coming up more often:
+  - **say a dua**: a short one (said at most three times) from the everyday adhkar (morning, evening, after
+    prayer, sleep, waking, leaving home, mosque, wudu), with its Arabic, meaning and source;
+  - **read some Quran**: a surah or a named passage (Ayat al-Kursi, the end of Al-Baqarah, the first ten verses of
+    Al-Kahf, the three Quls) or a few pages from where the reader stopped; Fridays always Al-Kahf;
+  - **a round of tasbih**: one of the eight phrases, 33 or 100 times;
+  - **finish a set of adhkar**: morning, evening, after prayer or before sleep;
+  - **all five prayers**, ticked off in the tracker;
+  - **the hadith of the day**;
+  - **a sunnah act**: Ḍuḥā, Witr, the sunnah before Fajr, some charity, calling a relative, a kind word, a dua for
+    someone in their absence.
+- Tasbih, adhkar and prayer challenges tick themselves when done (the tasbih round, the last dhikr of the set, the
+  fifth prayer); the others are ticked by hand, and buttons open the reader, the tasbih, the set, the tracker or the
+  hadith.
+- **The streak is for the daily challenges only** (days on which all three were done; an unfinished today doesn't
+  break it), with the best streak beside it. Adhkar and the tasbih themselves stay streak-free. History lives in
+  `activity.json` and is trimmed after about a year and a half, like the prayer tracker's.
+
 - **Haptics:** `VibrationEffect.Composition` PRIMITIVE_TICK on each count and a stronger PRIMITIVE_CLICK when the target is reached. Falls back to `HapticFeedbackConstants` where primitives aren't supported.
 - **Keep screen on:** optional.
 - **Presets:** SubḥānAllāh 33 · Alḥamdulillāh 33 · Allāhu Akbar 34 · lā ilāha illā Allāh 100 · Astaghfirullāh 100 · custom.
@@ -437,20 +459,20 @@ content/*.json  ──▶  tools/content-builder  ──▶  app/src/main/assets
 - M3 rounded shapes, an extra-large hero card on Today.
 - Gentle motion that respects the system "remove animations" setting.
 
-**Styles** (`UiStyle`, independent of the colour theme): Classic, Sleek, Glass, **Liquid**, Heritage and **ColorOS**.
+**Styles** (`UiStyle`, independent of the colour theme): Classic, Sleek, Glass, **Liquid** and Heritage.
 - **Liquid** (2026-10-13) follows iOS 26: the app draws one coloured backdrop under every screen (the full theme
   gradient on Today), pages are clear, and cards, the floating tab bar (with a wide capsule lens that slides,
   stretches and can be dragged), back buttons and controls are glass that bends and blurs what is behind them, with
   a wide band of bending around each edge. Rendering is Haze's Glass effect (Apache-2.0); Android 12 and older get
   its simpler fallback. Glass follows Deen's light/dark setting, and content on the gradient uses the theme's dark
   colours (`DeenOnGradient`).
-- **ColorOS** is offered only on ColorOS 17 phones (`DeviceSkin`, from `ro.build.version.oplusrom`) and is measured
-  from ColorOS 17's own apps (Settings, Clock, Weather): flat #303030 cards on a #181818 page (light: white on
-  #F2F3F5), 48 dp rows with inset hairline dividers, small grey group labels, a 40 dp "pebble" back button beside an
-  18 sp title, 32 sp large titles on tabs, ColorOS blue switches and accents, and a 56 dp frosted pill tab bar
-  (blurred, with a fine rim). On Today's gradient everything is white, as in its Weather app. No glass refraction.
-- Screenshot tests (Roborazzi on Robolectric, `-Pscreenshots`) render Today in each style, the Liquid shell and the
-  ColorOS shell.
+- Liquid can be tuned in Settings (`LiquidSettings`, shown only while Liquid is chosen): transparency (frosted to
+  clear: blur and white point), the tab lens's width, how wide the bending band at the edges is, and whether the
+  light follows the phone's tilt. The middle of each slider is the default look.
+- A ColorOS 17 style was tried in October 2026 and removed at the maintainer's request; a saved `COLOROS` style
+  loads as Sleek.
+- Screenshot tests (Roborazzi on Robolectric, `-Pscreenshots`) render Today in each style, the Liquid shell (at the
+  default and at both ends of the sliders) and the daily challenges card.
 
 **Art**
 - Original 8-fold geometric patterns, used subtly on the hero card and empty states.
@@ -637,6 +659,7 @@ adb reboot
 | **M4** ✅ | Hadith, Qibla, Hijri, widget | Daily hadith and fact, full collections in Arabic, Qibla compass, Hijri timetable, home-screen widget. Screenshot tests still to do |
 | **M4+** ✅ | Maintainer requests (2026-10-10/11) | Quran reader with resume, tafsir and recitation player, settings, four styles, seven colour themes, app language (seven languages), adhan voices, masjid and after-adhan reminders, monthly timetable, new app icon, support section |
 | **M4++** ✅ | Maintainer requests (2026-10-13) | Liquid Glass style, prayer tracker (ticks, week strip, streaks, month calendar), Islamic calendar with countdowns, khatmah plan by Madani page, middle and last third of the night, suhoor/iftar labels in Ramadan, Friday Al-Kahf reminder |
+| **M4+++** ✅ | Maintainer requests (2026-10-14) | Liquid Glass options (transparency, lens width, edge, tilt light), daily challenges in Adhkar (three random a day from seven kinds) with their own streak; the trial ColorOS style removed |
 | **M5** | Support, settings, polish | Tips/links, full settings, Arabic/English, accessibility pass, large-screen layouts |
 | **M6** | Release | Privacy policy, store and F-Droid listings, Play closed test, OEM beta, v1.0 |
 

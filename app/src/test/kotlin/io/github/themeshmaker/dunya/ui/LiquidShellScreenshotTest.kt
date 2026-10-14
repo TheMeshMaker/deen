@@ -35,6 +35,7 @@ import io.github.themeshmaker.dunya.core.designsystem.component.liquidSource
 import io.github.themeshmaker.dunya.core.designsystem.component.paddingExceptBottom
 import io.github.themeshmaker.dunya.core.designsystem.icon.DeenIcons
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.ThemeMode
 import io.github.themeshmaker.dunya.core.model.ThemeStyle
 import io.github.themeshmaker.dunya.core.model.UiStyle
@@ -70,8 +71,8 @@ class LiquidShellScreenshotTest {
     val compose = createComposeRule()
 
     @Composable
-    private fun Shell(dark: Boolean, theme: ThemeStyle) {
-        DeenTheme(style = theme, themeMode = if (dark) ThemeMode.DARK else ThemeMode.LIGHT, uiStyle = UiStyle.LIQUID) {
+    private fun Shell(dark: Boolean, theme: ThemeStyle, liquid: LiquidSettings) {
+        DeenTheme(style = theme, themeMode = if (dark) ThemeMode.DARK else ThemeMode.LIGHT, uiStyle = UiStyle.LIQUID, liquid = liquid) {
             ProvideLiquidGlass(dark) {
                 Box(Modifier.size(412.dp, 915.dp)) {
                     LiquidBackdrop(vivid = false, modifier = Modifier.fillMaxSize())
@@ -119,8 +120,8 @@ class LiquidShellScreenshotTest {
         }
     }
 
-    private fun shoot(name: String, dark: Boolean, theme: ThemeStyle = ThemeStyle.EMERALD) {
-        compose.setContent { Shell(dark, theme) }
+    private fun shoot(name: String, dark: Boolean, theme: ThemeStyle = ThemeStyle.EMERALD, liquid: LiquidSettings = LiquidSettings()) {
+        compose.setContent { Shell(dark, theme, liquid) }
         compose.onRoot().captureRoboImage("build/outputs/roborazzi/liquid-$name.png")
     }
 
@@ -129,4 +130,13 @@ class LiquidShellScreenshotTest {
     @Test fun dark() = shoot("dark", dark = true)
 
     @Test fun andalus() = shoot("andalus", dark = false, theme = ThemeStyle.ANDALUS)
+
+    @Test fun clearWideDeep() = shoot(
+        "clear-wide-deep",
+        dark = false,
+        liquid = LiquidSettings(transparency = 1f, lensWidth = 1f, edge = 1f)
+    )
+
+    @Test fun frostedNarrowThin() =
+        shoot("frosted-narrow-thin", dark = false, liquid = LiquidSettings(transparency = 0f, lensWidth = 0f, edge = 0f))
 }

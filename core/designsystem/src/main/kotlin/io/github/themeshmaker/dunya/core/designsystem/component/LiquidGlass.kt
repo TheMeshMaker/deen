@@ -64,6 +64,7 @@ import dev.chrisbanes.haze.glass.hazeGlass
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import kotlin.math.roundToInt
 
 /*
@@ -87,6 +88,9 @@ private val LocalLiquidLight = staticCompositionLocalOf<LiquidLight?> { null }
 /** Extra space tab screens leave at the bottom for the floating glass tab bar drawn over them. */
 val LocalFloatingBarInset = staticCompositionLocalOf { 0.dp }
 
+/** How the user tuned the glass in Settings (provided by DeenTheme). */
+val LocalLiquidSettings = staticCompositionLocalOf { LiquidSettings() }
+
 /**
  * Turns on Liquid glass for [content]. Glass picks its light or dark response from the
  * configuration, so it follows Deen's own light/dark setting rather than the phone's.
@@ -94,7 +98,7 @@ val LocalFloatingBarInset = staticCompositionLocalOf { 0.dp }
 @Composable
 fun ProvideLiquidGlass(dark: Boolean, content: @Composable () -> Unit) {
     val state = rememberHazeState()
-    val light = rememberLiquidLight(DeenTheme.look.motion)
+    val light = rememberLiquidLight(DeenTheme.look.motion && LocalLiquidSettings.current.tiltLight)
     LiquidAppearance(dark) {
         CompositionLocalProvider(LocalLiquidState provides state, LocalLiquidLight provides light, content = content)
     }
@@ -138,14 +142,24 @@ fun Modifier.liquidGlass(
     if (state == null) return@composed background(if (tint.isSpecified) tint else look.card, shape)
     val glassTint = tint
     val swell = if (look.motion) pressScale else 1f
-    val style = remember(shape, glassTint, dark, clear, swell, light) {
+    val tuning = LocalLiquidSettings.current
+    val style = remember(shape, glassTint, dark, clear, swell, light, tuning) {
+        val see = tuning.transparency.coerceIn(0f, 1f)
+        val edge = tuning.edge.coerceIn(0f, 1f)
         (if (clear) GlassStyle.clear else GlassStyle.regular).then {
             shape(shape)
             if (glassTint.isSpecified) this.tint(glassTint)
             // A wide band of bending around the edges, as on iOS (Haze's stock band is narrow): what
-            // is behind the glass visibly flows around its rim. Clear glass (the tab lens) bends most
-            // and barely blurs. (Strength, band as a fraction of the shape, displacement, depth, blur.)
-            if (clear) optics(0.95f, 0.5f, 24.dp, 1f, 3.dp) else optics(0.82f, 0.4f, 20.dp, 1f, 14.dp)
+            // is behind the glass visibly flows around its rim; Settings makes it thinner or deeper.
+            // Clear glass (the tab lens) bends most and barely blurs. (Strength, band as a fraction
+            // of the shape, displacement, depth, blur.)
+            if (clear) {
+                optics(0.95f, around(edge, 0.3f, 0.5f, 0.5f), around(edge, 14f, 24f, 34f).dp, 1f, 3.dp)
+            } else {
+                optics(0.82f, around(edge, 0.18f, 0.4f, 0.5f), around(edge, 10f, 20f, 30f).dp, 1f, around(see, 26f, 14f, 2f).dp)
+                // Frosted glass is milkier, clear glass barely tinted (Haze's own white point in the middle).
+                whitePoint(if (dark) around(see, -0.4f, -0.22f, -0.06f) else around(see, 0.8f, 0.55f, 0.12f))
+            }
             // A brighter rim and highlight than stock, so panes read as separate on busy backdrops.
             specularIntensity(if (dark) 0.5f else 0.62f)
             ambientResponse(if (dark) 0.24f else 0.3f)
@@ -211,6 +225,10 @@ const val PRESS_CARD = 1.025f
 const val PRESS_CONTROL = 1.12f
 
 private val Color.isSpecified: Boolean get() = this != Color.Unspecified
+
+/** [low] at 0, [middle] at 0.5 (Deen's own look) and [high] at 1, in a straight line between them. */
+private fun around(fraction: Float, low: Float, middle: Float, high: Float): Float =
+    if (fraction < 0.5f) low + (middle - low) * fraction * 2 else middle + (high - middle) * (fraction - 0.5f) * 2
 
 /**
  * The scroll-edge effect: under the status bar (or a top bar), content scrolling past melts into a

@@ -8,6 +8,7 @@ import io.github.themeshmaker.dunya.core.model.AsrMethod
 import io.github.themeshmaker.dunya.core.model.CalculationMethod
 import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.Coordinates
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.LocationSource
 import io.github.themeshmaker.dunya.core.model.MasjidReminder
 import io.github.themeshmaker.dunya.core.model.Prayer
@@ -122,5 +123,25 @@ class DeenPreferencesDataSourceTest {
         assertEquals(CalendarType.HIJRI, reloaded.timetableCalendar)
         assertEquals(ReadingSettings(1.3f, showTranslation = false, haptics = false), reloaded.reading)
         assertTrue(reloaded.secretsUnlocked)
+    }
+
+    @Test
+    fun liquidSettingsRoundTripAndBadValuesFallBack() = runTest {
+        val store = InMemoryDataStore()
+        val source = DeenPreferencesDataSource(store)
+        assertEquals(LiquidSettings(), source.userData.first().liquid)
+        val tuned = LiquidSettings(transparency = 0.9f, lensWidth = 1f, edge = 0.2f, tiltLight = false)
+        source.setLiquidSettings(tuned)
+        val bytes = ByteArrayOutputStream().also { serializer.writeTo(store.data.first(), it) }.toByteArray()
+        assertEquals(tuned, DeenPreferencesDataSource(InMemoryDataStore(decode(bytes.decodeToString()))).userData.first().liquid)
+
+        val odd = decode("""{"liquid":{"transparency":7.0,"lensWidth":-1.0,"edge":0.3}}""")
+        assertEquals(LiquidSettings(edge = 0.3f), DeenPreferencesDataSource(InMemoryDataStore(odd)).userData.first().liquid)
+    }
+
+    @Test
+    fun theRemovedColorOsStyleBecomesSleek() = runTest {
+        val prefs = decode("""{"uiStyle":"COLOROS"}""")
+        assertEquals(UiStyle.SLEEK, DeenPreferencesDataSource(InMemoryDataStore(prefs)).userData.first().uiStyle)
     }
 }

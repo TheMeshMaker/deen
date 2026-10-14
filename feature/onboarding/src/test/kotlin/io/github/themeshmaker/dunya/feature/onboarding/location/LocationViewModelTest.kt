@@ -7,6 +7,7 @@ import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.City
 import io.github.themeshmaker.dunya.core.model.Coordinates
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.LocationSource
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
@@ -57,6 +58,7 @@ class LocationViewModelTest {
         override suspend fun setSecretsUnlocked(unlocked: Boolean) = Unit
         override suspend fun setTimetableCalendar(calendar: CalendarType) = Unit
         override suspend fun setReadingSettings(settings: ReadingSettings) = Unit
+        override suspend fun setLiquidSettings(settings: LiquidSettings) = Unit
         override suspend fun setReliabilityStepConfirmed(step: String, confirmed: Boolean) = Unit
     }
 

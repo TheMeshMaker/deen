@@ -105,5 +105,18 @@
     <string name="feature_settings_kahf">Cuma: Kehf suresi</string>
     <string name="feature_settings_kahf_body">Cuma sabahları Kehf suresini okumak için hatırlatma</string>
     <string name="feature_settings_style_liquid">Sıvı Cam</string>
-    <string name="feature_settings_style_coloros">ColorOS</string>
+    <string name="feature_settings_liquid">Sıvı cam</string>
+    <string name="feature_settings_liquid_body">Camı zevkine göre ayarla. Her kaydırıcının ortası Deen\'in kendi görünümüdür.</string>
+    <string name="feature_settings_liquid_transparency">Saydamlık</string>
+    <string name="feature_settings_liquid_frosted">Buzlu</string>
+    <string name="feature_settings_liquid_clear">Berrak</string>
+    <string name="feature_settings_liquid_lens">Sekme çubuğu merceğinin genişliği</string>
+    <string name="feature_settings_liquid_narrow">Dar</string>
+    <string name="feature_settings_liquid_wide">Geniş</string>
+    <string name="feature_settings_liquid_edge">Sıvı kenar</string>
+    <string name="feature_settings_liquid_thin">İnce</string>
+    <string name="feature_settings_liquid_deep">Derin</string>
+    <string name="feature_settings_liquid_tilt">Işık eğimi takip etsin</string>
+    <string name="feature_settings_liquid_tilt_body">Telefonu eğdikçe parıltılar hareket eder. Kapatmak biraz pil tasarrufu sağlar.</string>
+    <string name="feature_settings_liquid_reset">Sıfırla</string>
 </resources>

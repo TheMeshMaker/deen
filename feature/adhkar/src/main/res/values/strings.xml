@@ -21,4 +21,55 @@
     <string name="feature_tasbih_tap">Count: %1$s. Tap to add one.</string>
     <string name="feature_tasbih_today_label">Today</string>
     <string name="feature_tasbih_all_time">All time</string>
+    <string name="feature_adhkar_challenges">Daily challenges</string>
+    <string name="feature_adhkar_challenges_progress">%1$s of %2$s done</string>
+    <string name="feature_adhkar_challenges_all_done">All done for today. New ones tomorrow.</string>
+    <plurals name="feature_adhkar_challenge_streak">
+        <item quantity="one">%1$s day in a row</item>
+        <item quantity="other">%1$s days in a row</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_best">Best streak: %1$s</string>
+    <string name="feature_adhkar_challenge_streak_note">Do all three each day to keep your streak</string>
+    <string name="feature_adhkar_challenge_dua_label">Dua</string>
+    <string name="feature_adhkar_challenge_quran_label">Quran</string>
+    <string name="feature_adhkar_challenge_tasbih_label">Tasbih</string>
+    <string name="feature_adhkar_challenge_say_dua">Say this dua</string>
+    <plurals name="feature_adhkar_challenge_times">
+        <item quantity="one">%1$s time</item>
+        <item quantity="other">%1$s times</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_from">Adhkar · %1$s</string>
+    <string name="feature_adhkar_challenge_read_surah">Read Surah %1$s</string>
+    <string name="feature_adhkar_challenge_read_kursi">Read Ayat al-Kursi</string>
+    <string name="feature_adhkar_challenge_read_baqarah_end">Read the last two verses of Al-Baqarah</string>
+    <string name="feature_adhkar_challenge_read_kahf_ten">Read the first ten verses of Al-Kahf</string>
+    <string name="feature_adhkar_challenge_read_quls">Read Al-Ikhlas, Al-Falaq and An-Nas</string>
+    <plurals name="feature_adhkar_challenge_read_pages">
+        <item quantity="one">Read %1$s page from where you stopped</item>
+        <item quantity="other">Read %1$s pages from where you stopped</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_open">Open</string>
+    <string name="feature_adhkar_challenge_start">Start</string>
+    <string name="feature_adhkar_challenge_show_all">Show all</string>
+    <string name="feature_adhkar_challenge_show_less">Show less</string>
+    <string name="feature_adhkar_challenge_done">Done</string>
+    <string name="feature_adhkar_challenge_not_done">Not done yet</string>
+    <string name="feature_tasbih_challenge">Today\'s challenge</string>
+    <string name="feature_tasbih_challenge_done">Today\'s challenge is done</string>
+    <string name="feature_tasbih_challenge_take">Count it</string>
+    <string name="feature_adhkar_challenge_adhkar_label">Adhkar</string>
+    <string name="feature_adhkar_challenge_finish_adhkar">Complete the adhkar: %1$s</string>
+    <string name="feature_adhkar_challenge_progress_of">%1$s of %2$s</string>
+    <string name="feature_adhkar_challenge_prayers_label">Prayer</string>
+    <string name="feature_adhkar_challenge_prayers">Pray all five prayers and tick them off</string>
+    <string name="feature_adhkar_challenge_hadith_label">Hadith</string>
+    <string name="feature_adhkar_challenge_hadith">Read today\'s hadith</string>
+    <string name="feature_adhkar_challenge_sunnah_label">Sunnah</string>
+    <string name="feature_adhkar_sunnah_duha">Pray two rakʿahs of Ḍuḥā</string>
+    <string name="feature_adhkar_sunnah_witr">Pray Witr before you sleep</string>
+    <string name="feature_adhkar_sunnah_fajr">Pray the two sunnah rakʿahs before Fajr</string>
+    <string name="feature_adhkar_sunnah_charity">Give some charity, even a little</string>
+    <string name="feature_adhkar_sunnah_kinship">Call or visit a relative</string>
+    <string name="feature_adhkar_sunnah_kind_word">Say a kind word to someone</string>
+    <string name="feature_adhkar_sunnah_dua_for_others">Make dua for someone in their absence</string>
 </resources>

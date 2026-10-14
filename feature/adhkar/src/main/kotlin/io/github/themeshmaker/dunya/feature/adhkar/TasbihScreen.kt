@@ -12,11 +12,13 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -29,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -43,6 +46,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -76,6 +80,7 @@ private val TARGETS = listOf(33, 99, 100, 0)
 internal fun TasbihScreenRoute(onBack: () -> Unit, viewModel: TasbihViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val reading by viewModel.reading.collectAsStateWithLifecycle()
+    val challenge by viewModel.challenge.collectAsStateWithLifecycle()
     val haptics = rememberHaptics(reading.haptics)
     DeenScaffold(
         title = stringResource(R.string.feature_tasbih_title),
@@ -100,6 +105,13 @@ internal fun TasbihScreenRoute(onBack: () -> Unit, viewModel: TasbihViewModel = 
             verticalArrangement = Arrangement.spacedBy(look.gap),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            challenge?.let { goal ->
+                ChallengeBanner(
+                    goal,
+                    set = tasbih.dhikrId == goal.dhikr.id && tasbih.target == goal.count,
+                    onTake = viewModel::takeChallenge
+                )
+            }
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 items(TasbihDhikr.entries, key = { it.id }) { option ->
                     FilterChip(
@@ -145,6 +157,43 @@ internal fun TasbihScreenRoute(onBack: () -> Unit, viewModel: TasbihViewModel = 
                     Stat(stringResource(R.string.feature_tasbih_today_label), localDigits(tasbih.todayTotal))
                     Stat(stringResource(R.string.feature_tasbih_all_time), localDigits(tasbih.allTimeTotal))
                 }
+            }
+        }
+    }
+}
+
+/** Today's tasbih challenge: what to say and how many times, done or (if not set up yet) a button to set it up. */
+@Composable
+private fun ChallengeBanner(goal: TasbihChallenge, set: Boolean, onTake: () -> Unit) {
+    DeenCard(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painterResource(if (goal.done) DeenIcons.Check else DeenIcons.Reward),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
+            )
+            Column(
+                Modifier
+                    .weight(1f)
+                    .padding(start = 12.dp)
+            ) {
+                Text(
+                    stringResource(if (goal.done) R.string.feature_tasbih_challenge_done else R.string.feature_tasbih_challenge),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    "${goal.dhikr.arabic} · ${pluralStringResource(
+                        R.plurals.feature_adhkar_challenge_times,
+                        goal.count,
+                        localDigits(goal.count)
+                    )}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            if (!goal.done && !set) {
+                TextButton(onClick = onTake) { Text(stringResource(R.string.feature_tasbih_challenge_take)) }
             }
         }
     }
