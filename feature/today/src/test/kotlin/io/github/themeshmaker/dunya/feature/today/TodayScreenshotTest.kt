@@ -1,3 +1,8 @@
+/*
+ * Deen — Copyright © 2026 TheMeshMaker
+ * Licensed under the GNU GPL, version 3 or later, with the additional terms in NOTICE.
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 package io.github.themeshmaker.dunya.feature.today
 
 import android.provider.Settings
@@ -122,6 +127,26 @@ class TodayScreenshotTest {
 
     @Test fun liquidRose() = shoot("liquid-rose", UiStyle.LIQUID, dark = false, theme = ThemeStyle.ROSE)
 
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun liquidLightArabic() = shoot("liquid-light-ar", UiStyle.LIQUID, dark = false)
+
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun liquidKiswahArabic() = shoot("liquid-kiswah-ar", UiStyle.LIQUID, dark = true, theme = ThemeStyle.KISWAH)
+
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun liquidMidnightArabic() = shoot("liquid-midnight-ar", UiStyle.LIQUID, dark = true, theme = ThemeStyle.MIDNIGHT)
+
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun liquidDesertArabic() = shoot("liquid-desert-ar", UiStyle.LIQUID, dark = false, theme = ThemeStyle.DESERT)
+
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun liquidRoseArabic() = shoot("liquid-rose-ar", UiStyle.LIQUID, dark = false, theme = ThemeStyle.ROSE)
+
     @Test fun liquidKiswah() = shoot("liquid-kiswah", UiStyle.LIQUID, dark = true, theme = ThemeStyle.KISWAH)
 
     @Test fun liquidMidnight() = shoot("liquid-midnight", UiStyle.LIQUID, dark = true, theme = ThemeStyle.MIDNIGHT)
@@ -137,7 +162,13 @@ class TodayScreenshotTest {
     @Test fun classicLight() = shoot("classic-light", UiStyle.CLASSIC, dark = false)
 
     @Test
-    fun trackerLiquid() {
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun trackerLiquidArabic() = trackerLiquid("tracker-liquid-ar")
+
+    @Test
+    fun trackerLiquid() = trackerLiquid("tracker-liquid")
+
+    private fun trackerLiquid(name: String) {
         compose.setContent {
             DeenTheme(style = ThemeStyle.EMERALD, themeMode = ThemeMode.LIGHT, uiStyle = UiStyle.LIQUID) {
                 ProvideLiquidGlass(false) {
@@ -150,6 +181,6 @@ class TodayScreenshotTest {
                 }
             }
         }
-        compose.onRoot().captureRoboImage("build/outputs/roborazzi/tracker-liquid.png")
+        compose.onRoot().captureRoboImage("build/outputs/roborazzi/$name.png")
     }
 }

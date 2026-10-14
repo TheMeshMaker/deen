@@ -119,4 +119,11 @@
     <string name="feature_settings_liquid_tilt">Cahaya mengikuti kemiringan</string>
     <string name="feature_settings_liquid_tilt_body">Kilau bergerak saat ponsel dimiringkan. Mematikannya sedikit menghemat baterai.</string>
     <string name="feature_settings_liquid_reset">Atur ulang</string>
+    <string name="feature_settings_legal_title">Lisensi</string>
+    <string name="feature_settings_legal_copyright">Deen © 2026 TheMeshMaker. Dibuat oleh satu pengembang.</string>
+    <string name="feature_settings_legal_body">Deen adalah perangkat lunak bebas: Anda boleh membagikan dan mengubahnya di bawah GNU General Public License versi 3 atau yang lebih baru, dengan ketentuan tambahan dalam NOTICE. Salinan harus mempertahankan pemberitahuan ini, menyatakan dengan jelas bahwa salinan itu telah diubah, dan tidak boleh memakai nama Deen atau ikonnya. Deen disediakan tanpa jaminan apa pun.</string>
+    <string name="feature_settings_legal_quran">Teks Al-Qur\'an hanya boleh disalin persis apa adanya; mengubahnya tidak diizinkan (lisensi Tanzil).</string>
+    <string name="feature_settings_legal_official">Deen resmi hanya diterbitkan oleh TheMeshMaker. Mohon laporkan salinan yang memakai namanya.</string>
+    <string name="feature_settings_legal_read">Baca lisensi lengkap</string>
+    <string name="feature_settings_legal_report">Laporkan salinan</string>
 </resources>

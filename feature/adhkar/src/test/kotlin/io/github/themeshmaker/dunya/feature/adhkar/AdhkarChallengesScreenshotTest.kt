@@ -1,3 +1,8 @@
+/*
+ * Deen — Copyright © 2026 TheMeshMaker
+ * Licensed under the GNU GPL, version 3 or later, with the additional terms in NOTICE.
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 package io.github.themeshmaker.dunya.feature.adhkar
 
 import android.provider.Settings
@@ -188,4 +193,8 @@ class AdhkarChallengesScreenshotTest {
     @Test
     @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
     fun tabLiquidArabicDark() = tab("liquid-ar-dark", ThemeStyle.KISWAH, dark = true)
+
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun tabLiquidArabic() = tab("liquid-ar", ThemeStyle.EMERALD, dark = false)
 }

@@ -13,3 +13,9 @@ Thank you for helping. A few ground rules keep the app trustworthy:
    once it exists, the alarm health log from the Reliability screen.
 
 By contributing you agree that your code is licensed under GPL-3.0-or-later.
+
+## Licence of contributions
+
+By contributing, you agree that your contribution is licensed under GPL-3.0-or-later with the
+additional terms in [NOTICE](NOTICE), and that the name, icon and releases of Deen stay with its
+author (see [TRADEMARKS.md](TRADEMARKS.md)).

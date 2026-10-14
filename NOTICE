@@ -1,0 +1,55 @@
+Deen (دِين)
+Copyright © 2026 TheMeshMaker. All rights reserved except as granted below.
+
+Deen is free software: you can redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version, together with the additional terms below. It is distributed in the
+hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License (LICENSE) for
+more details.
+
+Fonts, icons, recordings and religious texts bundled with Deen keep their own licences, listed in
+CONTENT_SOURCES.md. They are not covered by the GNU General Public License or by the terms below
+unless that file says so.
+
+
+ADDITIONAL TERMS UNDER SECTION 7 OF THE GNU GENERAL PUBLIC LICENSE, VERSION 3
+
+As section 7 of the licence allows, the following terms are added for all of Deen's code, artwork
+and texts written for Deen. They are part of the licence: whoever conveys Deen or a work based on it
+must keep them, and a copy that breaks them, or breaks the GNU General Public License itself, has no
+licence to be conveyed (see section 8 of the licence).
+
+1. Author attribution (section 7(b)).
+   You must keep, in every copy and in every modified version:
+   - this NOTICE file and the copyright notice "Copyright © 2026 TheMeshMaker";
+   - the copyright and licence notices in the source files;
+   - in the app itself, the author attribution and licence notice shown under
+     Settings → Sources and licences (the "Appropriate Legal Notices").
+
+2. Modified versions must be marked as different from the original (section 7(c)).
+   A modified version, or any app or service built from Deen's code, must:
+   - state clearly, in its store listing or description and in the app's own about or licence
+     screen, that it is a modified version of Deen and not the original;
+   - not be presented as the original Deen, or as made, published or endorsed by its author;
+   - not present texts it has altered (the Quran, hadith, adhkar, translations, rewards or
+     sources) as Deen's.
+
+3. No rights to the names and icon (section 7(e)).
+   This licence grants no rights under trademark law, or to otherwise use, the names "Deen" and
+   "دِين", the Deen icon (the letter nun as a crescent inside an eight-pointed star) or the name
+   "TheMeshMaker", except to state truthfully that a work is based on Deen. A modified version must
+   use a different name and a different icon. See TRADEMARKS.md.
+
+
+RELIGIOUS TEXTS
+
+The text of the Quran comes from the Tanzil Project. Its licence permits copying and distributing
+verbatim copies only: changing the text is not allowed. Any copy of Deen must keep the Quran text
+exactly as published by Tanzil, with its attribution. See CONTENT_SOURCES.md.
+
+
+REPORTING COPIES
+
+The official Deen is published only by TheMeshMaker, from https://github.com/TheMeshMaker/deen.
+Copies that break these terms or the licence can be reported through the issue tracker there.

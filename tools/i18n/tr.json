@@ -531,5 +531,12 @@
  "feature_adhkar_sunnah_charity": "Az da olsa sadaka ver",
  "feature_adhkar_sunnah_kinship": "Bir akrabanı ara ya da ziyaret et",
  "feature_adhkar_sunnah_kind_word": "Birine güzel bir söz söyle",
- "feature_adhkar_sunnah_dua_for_others": "Birine gıyabında dua et"
+ "feature_adhkar_sunnah_dua_for_others": "Birine gıyabında dua et",
+ "feature_settings_legal_title": "Lisans",
+ "feature_settings_legal_copyright": "Deen © 2026 TheMeshMaker. Tek bir geliştirici tarafından yapıldı.",
+ "feature_settings_legal_body": "Deen özgür bir yazılımdır: GNU Genel Kamu Lisansı sürüm 3 veya sonrası ve NOTICE dosyasındaki ek koşullar altında paylaşabilir ve değiştirebilirsiniz. Kopyalar bu bildirimi korumalı, değiştirildiklerini açıkça belirtmeli ve Deen adını ya da simgesini kullanmamalıdır. Deen hiçbir garanti olmadan sunulur.",
+ "feature_settings_legal_quran": "Kur'an metni yalnızca olduğu gibi kopyalanabilir; değiştirilmesine izin verilmez (Tanzil lisansı).",
+ "feature_settings_legal_official": "Resmî Deen yalnızca TheMeshMaker tarafından yayımlanır. Adını kullanan kopyaları lütfen bildirin.",
+ "feature_settings_legal_read": "Lisansın tamamını oku",
+ "feature_settings_legal_report": "Kopyayı bildir"
 }
