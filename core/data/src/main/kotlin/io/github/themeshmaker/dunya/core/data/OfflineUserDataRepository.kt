@@ -5,6 +5,7 @@ import io.github.themeshmaker.dunya.core.domain.UserDataRepository
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.CustomColors
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
 import io.github.themeshmaker.dunya.core.model.SavedLocation
@@ -42,4 +43,6 @@ internal class OfflineUserDataRepository @Inject constructor(private val prefere
     override suspend fun setTimetableCalendar(calendar: CalendarType) = preferences.setTimetableCalendar(calendar)
 
     override suspend fun setReadingSettings(settings: ReadingSettings) = preferences.setReadingSettings(settings)
+
+    override suspend fun setLiquidSettings(settings: LiquidSettings) = preferences.setLiquidSettings(settings)
 }

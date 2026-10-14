@@ -92,7 +92,8 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun AdhkarHomeScreenRoute(
     onOpenCategory: (String) -> Unit,
-    onOpenTasbih: () -> Unit,
+    onOpenTasbih: (TasbihRoute) -> Unit,
+    links: ChallengeLinks,
     viewModel: AdhkarHomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -108,7 +109,10 @@ internal fun AdhkarHomeScreenRoute(
                 .padding(bottom = padding.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(look.gap)
         ) {
-            Box(Modifier.rise(entrance, 0)) { TasbihCard(state, onOpenTasbih) }
+            state.challenges?.let { challenges ->
+                ChallengesCard(challenges, onToggle = viewModel::setChallengeDone, links = links, modifier = Modifier.rise(entrance, 0))
+            }
+            Box(Modifier.rise(entrance, 1)) { TasbihCard(state, onOpen = { onOpenTasbih(TasbihRoute()) }) }
             val suggested = state.categories.firstOrNull { it.id == state.suggested }
             if (suggested != null) {
                 SectionLabel(stringResource(R.string.feature_adhkar_now))

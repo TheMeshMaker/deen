@@ -5,6 +5,7 @@ import io.github.themeshmaker.dunya.core.model.AdhkarCategory
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.Ayah
 import io.github.themeshmaker.dunya.core.model.CalendarType
+import io.github.themeshmaker.dunya.core.model.ChallengeKind
 import io.github.themeshmaker.dunya.core.model.City
 import io.github.themeshmaker.dunya.core.model.CustomColors
 import io.github.themeshmaker.dunya.core.model.Hadith
@@ -12,6 +13,7 @@ import io.github.themeshmaker.dunya.core.model.HadithCollection
 import io.github.themeshmaker.dunya.core.model.HadithEntry
 import io.github.themeshmaker.dunya.core.model.JuzStart
 import io.github.themeshmaker.dunya.core.model.KhatmahPlan
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.ProphetFact
@@ -56,6 +58,9 @@ interface UserDataRepository {
     suspend fun setTimetableCalendar(calendar: CalendarType)
 
     suspend fun setReadingSettings(settings: ReadingSettings)
+
+    /** How the Liquid style's glass is tuned. */
+    suspend fun setLiquidSettings(settings: LiquidSettings)
 }
 
 /** What the user has been doing: reading position, bookmarks, adhkar counts, tasbih, prayers, khatmah. */
@@ -77,6 +82,9 @@ interface ActivityRepository {
 
     /** Starts (or replaces) the khatmah plan; null ends it. */
     suspend fun setKhatmah(plan: KhatmahPlan?)
+
+    /** Marks one of [day]'s daily challenges done or not. */
+    suspend fun setChallengeDone(day: LocalDate, kind: ChallengeKind, done: Boolean)
 }
 
 /** The bundled, offline religious texts (core:content). Everything is read lazily and cached. */

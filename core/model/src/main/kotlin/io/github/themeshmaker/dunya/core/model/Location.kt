@@ -49,7 +49,8 @@ data class UserData(
     /** Hidden options were unlocked (About → tap the version seven times). */
     val secretsUnlocked: Boolean = false,
     val timetableCalendar: CalendarType = CalendarType.GREGORIAN,
-    val reading: ReadingSettings = ReadingSettings()
+    val reading: ReadingSettings = ReadingSettings(),
+    val liquid: LiquidSettings = LiquidSettings()
 )
 
 /** How Quran, hadith and adhkar text is shown. */

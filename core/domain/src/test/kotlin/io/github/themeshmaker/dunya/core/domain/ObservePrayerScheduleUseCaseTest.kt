@@ -5,6 +5,7 @@ import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.CalculationMethod
 import io.github.themeshmaker.dunya.core.model.CalendarType
 import io.github.themeshmaker.dunya.core.model.Coordinates
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.LocationSource
 import io.github.themeshmaker.dunya.core.model.PrayerSettings
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
@@ -56,6 +57,7 @@ class ObservePrayerScheduleUseCaseTest {
         override suspend fun setSecretsUnlocked(unlocked: Boolean) = state.update { it.copy(secretsUnlocked = unlocked) }
         override suspend fun setTimetableCalendar(calendar: CalendarType) = state.update { it.copy(timetableCalendar = calendar) }
         override suspend fun setReadingSettings(settings: ReadingSettings) = state.update { it.copy(reading = settings) }
+        override suspend fun setLiquidSettings(settings: LiquidSettings) = state.update { it.copy(liquid = settings) }
         override suspend fun setReliabilityStepConfirmed(step: String, confirmed: Boolean) = Unit
         private inline fun MutableStateFlow<UserData>.update(f: (UserData) -> UserData) {
             value = f(value)

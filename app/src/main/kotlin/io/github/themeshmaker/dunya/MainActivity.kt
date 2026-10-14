@@ -45,7 +45,13 @@ class MainActivity : ComponentActivity() {
             // Decided once: finishing onboarding navigates on its own, it must not rebuild the graph.
             val startDestination: Any = remember { if (ready.onboardingComplete) TodayRoute else OnboardingRoute }
             val link by pendingLink
-            DeenTheme(style = ready.themeStyle, themeMode = ready.themeMode, uiStyle = ready.uiStyle, customColors = ready.customColors) {
+            DeenTheme(
+                style = ready.themeStyle,
+                themeMode = ready.themeMode,
+                uiStyle = ready.uiStyle,
+                customColors = ready.customColors,
+                liquid = ready.liquid
+            ) {
                 DeenApp(startDestination = startDestination, link = link, onLinkHandled = { pendingLink.value = null })
             }
         }

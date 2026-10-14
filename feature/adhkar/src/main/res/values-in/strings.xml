@@ -22,4 +22,52 @@
     <string name="feature_tasbih_tap">Hitungan: %1$s. Ketuk untuk menambah satu.</string>
     <string name="feature_tasbih_today_label">Hari ini</string>
     <string name="feature_tasbih_all_time">Sepanjang waktu</string>
+    <string name="feature_adhkar_challenges">Tantangan harian</string>
+    <string name="feature_adhkar_challenges_progress">%1$s dari %2$s selesai</string>
+    <string name="feature_adhkar_challenges_all_done">Semua selesai hari ini. Yang baru besok.</string>
+    <plurals name="feature_adhkar_challenge_streak">
+        <item quantity="other">%1$s hari berturut-turut</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_best">Rekor beruntun: %1$s</string>
+    <string name="feature_adhkar_challenge_streak_note">Selesaikan ketiganya setiap hari agar tetap beruntun</string>
+    <string name="feature_adhkar_challenge_dua_label">Doa</string>
+    <string name="feature_adhkar_challenge_quran_label">Al-Qur\'an</string>
+    <string name="feature_adhkar_challenge_tasbih_label">Tasbih</string>
+    <string name="feature_adhkar_challenge_say_dua">Ucapkan doa ini</string>
+    <plurals name="feature_adhkar_challenge_times">
+        <item quantity="other">%1$s kali</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_from">Zikir · %1$s</string>
+    <string name="feature_adhkar_challenge_read_surah">Baca Surah %1$s</string>
+    <string name="feature_adhkar_challenge_read_kursi">Baca Ayat Kursi</string>
+    <string name="feature_adhkar_challenge_read_baqarah_end">Baca dua ayat terakhir Surah Al-Baqarah</string>
+    <string name="feature_adhkar_challenge_read_kahf_ten">Baca sepuluh ayat pertama Surah Al-Kahf</string>
+    <string name="feature_adhkar_challenge_read_quls">Baca Al-Ikhlas, Al-Falaq, dan An-Nas</string>
+    <plurals name="feature_adhkar_challenge_read_pages">
+        <item quantity="other">Baca %1$s halaman dari terakhir dibaca</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_open">Buka</string>
+    <string name="feature_adhkar_challenge_start">Mulai</string>
+    <string name="feature_adhkar_challenge_show_all">Tampilkan semua</string>
+    <string name="feature_adhkar_challenge_show_less">Tampilkan lebih sedikit</string>
+    <string name="feature_adhkar_challenge_done">Selesai</string>
+    <string name="feature_adhkar_challenge_not_done">Belum selesai</string>
+    <string name="feature_tasbih_challenge">Tantangan hari ini</string>
+    <string name="feature_tasbih_challenge_done">Tantangan hari ini selesai</string>
+    <string name="feature_tasbih_challenge_take">Hitung</string>
+    <string name="feature_adhkar_challenge_adhkar_label">Zikir</string>
+    <string name="feature_adhkar_challenge_finish_adhkar">Selesaikan zikir: %1$s</string>
+    <string name="feature_adhkar_challenge_progress_of">%1$s dari %2$s</string>
+    <string name="feature_adhkar_challenge_prayers_label">Salat</string>
+    <string name="feature_adhkar_challenge_prayers">Salat lima waktu dan centang semuanya</string>
+    <string name="feature_adhkar_challenge_hadith_label">Hadis</string>
+    <string name="feature_adhkar_challenge_hadith">Baca hadis hari ini</string>
+    <string name="feature_adhkar_challenge_sunnah_label">Sunah</string>
+    <string name="feature_adhkar_sunnah_duha">Salat Duha dua rakaat</string>
+    <string name="feature_adhkar_sunnah_witr">Salat Witir sebelum tidur</string>
+    <string name="feature_adhkar_sunnah_fajr">Salat sunah dua rakaat sebelum Subuh</string>
+    <string name="feature_adhkar_sunnah_charity">Bersedekahlah, walau sedikit</string>
+    <string name="feature_adhkar_sunnah_kinship">Hubungi atau kunjungi kerabat</string>
+    <string name="feature_adhkar_sunnah_kind_word">Ucapkan kata yang baik kepada seseorang</string>
+    <string name="feature_adhkar_sunnah_dua_for_others">Doakan seseorang tanpa sepengetahuannya</string>
 </resources>

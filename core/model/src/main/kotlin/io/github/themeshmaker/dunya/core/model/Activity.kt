@@ -35,8 +35,8 @@ enum class TasbihDhikr(val id: String, val arabic: String, val english: String) 
 
 /**
  * What the user has been doing, kept apart from settings: last Quran position, bookmarks,
- * today's adhkar counts (key "category/id"), the tasbih, the prayers they have ticked off and
- * their khatmah plan.
+ * today's adhkar counts (key "category/id"), the tasbih, the prayers they have ticked off, their
+ * khatmah plan and the daily challenges they have done.
  */
 data class ActivityData(
     val lastRead: QuranPosition? = null,
@@ -46,7 +46,9 @@ data class ActivityData(
     val tasbih: TasbihState = TasbihState(),
     /** Prayers marked as prayed, by the day they belong to (the saved location's date). */
     val prayed: Map<LocalDate, Set<Prayer>> = emptyMap(),
-    val khatmah: KhatmahPlan? = null
+    val khatmah: KhatmahPlan? = null,
+    /** Daily challenges done, by day. */
+    val challenges: Map<LocalDate, Set<ChallengeKind>> = emptyMap()
 ) {
     /** Today's counts, or none if they are from an earlier day. */
     fun adhkarCountsOn(day: LocalDate): Map<String, Int> = if (adhkarDay == day) adhkarCounts else emptyMap()

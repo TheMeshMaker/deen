@@ -11,6 +11,7 @@ import io.github.themeshmaker.dunya.core.model.AdhanVoice
 import io.github.themeshmaker.dunya.core.model.AlertSettings
 import io.github.themeshmaker.dunya.core.model.AppBuildInfo
 import io.github.themeshmaker.dunya.core.model.CustomColors
+import io.github.themeshmaker.dunya.core.model.LiquidSettings
 import io.github.themeshmaker.dunya.core.model.MasjidReminder
 import io.github.themeshmaker.dunya.core.model.Prayer
 import io.github.themeshmaker.dunya.core.model.ReadingSettings
@@ -77,6 +78,8 @@ class SettingsViewModel @Inject constructor(
     fun setThemeMode(mode: ThemeMode) = launch { userData.setThemeMode(mode) }
 
     fun setUiStyle(style: UiStyle) = launch { userData.setUiStyle(style) }
+
+    fun setLiquid(settings: LiquidSettings) = launch { userData.setLiquidSettings(settings) }
 
     fun setReading(transform: (ReadingSettings) -> ReadingSettings) = launch {
         userData.setReadingSettings(transform(userData.userData.first().reading))

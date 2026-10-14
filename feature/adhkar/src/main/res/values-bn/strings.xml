@@ -22,4 +22,55 @@
     <string name="feature_tasbih_tap">গণনা: %1$s। একটি বাড়াতে ট্যাপ করুন।</string>
     <string name="feature_tasbih_today_label">আজ</string>
     <string name="feature_tasbih_all_time">মোট</string>
+    <string name="feature_adhkar_challenges">দৈনিক চ্যালেঞ্জ</string>
+    <string name="feature_adhkar_challenges_progress">%2$sটির মধ্যে %1$sটি সম্পন্ন</string>
+    <string name="feature_adhkar_challenges_all_done">আজকের সব সম্পন্ন। কাল নতুন আসবে।</string>
+    <plurals name="feature_adhkar_challenge_streak">
+        <item quantity="one">টানা %1$s দিন</item>
+        <item quantity="other">টানা %1$s দিন</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_best">সেরা ধারাবাহিকতা: %1$s</string>
+    <string name="feature_adhkar_challenge_streak_note">ধারাবাহিকতা ধরে রাখতে প্রতিদিন তিনটিই সম্পন্ন করুন</string>
+    <string name="feature_adhkar_challenge_dua_label">দোয়া</string>
+    <string name="feature_adhkar_challenge_quran_label">কুরআন</string>
+    <string name="feature_adhkar_challenge_tasbih_label">তাসবিহ</string>
+    <string name="feature_adhkar_challenge_say_dua">এই দোয়াটি পড়ুন</string>
+    <plurals name="feature_adhkar_challenge_times">
+        <item quantity="one">%1$s বার</item>
+        <item quantity="other">%1$s বার</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_from">যিকির · %1$s</string>
+    <string name="feature_adhkar_challenge_read_surah">সূরা %1$s পড়ুন</string>
+    <string name="feature_adhkar_challenge_read_kursi">আয়াতুল কুরসি পড়ুন</string>
+    <string name="feature_adhkar_challenge_read_baqarah_end">সূরা আল-বাকারার শেষ দুই আয়াত পড়ুন</string>
+    <string name="feature_adhkar_challenge_read_kahf_ten">সূরা আল-কাহফের প্রথম দশ আয়াত পড়ুন</string>
+    <string name="feature_adhkar_challenge_read_quls">সূরা ইখলাস, ফালাক ও নাস পড়ুন</string>
+    <plurals name="feature_adhkar_challenge_read_pages">
+        <item quantity="one">যেখানে থেমেছিলেন সেখান থেকে %1$s পৃষ্ঠা পড়ুন</item>
+        <item quantity="other">যেখানে থেমেছিলেন সেখান থেকে %1$s পৃষ্ঠা পড়ুন</item>
+    </plurals>
+    <string name="feature_adhkar_challenge_open">খুলুন</string>
+    <string name="feature_adhkar_challenge_start">শুরু করুন</string>
+    <string name="feature_adhkar_challenge_show_all">সবটা দেখুন</string>
+    <string name="feature_adhkar_challenge_show_less">কম দেখুন</string>
+    <string name="feature_adhkar_challenge_done">সম্পন্ন</string>
+    <string name="feature_adhkar_challenge_not_done">এখনো হয়নি</string>
+    <string name="feature_tasbih_challenge">আজকের চ্যালেঞ্জ</string>
+    <string name="feature_tasbih_challenge_done">আজকের চ্যালেঞ্জ সম্পন্ন</string>
+    <string name="feature_tasbih_challenge_take">গণনা শুরু করুন</string>
+    <string name="feature_adhkar_challenge_adhkar_label">যিকির</string>
+    <string name="feature_adhkar_challenge_finish_adhkar">যিকির সম্পন্ন করুন: %1$s</string>
+    <string name="feature_adhkar_challenge_progress_of">%2$sটির মধ্যে %1$sটি</string>
+    <string name="feature_adhkar_challenge_prayers_label">নামাজ</string>
+    <string name="feature_adhkar_challenge_prayers">পাঁচ ওয়াক্ত নামাজ পড়ে টিক দিন</string>
+    <string name="feature_adhkar_challenge_hadith_label">হাদিস</string>
+    <string name="feature_adhkar_challenge_hadith">আজকের হাদিস পড়ুন</string>
+    <string name="feature_adhkar_challenge_sunnah_label">সুন্নাহ</string>
+    <string name="feature_adhkar_sunnah_duha">দুই রাকাত চাশতের নামাজ পড়ুন</string>
+    <string name="feature_adhkar_sunnah_witr">ঘুমানোর আগে বিতর পড়ুন</string>
+    <string name="feature_adhkar_sunnah_fajr">ফজরের আগের দুই রাকাত সুন্নাত পড়ুন</string>
+    <string name="feature_adhkar_sunnah_charity">অল্প হলেও কিছু সদকা দিন</string>
+    <string name="feature_adhkar_sunnah_kinship">কোনো আত্মীয়কে ফোন করুন বা দেখা করুন</string>
+    <string name="feature_adhkar_sunnah_kind_word">কাউকে একটি ভালো কথা বলুন</string>
+    <string name="feature_adhkar_sunnah_dua_for_others">কারও অনুপস্থিতিতে তার জন্য দোয়া করুন</string>
 </resources>
