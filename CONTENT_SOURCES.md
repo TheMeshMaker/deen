@@ -4,6 +4,11 @@ Everything bundled in Deen that isn't original code, with its licence. The relig
 built by the scripts in [`tools/content`](tools/content/README.md); the app shows a summary of this
 page under Settings → Sources and licences.
 
+Deen's own code, artwork and texts written for it are © 2026 TheMeshMaker under GPL-3.0-or-later with
+the additional terms in [NOTICE](NOTICE) (keep the credit, mark modified versions, no use of the name
+or icon: see [TRADEMARKS.md](TRADEMARKS.md)). The Quran text is never changed: Tanzil's licence allows
+verbatim copies only.
+
 ## Religious texts
 
 | Content | Where | Source | Licence |

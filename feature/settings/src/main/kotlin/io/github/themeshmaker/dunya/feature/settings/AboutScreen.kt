@@ -1,8 +1,14 @@
+/*
+ * Deen — Copyright © 2026 TheMeshMaker
+ * Licensed under the GNU GPL, version 3 or later, with the additional terms in NOTICE.
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 package io.github.themeshmaker.dunya.feature.settings
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -67,6 +73,7 @@ internal fun AboutScreenRoute(onBack: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            LicenceCard(onOpen = { url -> runCatching { uriHandler.openUri(url) } })
             sources.forEach { source ->
                 DeenCard {
                     Text(stringResource(source.title), style = MaterialTheme.typography.titleMedium)
@@ -86,3 +93,40 @@ internal fun AboutScreenRoute(onBack: () -> Unit) {
         }
     }
 }
+
+/**
+ * The app's legal notice (the GPL's "Appropriate Legal Notices"): the copyright, the licence and its
+ * additional terms in plain words, the rule that the Quran text is never changed, and where the
+ * official app comes from.
+ */
+@Composable
+private fun LicenceCard(onOpen: (String) -> Unit) {
+    DeenCard {
+        Text(stringResource(R.string.feature_settings_legal_title), style = MaterialTheme.typography.titleMedium)
+        Text(
+            stringResource(R.string.feature_settings_legal_copyright),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+        listOf(
+            R.string.feature_settings_legal_body,
+            R.string.feature_settings_legal_quran,
+            R.string.feature_settings_legal_official
+        ).forEach {
+            Text(
+                stringResource(it),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+        Row {
+            TextButton(onClick = { onOpen(NOTICE_URL) }) { Text(stringResource(R.string.feature_settings_legal_read)) }
+            TextButton(onClick = { onOpen(REPORT_URL) }) { Text(stringResource(R.string.feature_settings_legal_report)) }
+        }
+    }
+}
+
+private const val NOTICE_URL = "$SOURCE_URL/blob/main/NOTICE"
+private const val REPORT_URL = "$SOURCE_URL/issues/new"

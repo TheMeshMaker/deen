@@ -531,5 +531,12 @@
  "feature_adhkar_sunnah_charity": "অল্প হলেও কিছু সদকা দিন",
  "feature_adhkar_sunnah_kinship": "কোনো আত্মীয়কে ফোন করুন বা দেখা করুন",
  "feature_adhkar_sunnah_kind_word": "কাউকে একটি ভালো কথা বলুন",
- "feature_adhkar_sunnah_dua_for_others": "কারও অনুপস্থিতিতে তার জন্য দোয়া করুন"
+ "feature_adhkar_sunnah_dua_for_others": "কারও অনুপস্থিতিতে তার জন্য দোয়া করুন",
+ "feature_settings_legal_title": "লাইসেন্স",
+ "feature_settings_legal_copyright": "Deen © 2026 TheMeshMaker। একজন ডেভেলপারের তৈরি।",
+ "feature_settings_legal_body": "দীন একটি মুক্ত সফটওয়্যার: আপনি এটি GNU জেনারেল পাবলিক লাইসেন্স, সংস্করণ ৩ বা পরবর্তী, এবং NOTICE-এ থাকা অতিরিক্ত শর্তসহ শেয়ার ও পরিবর্তন করতে পারেন। প্রতিটি কপিতে এই নোটিশ রাখতে হবে, স্পষ্ট করে বলতে হবে যে এটি পরিবর্তিত, এবং দীন নাম বা আইকন ব্যবহার করা যাবে না। দীন কোনো ওয়ারেন্টি ছাড়াই দেওয়া হয়।",
+ "feature_settings_legal_quran": "কুরআনের পাঠ শুধু হুবহু কপি করা যাবে; এতে পরিবর্তন করা নিষেধ (তানজিল লাইসেন্স)।",
+ "feature_settings_legal_official": "অফিসিয়াল দীন কেবল TheMeshMaker প্রকাশ করেন। এর নাম ব্যবহারকারী কপির কথা জানান।",
+ "feature_settings_legal_read": "পুরো লাইসেন্স পড়ুন",
+ "feature_settings_legal_report": "কপির কথা জানান"
 }

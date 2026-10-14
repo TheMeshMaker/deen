@@ -118,4 +118,11 @@
     <string name="feature_settings_liquid_tilt">الضوء يتبع الإمالة</string>
     <string name="feature_settings_liquid_tilt_body">تتحرك اللمعة حين تُميل الهاتف. إيقافه يوفّر قليلًا من البطارية.</string>
     <string name="feature_settings_liquid_reset">إعادة الضبط</string>
+    <string name="feature_settings_legal_title">الترخيص</string>
+    <string name="feature_settings_legal_copyright">دِين © 2026 TheMeshMaker. يطوّره مطوّرٌ واحد.</string>
+    <string name="feature_settings_legal_body">دِين برنامجٌ حر: يحق لك نشره وتعديله وفق رخصة جنو العمومية، الإصدار الثالث أو أحدث، مع الشروط الإضافية في ملف NOTICE. ويجب على أي نسخة أن تُبقي هذا الإشعار، وأن تذكر بوضوح أنها معدّلة، وألا تستعمل اسم «دِين» أو أيقونته. ويُقدَّم دِين دون أي ضمان.</string>
+    <string name="feature_settings_legal_quran">لا يجوز نسخ نص القرآن إلا كما هو تمامًا، ولا يُسمح بتغييره (رخصة مشروع تنزيل).</string>
+    <string name="feature_settings_legal_official">لا تُنشر النسخة الرسمية من دِين إلا من TheMeshMaker. يُرجى الإبلاغ عن النسخ التي تستعمل اسمه.</string>
+    <string name="feature_settings_legal_read">اقرأ الترخيص كاملًا</string>
+    <string name="feature_settings_legal_report">أبلغ عن نسخة</string>
 </resources>

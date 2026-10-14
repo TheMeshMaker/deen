@@ -1,3 +1,8 @@
+/*
+ * Deen — Copyright © 2026 TheMeshMaker
+ * Licensed under the GNU GPL, version 3 or later, with the additional terms in NOTICE.
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 package io.github.themeshmaker.dunya.feature.timetable
 
 import android.provider.Settings
@@ -61,6 +66,10 @@ class CalendarScreenshotTest {
     }
 
     @Test fun liquidLight() = shoot("liquid-light", UiStyle.LIQUID, dark = false)
+
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun liquidLightArabic() = shoot("liquid-light-ar", UiStyle.LIQUID, dark = false)
 
     @Test fun sleekDark() = shoot("sleek-dark", UiStyle.SLEEK, dark = true)
 }

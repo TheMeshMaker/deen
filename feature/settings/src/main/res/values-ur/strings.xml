@@ -119,4 +119,11 @@
     <string name="feature_settings_liquid_tilt">روشنی جھکاؤ کے ساتھ</string>
     <string name="feature_settings_liquid_tilt_body">فون جھکانے پر چمک حرکت کرتی ہے۔ بند کرنے سے کچھ بیٹری بچتی ہے۔</string>
     <string name="feature_settings_liquid_reset">ری سیٹ</string>
+    <string name="feature_settings_legal_title">لائسنس</string>
+    <string name="feature_settings_legal_copyright">دِین © 2026 TheMeshMaker۔ ایک ڈویلپر کا بنایا ہوا۔</string>
+    <string name="feature_settings_legal_body">دِین ایک آزاد سافٹ ویئر ہے: آپ اسے GNU جنرل پبلک لائسنس، ورژن 3 یا بعد کے تحت، NOTICE میں دی گئی اضافی شرائط کے ساتھ شیئر اور تبدیل کر سکتے ہیں۔ ہر نقل میں یہ نوٹس برقرار رہنا چاہیے، واضح لکھا ہو کہ یہ ترمیم شدہ ہے، اور اس میں دِین کا نام یا آئیکن استعمال نہ ہو۔ دِین بغیر کسی ضمانت کے فراہم کیا جاتا ہے۔</string>
+    <string name="feature_settings_legal_quran">قرآن کا متن صرف ہوبہو نقل کیا جا سکتا ہے، اسے بدلنے کی اجازت نہیں (تنزیل لائسنس)۔</string>
+    <string name="feature_settings_legal_official">دِین کا سرکاری ورژن صرف TheMeshMaker شائع کرتا ہے۔ اس کا نام استعمال کرنے والی نقلوں کی اطلاع دیں۔</string>
+    <string name="feature_settings_legal_read">پورا لائسنس پڑھیں</string>
+    <string name="feature_settings_legal_report">نقل کی اطلاع دیں</string>
 </resources>

@@ -119,4 +119,11 @@
     <string name="feature_settings_liquid_tilt">La lumière suit l\'inclinaison</string>
     <string name="feature_settings_liquid_tilt_body">Les reflets bougent quand vous inclinez le téléphone. Le désactiver économise un peu de batterie.</string>
     <string name="feature_settings_liquid_reset">Réinitialiser</string>
+    <string name="feature_settings_legal_title">Licence</string>
+    <string name="feature_settings_legal_copyright">Deen © 2026 TheMeshMaker. Créé par un seul développeur.</string>
+    <string name="feature_settings_legal_body">Deen est un logiciel libre : vous pouvez le partager et le modifier selon la Licence publique générale GNU, version 3 ou ultérieure, avec les conditions supplémentaires du fichier NOTICE. Toute copie doit conserver cet avis, indiquer clairement qu\'elle est modifiée et ne pas utiliser le nom Deen ni son icône. Deen est fourni sans aucune garantie.</string>
+    <string name="feature_settings_legal_quran">Le texte du Coran ne peut être copié qu\'à l\'identique : le modifier est interdit (licence Tanzil).</string>
+    <string name="feature_settings_legal_official">Le Deen officiel n\'est publié que par TheMeshMaker. Merci de signaler les copies qui utilisent son nom.</string>
+    <string name="feature_settings_legal_read">Lire la licence complète</string>
+    <string name="feature_settings_legal_report">Signaler une copie</string>
 </resources>

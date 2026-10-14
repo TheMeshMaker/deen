@@ -66,7 +66,31 @@ by a qualified person before it ships.
 
 ## License
 
-Code: [GPL-3.0-or-later](LICENSE). Fonts, icons and religious texts keep their own licenses, listed in
+Copyright © 2026 TheMeshMaker. Deen is developed by one person.
+
+Code: [GPL-3.0-or-later](LICENSE), **with additional terms** (allowed by section 7 of the licence) in
+[NOTICE](NOTICE). Fonts, icons and religious texts keep their own licenses, listed in
 [CONTENT_SOURCES.md](CONTENT_SOURCES.md).
 
-Copyright © 2026 TheMeshMaker
+### Please don't republish Deen
+
+I don't want copies of this app published, under any name. If you'd like to improve Deen, please open
+an issue or a pull request here instead, so everyone gets the one app whose religious texts have been
+checked. (This is a request: the licence lets people copy the code. The rules below are binding.)
+
+### Rules for any copy or modified version
+
+Anyone who copies or changes Deen must follow the GPL and the terms in [NOTICE](NOTICE). In short:
+
+- **No name or icon.** A copy may not be called Deen or دِين or use Deen's icon, and may not suggest
+  it is the original or made by me. See [TRADEMARKS.md](TRADEMARKS.md).
+- **Mark it as changed.** A modified version must say clearly, in its store listing and in the app,
+  that it is a modified version of Deen.
+- **Keep the credit.** The copyright notice, this NOTICE and the app's licence screen (Settings →
+  Sources and licences) must stay.
+- **Keep it open.** Anyone who publishes a copy must share its full source code under the same licence.
+- **The Quran stays as it is.** The Quran text may only be copied exactly as published by the Tanzil
+  Project; changing it is not allowed. Altered religious texts may never be presented as Deen's.
+
+A copy that breaks these rules loses its licence (GPL section 8), and I will have it taken down. The
+official Deen is published only from this repository. To report a copy, open an issue.
