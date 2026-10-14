@@ -144,4 +144,48 @@ class AdhkarChallengesScreenshotTest {
     @Test
     @Config(qualifiers = "ar-w412dp-h700dp-xxhdpi")
     fun arabic() = shoot("arabic", UiStyle.SLEEK, items = everything.drop(3).take(3), done = emptySet(), streak = 0)
+
+    /** The whole Adhkar tab in Liquid, for the trailer and the store listing. */
+    private fun tab(name: String, theme: ThemeStyle, dark: Boolean) {
+        val categories = listOf(
+            AdhkarCategory.MORNING to LocalizedText("أذكار الصباح", "Morning") to 25,
+            AdhkarCategory.EVENING to LocalizedText("أذكار المساء", "Evening") to 23,
+            AdhkarCategory.AFTER_PRAYER to LocalizedText("أذكار بعد الصلاة", "After prayer") to 10,
+            AdhkarCategory.SLEEP to LocalizedText("أذكار النوم", "Before sleep") to 12,
+            "waking" to LocalizedText("أذكار الاستيقاظ", "Waking up") to 3,
+            AdhkarCategory.ADHAN to LocalizedText("عند الأذان", "With the adhan") to 4,
+            AdhkarCategory.MOSQUE to LocalizedText("المسجد", "The mosque") to 4,
+            "wudu" to LocalizedText("الوضوء", "Wudu") to 4,
+            "home" to LocalizedText("الخروج من المنزل", "Leaving home") to 3
+        ).map { (idTitle, size) -> AdhkarCategory(idTitle.first, idTitle.second, List(size) { dua.copy(id = it) }) }
+        val state = AdhkarHomeUiState(
+            categories = categories,
+            done = mapOf(AdhkarCategory.MORNING to 25, AdhkarCategory.EVENING to 6, AdhkarCategory.AFTER_PRAYER to 10),
+            suggested = AdhkarCategory.EVENING,
+            tasbih = io.github.themeshmaker.dunya.core.model.TasbihState(todayTotal = 233, day = LocalDate.of(2026, 10, 14)),
+            today = LocalDate.of(2026, 10, 14),
+            challenges = state(everything.take(3), setOf(ChallengeKind.DUA, ChallengeKind.QURAN), 12)
+        )
+        compose.setContent {
+            DeenTheme(style = theme, themeMode = if (dark) ThemeMode.DARK else ThemeMode.LIGHT, uiStyle = UiStyle.LIQUID) {
+                ProvideLiquidGlass(dark) {
+                    Box(Modifier.fillMaxSize()) {
+                        LiquidBackdrop(vivid = false, modifier = Modifier.fillMaxSize())
+                        Box(Modifier.fillMaxSize().liquidSource(1f)) {
+                            AdhkarHomeScreen(state, onToggleChallenge = { _, _ -> }, onOpenCategory = {}, onOpenTasbih = {}, links = links)
+                        }
+                    }
+                }
+            }
+        }
+        compose.onRoot().captureRoboImage("build/outputs/roborazzi/adhkar-tab-$name.png")
+    }
+
+    @Test
+    @Config(qualifiers = "w412dp-h915dp-xxhdpi")
+    fun tabLiquid() = tab("liquid", ThemeStyle.EMERALD, dark = false)
+
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun tabLiquidArabicDark() = tab("liquid-ar-dark", ThemeStyle.KISWAH, dark = true)
 }

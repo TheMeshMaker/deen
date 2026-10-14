@@ -79,6 +79,7 @@ import io.github.themeshmaker.dunya.core.designsystem.theme.DeenMotion
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTextStyles
 import io.github.themeshmaker.dunya.core.designsystem.theme.DeenTheme
 import io.github.themeshmaker.dunya.core.model.AdhkarCategory
+import io.github.themeshmaker.dunya.core.model.ChallengeKind
 import io.github.themeshmaker.dunya.core.model.TasbihDhikr
 import io.github.themeshmaker.dunya.core.ui.R as UiR
 import io.github.themeshmaker.dunya.core.ui.isArabicUi
@@ -97,6 +98,17 @@ internal fun AdhkarHomeScreenRoute(
     viewModel: AdhkarHomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    AdhkarHomeScreen(state, onToggleChallenge = viewModel::setChallengeDone, onOpenCategory, onOpenTasbih, links)
+}
+
+@Composable
+internal fun AdhkarHomeScreen(
+    state: AdhkarHomeUiState,
+    onToggleChallenge: (ChallengeKind, Boolean) -> Unit,
+    onOpenCategory: (String) -> Unit,
+    onOpenTasbih: (TasbihRoute) -> Unit,
+    links: ChallengeLinks
+) {
     val look = DeenTheme.look
     val entrance = rememberEntrance()
     DeenTabScaffold(title = stringResource(R.string.feature_adhkar_title)) { padding ->
@@ -110,7 +122,7 @@ internal fun AdhkarHomeScreenRoute(
             verticalArrangement = Arrangement.spacedBy(look.gap)
         ) {
             state.challenges?.let { challenges ->
-                ChallengesCard(challenges, onToggle = viewModel::setChallengeDone, links = links, modifier = Modifier.rise(entrance, 0))
+                ChallengesCard(challenges, onToggle = onToggleChallenge, links = links, modifier = Modifier.rise(entrance, 0))
             }
             Box(Modifier.rise(entrance, 1)) { TasbihCard(state, onOpen = { onOpenTasbih(TasbihRoute()) }) }
             val suggested = state.categories.firstOrNull { it.id == state.suggested }

@@ -122,6 +122,16 @@ class TodayScreenshotTest {
 
     @Test fun liquidRose() = shoot("liquid-rose", UiStyle.LIQUID, dark = false, theme = ThemeStyle.ROSE)
 
+    @Test fun liquidKiswah() = shoot("liquid-kiswah", UiStyle.LIQUID, dark = true, theme = ThemeStyle.KISWAH)
+
+    @Test fun liquidMidnight() = shoot("liquid-midnight", UiStyle.LIQUID, dark = true, theme = ThemeStyle.MIDNIGHT)
+
+    @Test fun liquidDesert() = shoot("liquid-desert", UiStyle.LIQUID, dark = false, theme = ThemeStyle.DESERT)
+
+    @Test
+    @Config(qualifiers = "ar-w412dp-h915dp-xxhdpi")
+    fun liquidAndalusArabic() = shoot("liquid-andalus-ar", UiStyle.LIQUID, dark = false, theme = ThemeStyle.ANDALUS)
+
     @Test fun sleekLight() = shoot("sleek-light", UiStyle.SLEEK, dark = false)
 
     @Test fun classicLight() = shoot("classic-light", UiStyle.CLASSIC, dark = false)
